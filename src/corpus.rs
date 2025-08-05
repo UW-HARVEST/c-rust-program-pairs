@@ -1,5 +1,8 @@
 use crate::{
-    parser::schema::{Language, Metadata, ProgramPair},
+    parser::{
+        individual, project,
+        schema::{Language, Metadata, MetadataType, ProgramPair},
+    },
     paths::{PROGRAMS_DIRECTORY, REPOSITORY_CACHE_DIRECTORY},
 };
 
@@ -7,8 +10,33 @@ use git2::{FetchOptions, Progress, RemoteCallbacks, Repository, build::RepoBuild
 use indicatif::{ProgressBar, ProgressStyle};
 use std::{error::Error, fs, path::Path};
 
+// Download all metadata files from a directory.
+pub fn download_metadata_dir(directory: &Path, metadata_type: MetadataType) {
+    for metadata_file in directory
+        .read_dir()
+        .expect("Failed to read metadata directory")
+    {
+        if let Ok(metadata_file) = metadata_file {
+            let parsed_result = match metadata_type {
+                MetadataType::Individual => individual::parse(&metadata_file.path()),
+                MetadataType::Project => project::parse(&metadata_file.path()),
+            };
+            match parsed_result {
+                Ok(metadata) => {
+                    println!("Successfully parsed {:?}", metadata_file.path().file_name());
+                    download_metadata_file(&metadata);
+                }
+                Err(error) => println!(
+                    "Failed to parse {:?}: {error}",
+                    metadata_file.path().file_name()
+                ),
+            }
+        }
+    }
+}
+
 // Downloads all program-pairs in a given Metadata object.
-pub fn download_metadata(metadata: &Metadata) {
+fn download_metadata_file(metadata: &Metadata) {
     for pair in metadata.pairs.iter() {
         match download_program_pair(pair) {
             Ok(_) => {}

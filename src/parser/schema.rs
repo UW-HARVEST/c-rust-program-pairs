@@ -1,5 +1,11 @@
 use serde::{Deserialize, Serialize};
 
+// Indicates the type of metadata file.
+pub enum MetadataType {
+    Individual,
+    Project,
+}
+
 // Our final, metadata data structure that we extract from individual /
 // project metadata files.
 #[derive(Debug, Serialize, Deserialize)]

@@ -37,32 +37,17 @@ mod tests {
 }
 
 use crate::{
-    parser::{individual, project},
+    corpus::download_metadata_dir,
+    parser::schema::MetadataType,
     paths::{INDIVIDUAL_METADATA_DIRECTORY, PROJECT_METADATA_DIRECTORY},
 };
 
 use std::path::Path;
 
 fn main() {
-    let project_metadata_directory = Path::new(PROJECT_METADATA_DIRECTORY);
-    let individual_metadata_directory = Path::new(INDIVIDUAL_METADATA_DIRECTORY);
-
-    for metadata_file in project_metadata_directory
-        .read_dir()
-        .expect("Failed to read project metadata directory")
-    {
-        if let Ok(metadata_file) = metadata_file {
-            match project::parse(&metadata_file.path()) {
-                Ok(metadata) => {
-                    println!("Successfully parsed {:?}", metadata_file.path().file_name());
-                    corpus::download_metadata(&metadata);
-                }
-                Err(error) => println!(
-                    "Failed to parse {:?}: {}",
-                    metadata_file.path().file_name(),
-                    error
-                ),
-            }
-        }
-    }
+    download_metadata_dir(Path::new(PROJECT_METADATA_DIRECTORY), MetadataType::Project);
+    download_metadata_dir(
+        Path::new(INDIVIDUAL_METADATA_DIRECTORY),
+        MetadataType::Individual,
+    );
 }
