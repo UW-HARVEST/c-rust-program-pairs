@@ -1,0 +1,114 @@
+{
+    "project_information": {
+        "program_name": "procps",
+        "translation_method": "manual",
+        "translation_tool": "",
+        "feature_relationship": "equivalent",
+        "c_program": {
+            "documentation_url": "https://gitlab.com/procps-ng/procps",
+            "repository_url": "https://gitlab.com/procps-ng/procps"
+        },
+        "rust_program": {
+            "documentation_url": "https://github.com/uutils/procps/blob/main/README.md",
+            "repository_url": "https://github.com/uutils/procps"
+        }
+    },
+    "pairs": [
+        {
+            "program_name": "free",
+            "program_description": "Report the amount of free and used memory in the system.",
+            "c_program": { "source_paths": ["src/free.c"] },
+            "rust_program": { "source_paths": ["src/uu/free/src"] }
+        },
+        {
+            "program_name": "pgrep",
+            "program_description": "List processes based on name or other attributes.",
+            "c_program": { "source_paths": ["src/pgrep.c"] },
+            "rust_program": { "source_paths": ["src/uu/pgrep/src"] }
+        },
+        {
+            "program_name": "pidof",
+            "program_description": "Find the process ID of a running program.",
+            "c_program": { "source_paths": ["src/pidof.c"] },
+            "rust_program": { "source_paths": ["src/uu/pidof/src"] }
+        },
+        {
+            "program_name": "pidwait",
+            "program_description": "Wait for a specific process to terminate.",
+            "c_program": { "source_paths": ["src/pgrep.c"] },
+            "rust_program": { "source_paths": ["src/uu/pidwait/src"] }
+        },
+        {
+            "program_name": "pkill",
+            "program_description": "Kill processes based on name and other attributes.",
+            "c_program": { "source_paths": ["src/pgrep.c"] },
+            "rust_program": { "source_paths": ["src/uu/pkill/src"] }
+        },
+        {
+            "program_name": "pmap",
+            "program_description": "Display the memory map of a process.",
+            "c_program": { "source_paths": ["src/pmap.c"] },
+            "rust_program": { "source_paths": ["src/uu/pmap/src"] }
+        },
+        {
+            "program_name": "ps",
+            "program_description": "Display information about active processes.",
+            "c_program": { "source_paths": ["src/ps/"] },
+            "rust_program": { "source_paths": ["src/uu/ps/src"] }
+        },
+        {
+            "program_name": "pwdx",
+            "program_description": "Show the current working directory of a process.",
+            "c_program": { "source_paths": ["src/pwdx.c"] },
+            "rust_program": { "source_paths": ["src/uu/pwdx/src"] }
+        },
+        {
+            "program_name": "slabtop",
+            "program_description": "Display detailed kernel slab cache information in real time.",
+            "c_program": { "source_paths": ["src/slabtop.c"] },
+            "rust_program": { "source_paths": ["src/uu/slabtop/src"] }
+        },
+        {
+            "program_name": "snice",
+            "program_description": "Change the scheduling priority of a running process.",
+            "c_program": { "source_paths": ["src/skill.c"] },
+            "rust_program": { "source_paths": ["src/uu/snice/src"] }
+        },
+        {
+            "program_name": "sysctl",
+            "program_description": "Read or write kernel parameters at run-time.",
+            "c_program": { "source_paths": ["src/sysctl.c"] },
+            "rust_program": { "source_paths": ["src/uu/sysctl/src"] }
+        },
+        {
+            "program_name": "tload",
+            "program_description": "Print a graphical representation of system load average to the terminal.",
+            "c_program": { "source_paths": ["src/tload.c"] },
+            "rust_program": { "source_paths": ["src/uu/tload/src"] }
+        },
+        {
+            "program_name": "top",
+            "program_description": "Display real-time information about system processes.",
+            "c_program": { "source_paths": ["src/top/"] },
+            "rust_program": { "source_paths": ["src/uu/top/src"] }
+        },
+        {
+            "program_name": "vmstat",
+            "program_description": "Report information about processes, memory, paging, block IO, traps, and CPU activity.",
+            "c_program": { "source_paths": ["src/vmstat.c"] },
+            "rust_program": { "source_paths": ["src/uu/vmstat/src"] }
+        },
+        {
+            "program_name": "w",
+            "program_description": "Show who is logged on and what they are doing.",
+            "c_program": { "source_paths": ["src/w.c"] },
+            "rust_program": { "source_paths": ["src/uu/w/src"] }
+        },
+        {
+            "program_name": "watch",
+            "program_description": "Execute a program periodically, showing output fullscreen.",
+            "c_program": { "source_paths": ["src/watch.c"] },
+            "rust_program": { "source_paths": ["src/uu/watch/src"] }
+        }
+    ]
+}

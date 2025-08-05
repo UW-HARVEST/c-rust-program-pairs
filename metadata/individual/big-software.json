@@ -1,0 +1,21 @@
+{
+    "pairs": [
+        {
+            "program_name": "gitoxide",
+            "program_description": "An idiomatic, lean, fast & safe pure Rust implementation of Git.",
+            "translation_method": "manual",
+            "translation_tool": "",
+            "feature_relationship": "subset",
+            "c_program": {
+                "documentation_url": "https://git-scm.com/doc",
+                "repository_url": "https://github.com/git/git",
+                "source_paths": ["src/ls.c", "src/ls.h"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/eza-community/eza/blob/main/README.md",
+                "repository_url": "https://github.com/eza-community/eza",
+                "source_paths": ["src"]
+            }
+        }
+    ]
+}

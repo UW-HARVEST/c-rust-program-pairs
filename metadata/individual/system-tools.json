@@ -1,0 +1,56 @@
+{
+    "pairs": [
+        {
+            "program_name": "eza",
+            "program_description": "A modern alternative to ls.",
+            "translation_method": "manual",
+            "translation_tool": "",
+            "feature_relationship": "superset",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils",
+                "source_paths": ["src/ls.c", "src/ls.h"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/eza-community/eza/blob/main/README.md",
+                "repository_url": "https://github.com/eza-community/eza",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "bat",
+            "program_description": "A cat(1) clone with wings.",
+            "translation_method": "manual",
+            "translation_tool": "",
+            "feature_relationship": "superset",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils",
+                "source_paths": ["src/cat.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/sharkdp/bat/blob/master/README.md",
+                "repository_url": "https://github.com/sharkdp/bat",
+                "source_paths": ["src"]
+            }
+        },
+
+        {
+            "program_name": "fd",
+            "program_description": "A simple, fast and user-friendly alternative to 'find'.",
+            "translation_method": "manual",
+            "translation_tool": "",
+            "feature_relationship": "superset",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/findutils/manual/html_mono/find.html",
+                "repository_url": "https://git.savannah.gnu.org/git/findutils.git",
+                "source_paths": ["find"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/sharkdp/fd/blob/master/README.md",
+                "repository_url": "https://github.com/sharkdp/fd.git",
+                "source_paths": ["src"]
+            }
+        }
+    ]
+}

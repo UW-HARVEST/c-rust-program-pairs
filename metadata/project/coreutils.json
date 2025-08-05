@@ -1,0 +1,1028 @@
+{
+    "project_information": {
+        "program_name": "coreutils",
+        "translation_method": "manual",
+        "translation_tool": "",
+        "feature_relationship": "equivalent",
+        "c_program": {
+            "documentation_url": "https://www.gnu.org/software/coreutils/",
+            "repository_url": "https://git.savannah.gnu.org/git/coreutils"
+        },
+        "rust_program": {
+            "documentation_url": "https://github.com/uutils/coreutils/blob/main/README.md",
+            "repository_url": "https://github.com/uutils/coreutils.git"
+        }
+    },
+    "pairs": [
+        {
+            "program_name": "arch",
+            "program_description": "Display machine architecture",
+            "c_program": {
+                "source_paths": ["src/coreutils-arch.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/arch/src/arch.rs"]
+            }
+        },
+        {
+            "program_name": "base32",
+            "program_description": "Base32 encode/decode data",
+            "c_program": {
+                "source_paths": ["src/basenc.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/base32/src/base32.rs"]
+            }
+        },
+        {
+            "program_name": "base64",
+            "program_description": "Base64 encode/decode data",
+            "c_program": {
+                "source_paths": ["src/basenc.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/base64/src/base64.rs"]
+            }
+        },
+        {
+            "program_name": "basename",
+            "program_description": "Strip directory and suffix from filenames",
+            "c_program": {
+                "source_paths": ["src/basename.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/basename/src/basename.rs"]
+            }
+        },
+        {
+            "program_name": "basenc",
+            "program_description": "Encode/decode data in various bases",
+            "c_program": {
+                "source_paths": ["src/basenc.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/basenc/src/basenc.rs"]
+            }
+        },
+        {
+            "program_name": "cat",
+            "program_description": "Concatenate files and print on the standard output",
+            "c_program": {
+                "source_paths": ["src/cat.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/cat/src/cat.rs"]
+            }
+        },
+        {
+            "program_name": "chcon",
+            "program_description": "Change file security context",
+            "c_program": {
+                "source_paths": ["src/chcon.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/chcon/src/chcon.rs"]
+            }
+        },
+        {
+            "program_name": "chgrp",
+            "program_description": "Change group ownership of files",
+            "c_program": {
+                "source_paths": ["src/coreutils-chgrp.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/chgrp/src/chgrp.rs"]
+            }
+        },
+        {
+            "program_name": "chmod",
+            "program_description": "Change file mode bits",
+            "c_program": {
+                "source_paths": ["src/chmod.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/chmod/src/chmod.rs"]
+            }
+        },
+        {
+            "program_name": "chown",
+            "program_description": "Change file owner and group",
+            "c_program": {
+                "source_paths": ["src/chown.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/chown/src/chown.rs"]
+            }
+        },
+        {
+            "program_name": "chroot",
+            "program_description": "Run command or interactive shell with special root directory",
+            "c_program": {
+                "source_paths": ["src/chroot.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/chroot/src/chroot.rs"]
+            }
+        },
+        {
+            "program_name": "cksum",
+            "program_description": "Checksum and count the bytes in a file",
+            "c_program": {
+                "source_paths": ["src/cksum.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/cksum/src/cksum.rs"]
+            }
+        },
+        {
+            "program_name": "comm",
+            "program_description": "Compare two sorted files line by line",
+            "c_program": {
+                "source_paths": ["src/comm.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/comm/src/comm.rs"]
+            }
+        },
+        {
+            "program_name": "cp",
+            "program_description": "Copy files or directories",
+            "c_program": {
+                "source_paths": ["src/cp.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/cp/src/cp.rs"]
+            }
+        },
+        {
+            "program_name": "csplit",
+            "program_description": "Split a file into sections determined by context lines",
+            "c_program": {
+                "source_paths": ["src/csplit.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/csplit/src/csplit.rs"]
+            }
+        },
+        {
+            "program_name": "cut",
+            "program_description": "Remove sections from each line of files",
+            "c_program": {
+                "source_paths": ["src/cut.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/cut/src/cut.rs"]
+            }
+        },
+        {
+            "program_name": "date",
+            "program_description": "Print or set the system date",
+            "c_program": {
+                "source_paths": ["src/date.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/date/src/date.rs"]
+            }
+        },
+        {
+            "program_name": "dd",
+            "program_description": "Convert and copy a file",
+            "c_program": {
+                "source_paths": ["src/dd.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/dd/src/dd.rs"]
+            }
+        },
+        {
+            "program_name": "df",
+            "program_description": "Display filesystem disk space usage",
+            "c_program": {
+                "source_paths": ["src/df.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/df/src/df.rs"]
+            }
+        },
+        {
+            "program_name": "dir",
+            "program_description": "List directory contents",
+            "c_program": {
+                "source_paths": ["src/ls.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/dir/src/dir.rs"]
+            }
+        },
+        {
+            "program_name": "dircolors",
+            "program_description": "Color setup for ls",
+            "c_program": {
+                "source_paths": ["src/dircolors.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/dircolors/src/dircolors.rs"]
+            }
+        },
+        {
+            "program_name": "dirname",
+            "program_description": "Strip last component from file name",
+            "c_program": {
+                "source_paths": ["src/dirname.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/dirname/src/dirname.rs"]
+            }
+        },
+        {
+            "program_name": "du",
+            "program_description": "Estimate file space usage",
+            "c_program": {
+                "source_paths": ["src/du.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/du/src/du.rs"]
+            }
+        },
+        {
+            "program_name": "echo",
+            "program_description": "Display a line of text",
+            "c_program": {
+                "source_paths": ["src/echo.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/echo/src/echo.rs"]
+            }
+        },
+        {
+            "program_name": "env",
+            "program_description": "Run a program in a modified environment",
+            "c_program": {
+                "source_paths": ["src/env.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/env/src/env.rs"]
+            }
+        },
+        {
+            "program_name": "expand",
+            "program_description": "Convert tabs to spaces",
+            "c_program": {
+                "source_paths": ["src/expand.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/expand/src/expand.rs"]
+            }
+        },
+        {
+            "program_name": "expr",
+            "program_description": "Evaluate expressions",
+            "c_program": {
+                "source_paths": ["src/expr.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/expr/src/expr.rs"]
+            }
+        },
+        {
+            "program_name": "factor",
+            "program_description": "Factor numbers",
+            "c_program": {
+                "source_paths": ["src/factor.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/factor/src/factor.rs"]
+            }
+        },
+        {
+            "program_name": "false",
+            "program_description": "Do nothing, unsuccessfully",
+            "c_program": {
+                "source_paths": ["src/false.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/false/src/false.rs"]
+            }
+        },
+        {
+            "program_name": "fmt",
+            "program_description": "Simple optimal text formatter",
+            "c_program": {
+                "source_paths": ["src/fmt.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/fmt/src/fmt.rs"]
+            }
+        },
+        {
+            "program_name": "fold",
+            "program_description": "Wrap each input line to fit in specified width",
+            "c_program": {
+                "source_paths": ["src/fold.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/fold/src/fold.rs"]
+            }
+        },
+        {
+            "program_name": "groups",
+            "program_description": "Print the groups a user is in",
+            "c_program": {
+                "source_paths": ["src/groups.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/groups/src/groups.rs"]
+            }
+        },
+        {
+            "program_name": "hashsum",
+            "program_description": "Compute and check hashes",
+            "c_program": {
+                "source_paths": ["src/digest.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/hashsum/src/hashsum.rs"]
+            }
+        },
+        {
+            "program_name": "head",
+            "program_description": "Output the first part of files",
+            "c_program": {
+                "source_paths": ["src/head.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/head/src/head.rs"]
+            }
+        },
+        {
+            "program_name": "hostid",
+            "program_description": "Print the numeric identifier for the current host",
+            "c_program": {
+                "source_paths": ["src/hostid.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/hostid/src/hostid.rs"]
+            }
+        },
+        {
+            "program_name": "hostname",
+            "program_description": "Print or set the system hostname",
+            "c_program": {
+                "source_paths": ["src/hostname.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/hostname/src/hostname.rs"]
+            }
+        },
+        {
+            "program_name": "id",
+            "program_description": "Print real and effective user and group IDs",
+            "c_program": {
+                "source_paths": ["src/id.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/id/src/id.rs"]
+            }
+        },
+        {
+            "program_name": "install",
+            "program_description": "Copy files and set attributes",
+            "c_program": {
+                "source_paths": ["src/install.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/install/src/install.rs"]
+            }
+        },
+        {
+            "program_name": "join",
+            "program_description": "Join lines of two files on a common field",
+            "c_program": {
+                "source_paths": ["src/join.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/join/src/join.rs"]
+            }
+        },
+        {
+            "program_name": "kill",
+            "program_description": "Send signals to processes",
+            "c_program": {
+                "source_paths": ["src/kill.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/kill/src/kill.rs"]
+            }
+        },
+        {
+            "program_name": "link",
+            "program_description": "Create a link to a file",
+            "c_program": {
+                "source_paths": ["src/link.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/link/src/link.rs"]
+            }
+        },
+        {
+            "program_name": "ln",
+            "program_description": "Make links between files",
+            "c_program": {
+                "source_paths": ["src/ln.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/ln/src/ln.rs"]
+            }
+        },
+        {
+            "program_name": "logname",
+            "program_description": "Print user's login name",
+            "c_program": {
+                "source_paths": ["src/logname.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/logname/src/logname.rs"]
+            }
+        },
+        {
+            "program_name": "ls",
+            "program_description": "List directory contents",
+            "c_program": {
+                "source_paths": ["src/ls.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/ls/src/ls.rs"]
+            }
+        },
+        {
+            "program_name": "mkdir",
+            "program_description": "Make directories",
+            "c_program": {
+                "source_paths": ["src/mkdir.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/mkdir/src/mkdir.rs"]
+            }
+        },
+        {
+            "program_name": "mkfifo",
+            "program_description": "Make FIFOs (named pipes)",
+            "c_program": {
+                "source_paths": ["src/mkfifo.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/mkfifo/src/mkfifo.rs"]
+            }
+        },
+        {
+            "program_name": "mknod",
+            "program_description": "Make block or character special files",
+            "c_program": {
+                "source_paths": ["src/mknod.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/mknod/src/mknod.rs"]
+            }
+        },
+        {
+            "program_name": "mktemp",
+            "program_description": "Create a temporary file or directory",
+            "c_program": {
+                "source_paths": ["src/mktemp.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/mktemp/src/mktemp.rs"]
+            }
+        },
+        {
+            "program_name": "mv",
+            "program_description": "Move (rename) files",
+            "c_program": {
+                "source_paths": ["src/mv.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/mv/src/mv.rs"]
+            }
+        },
+        {
+            "program_name": "nice",
+            "program_description": "Run a program with modified scheduling priority",
+            "c_program": {
+                "source_paths": ["src/nice.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/nice/src/nice.rs"]
+            }
+        },
+        {
+            "program_name": "nl",
+            "program_description": "Number lines of files",
+            "c_program": {
+                "source_paths": ["src/nl.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/nl/src/nl.rs"]
+            }
+        },
+        {
+            "program_name": "nohup",
+            "program_description": "Run a command immune to hangups",
+            "c_program": {
+                "source_paths": ["src/nohup.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/nohup/src/nohup.rs"]
+            }
+        },
+        {
+            "program_name": "nproc",
+            "program_description": "Print the number of processing units available",
+            "c_program": {
+                "source_paths": ["src/nproc.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/nproc/src/nproc.rs"]
+            }
+        },
+        {
+            "program_name": "numfmt",
+            "program_description": "Convert numbers from/to human-readable strings",
+            "c_program": {
+                "source_paths": ["src/numfmt.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/numfmt/src/numfmt.rs"]
+            }
+        },
+        {
+            "program_name": "od",
+            "program_description": "Dump files in octal and other formats",
+            "c_program": {
+                "source_paths": ["src/od.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/od/src/od.rs"]
+            }
+        },
+        {
+            "program_name": "paste",
+            "program_description": "Merge lines of files",
+            "c_program": {
+                "source_paths": ["src/paste.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/paste/src/paste.rs"]
+            }
+        },
+        {
+            "program_name": "pathchk",
+            "program_description": "Check whether file names are valid or portable",
+            "c_program": {
+                "source_paths": ["src/pathchk.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/pathchk/src/pathchk.rs"]
+            }
+        },
+        {
+            "program_name": "pinky",
+            "program_description": "Lightweight finger",
+            "c_program": {
+                "source_paths": ["src/pinky.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/pinky/src/pinky.rs"]
+            }
+        },
+        {
+            "program_name": "pr",
+            "program_description": "Convert text files for printing",
+            "c_program": {
+                "source_paths": ["src/pr.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/pr/src/pr.rs"]
+            }
+        },
+        {
+            "program_name": "printenv",
+            "program_description": "Print all or part of environment",
+            "c_program": {
+                "source_paths": ["src/printenv.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/printenv/src/printenv.rs"]
+            }
+        },
+        {
+            "program_name": "printf",
+            "program_description": "Format and print data",
+            "c_program": {
+                "source_paths": ["src/printf.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/printf/src/printf.rs"]
+            }
+        },
+        {
+            "program_name": "ptx",
+            "program_description": "Produce a permuted index of file contents",
+            "c_program": {
+                "source_paths": ["src/ptx.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/ptx/src/ptx.rs"]
+            }
+        },
+        {
+            "program_name": "pwd",
+            "program_description": "Print name of current/working directory",
+            "c_program": {
+                "source_paths": ["src/pwd.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/pwd/src/pwd.rs"]
+            }
+        },
+        {
+            "program_name": "readlink",
+            "program_description": "Print resolved symbolic links or canonical file names",
+            "c_program": {
+                "source_paths": ["src/readlink.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/readlink/src/readlink.rs"]
+            }
+        },
+        {
+            "program_name": "realpath",
+            "program_description": "Print the resolved path",
+            "c_program": {
+                "source_paths": ["src/realpath.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/realpath/src/realpath.rs"]
+            }
+        },
+        {
+            "program_name": "rm",
+            "program_description": "Remove files or directories",
+            "c_program": {
+                "source_paths": ["src/rm.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/rm/src/rm.rs"]
+            }
+        },
+        {
+            "program_name": "rmdir",
+            "program_description": "Remove empty directories",
+            "c_program": {
+                "source_paths": ["src/rmdir.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/rmdir/src/rmdir.rs"]
+            }
+        },
+        {
+            "program_name": "runcon",
+            "program_description": "Run command with specified security context",
+            "c_program": {
+                "source_paths": ["src/runcon.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/runcon/src/runcon.rs"]
+            }
+        },
+        {
+            "program_name": "seq",
+            "program_description": "Print a sequence of numbers",
+            "c_program": {
+                "source_paths": ["src/seq.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/seq/src/seq.rs"]
+            }
+        },
+        {
+            "program_name": "shred",
+            "program_description": "Overwrite a file to hide its contents, and optionally delete it",
+            "c_program": {
+                "source_paths": ["src/shred.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/shred/src/shred.rs"]
+            }
+        },
+        {
+            "program_name": "shuf",
+            "program_description": "Generate random permutations",
+            "c_program": {
+                "source_paths": ["src/shuf.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/shuf/src/shuf.rs"]
+            }
+        },
+        {
+            "program_name": "sleep",
+            "program_description": "Delay for a specified amount of time",
+            "c_program": {
+                "source_paths": ["src/sleep.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/sleep/src/sleep.rs"]
+            }
+        },
+        {
+            "program_name": "sort",
+            "program_description": "Sort lines of text files",
+            "c_program": {
+                "source_paths": ["src/sort.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/sort/src/sort.rs"]
+            }
+        },
+        {
+            "program_name": "split",
+            "program_description": "Split a file into pieces",
+            "c_program": {
+                "source_paths": ["src/split.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/split/src/split.rs"]
+            }
+        },
+        {
+            "program_name": "stat",
+            "program_description": "Display file or file system status",
+            "c_program": {
+                "source_paths": ["src/stat.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/stat/src/stat.rs"]
+            }
+        },
+        {
+            "program_name": "stdbuf",
+            "program_description": "Run command with modified buffering for its standard streams",
+            "c_program": {
+                "source_paths": ["src/stdbuf.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/stdbuf/src/stdbuf.rs"]
+            }
+        },
+        {
+            "program_name": "stty",
+            "program_description": "Change and print terminal line settings",
+            "c_program": {
+                "source_paths": ["src/stty.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/stty/src/stty.rs"]
+            }
+        },
+        {
+            "program_name": "sum",
+            "program_description": "Checksum and count the blocks in a file",
+            "c_program": {
+                "source_paths": ["src/sum.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/sum/src/sum.rs"]
+            }
+        },
+        {
+            "program_name": "sync",
+            "program_description": "Synchronize cached writes to persistent storage",
+            "c_program": {
+                "source_paths": ["src/sync.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/sync/src/sync.rs"]
+            }
+        },
+        {
+            "program_name": "tac",
+            "program_description": "Concatenate and print files in reverse",
+            "c_program": {
+                "source_paths": ["src/tac.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/tac/src/tac.rs"]
+            }
+        },
+        {
+            "program_name": "tail",
+            "program_description": "Output the last part of files",
+            "c_program": {
+                "source_paths": ["src/tail.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/tail/src/tail.rs"]
+            }
+        },
+        {
+            "program_name": "tee",
+            "program_description": "Read from standard input and write to standard output and files",
+            "c_program": {
+                "source_paths": ["src/tee.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/tee/src/tee.rs"]
+            }
+        },
+        {
+            "program_name": "test",
+            "program_description": "Check file types and compare values",
+            "c_program": {
+                "source_paths": ["src/test.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/test/src/test.rs"]
+            }
+        },
+        {
+            "program_name": "timeout",
+            "program_description": "Run a command with a time limit",
+            "c_program": {
+                "source_paths": ["src/timeout.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/timeout/src/timeout.rs"]
+            }
+        },
+        {
+            "program_name": "touch",
+            "program_description": "Change file timestamps",
+            "c_program": {
+                "source_paths": ["src/touch.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/touch/src/touch.rs"]
+            }
+        },
+        {
+            "program_name": "tr",
+            "program_description": "Translate or delete characters",
+            "c_program": {
+                "source_paths": ["src/tr.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/tr/src/tr.rs"]
+            }
+        },
+        {
+            "program_name": "true",
+            "program_description": "Do nothing, successfully",
+            "c_program": {
+                "source_paths": ["src/true.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/true/src/true.rs"]
+            }
+        },
+        {
+            "program_name": "truncate",
+            "program_description": "Shrink or extend the size of a file to the specified size",
+            "c_program": {
+                "source_paths": ["src/truncate.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/truncate/src/truncate.rs"]
+            }
+        },
+        {
+            "program_name": "tsort",
+            "program_description": "Perform topological sort",
+            "c_program": {
+                "source_paths": ["src/tsort.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/tsort/src/tsort.rs"]
+            }
+        },
+        {
+            "program_name": "tty",
+            "program_description": "Print the file name of the terminal connected to standard input",
+            "c_program": {
+                "source_paths": ["src/tty.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/tty/src/tty.rs"]
+            }
+        },
+        {
+            "program_name": "uname",
+            "program_description": "Print system information",
+            "c_program": {
+                "source_paths": ["src/uname.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/uname/src/uname.rs"]
+            }
+        },
+        {
+            "program_name": "unexpand",
+            "program_description": "Convert spaces to tabs",
+            "c_program": {
+                "source_paths": ["src/unexpand.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/unexpand/src/unexpand.rs"]
+            }
+        },
+        {
+            "program_name": "uniq",
+            "program_description": "Report or omit repeated lines",
+            "c_program": {
+                "source_paths": ["src/uniq.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/uniq/src/uniq.rs"]
+            }
+        },
+        {
+            "program_name": "unlink",
+            "program_description": "Call the unlink function to remove the specified file",
+            "c_program": {
+                "source_paths": ["src/unlink.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/unlink/src/unlink.rs"]
+            }
+        },
+        {
+            "program_name": "uptime",
+            "program_description": "Tell how long the system has been running",
+            "c_program": {
+                "source_paths": ["src/uptime.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/uptime/src/uptime.rs"]
+            }
+        },
+        {
+            "program_name": "users",
+            "program_description": "Print the user names of users currently logged in",
+            "c_program": {
+                "source_paths": ["src/users.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/users/src/users.rs"]
+            }
+        },
+        {
+            "program_name": "vdir",
+            "program_description": "List directory contents in long format by default",
+            "c_program": {
+                "source_paths": ["src/ls.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/vdir/src/vdir.rs"]
+            }
+        },
+        {
+            "program_name": "wc",
+            "program_description": "Print newline, word, and byte counts for each file",
+            "c_program": {
+                "source_paths": ["src/wc.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/wc/src/wc.rs"]
+            }
+        },
+        {
+            "program_name": "who",
+            "program_description": "Show who is logged on",
+            "c_program": {
+                "source_paths": ["src/who.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/who/src/who.rs"]
+            }
+        },
+        {
+            "program_name": "whoami",
+            "program_description": "Print effective userid",
+            "c_program": {
+                "source_paths": ["src/whoami.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/whoami/src/whoami.rs"]
+            }
+        },
+        {
+            "program_name": "yes",
+            "program_description": "Output a string repeatedly until killed",
+            "c_program": {
+                "source_paths": ["src/yes.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/yes/src/yes.rs"]
+            }
+        }
+    ]
+}

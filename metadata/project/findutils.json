@@ -1,0 +1,38 @@
+{
+    "project_information": {
+        "program_name": "findutils",
+        "translation_method": "manual",
+        "translation_tool": "",
+        "feature_relationship": "equivalent",
+        "c_program": {
+            "documentation_url": "https://www.gnu.org/software/findutils/",
+            "repository_url": "https://git.savannah.gnu.org/git/findutils.git"
+        },
+        "rust_program": {
+            "documentation_url": "https://github.com/uutils/findutils/blob/main/README.md",
+            "repository_url": "https://github.com/uutils/findutils.git"
+        }
+    },
+    "pairs": [
+        {
+            "program_name": "find",
+            "program_description": "Search for files and directories",
+            "c_program": {
+                "source_paths": ["find"]
+            },
+            "rust_program": {
+                "source_paths": ["src/find"]
+            }
+        },
+        {
+            "program_name": "xargs",
+            "program_description": "Build and execute command lines from standard input",
+            "c_program": {
+                "source_paths": ["xargs/xargs.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/xargs"]
+            }
+        }
+    ]
+}

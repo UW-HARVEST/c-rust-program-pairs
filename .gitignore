@@ -1,0 +1,9 @@
+target
+
+# Where we store our program pairs.
+programs
+
+# Where we store repositories we have downloaded.
+repository_cache
+
+.DS_Store
