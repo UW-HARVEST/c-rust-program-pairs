@@ -1,3 +1,8 @@
+use std::{error::Error, fs, path::Path};
+
+use git2::{FetchOptions, Progress, RemoteCallbacks, Repository, build::RepoBuilder};
+use indicatif::{ProgressBar, ProgressStyle};
+
 use crate::{
     parser::{
         individual, project,
@@ -5,10 +10,6 @@ use crate::{
     },
     paths::{PROGRAMS_DIRECTORY, REPOSITORY_CACHE_DIRECTORY},
 };
-
-use git2::{FetchOptions, Progress, RemoteCallbacks, Repository, build::RepoBuilder};
-use indicatif::{ProgressBar, ProgressStyle};
-use std::{error::Error, fs, path::Path};
 
 // Download all metadata files from a directory.
 pub fn download_metadata_dir(directory: &Path, metadata_type: MetadataType) {

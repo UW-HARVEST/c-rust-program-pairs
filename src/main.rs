@@ -36,13 +36,13 @@ mod tests {
     }
 }
 
+use std::path::Path;
+
 use crate::{
     corpus::download_metadata_dir,
     parser::schema::MetadataType,
     paths::{INDIVIDUAL_METADATA_DIRECTORY, PROJECT_METADATA_DIRECTORY},
 };
-
-use std::path::Path;
 
 fn main() {
     download_metadata_dir(Path::new(PROJECT_METADATA_DIRECTORY), MetadataType::Project);

@@ -1,12 +1,11 @@
-use crate::{
-    parser::schema::{Features, Language, Metadata, Program, ProgramPair, Translation},
-    paths::METADATA_SCHEMA_FILE,
-};
-
-use jsonschema::validator_for;
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use std::{error::Error, fs, path::Path};
+
+use serde::{Deserialize, Serialize};
+
+use crate::parser::{
+    schema::{Features, Language, Metadata, Program, ProgramPair, Translation},
+    validator,
+};
 
 // Schema for project metadata files.
 #[derive(Debug, Serialize, Deserialize)]
@@ -54,14 +53,7 @@ pub fn parse(path: &Path) -> Result<Metadata, Box<dyn Error>> {
     let project_metadata: ProjectMetadata = serde_json::from_str(&raw_metadata)?;
 
     // Validate metadata file with our JSON schema.
-    let schema_str = fs::read_to_string(METADATA_SCHEMA_FILE)?;
-    let schema: Value = serde_json::from_str(&schema_str)?;
-    let validator = validator_for(&schema)?;
-    let project_metadata_json = serde_json::to_value(&project_metadata)?;
-
-    if let Err(error) = validator.validate(&project_metadata_json) {
-        return Err(format!("Failed to validate metadata: {error}").into());
-    }
+    validator::validate_metadata(&project_metadata)?;
 
     // Parse metadata into our program-pair data structure.
     let global_metadata = project_metadata.project_information;
