@@ -1,6 +1,6 @@
 use std::{error::Error, fs, path::Path};
 
-use git2::{FetchOptions, Progress, RemoteCallbacks, Repository, build::RepoBuilder};
+use git2::{build::RepoBuilder, FetchOptions, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
@@ -105,7 +105,7 @@ fn download_files(
 
     // Set up remote callbacks for progress tracking.
     let mut remote_callbacks = RemoteCallbacks::new();
-    remote_callbacks.transfer_progress(|progress: Progress| {
+    remote_callbacks.transfer_progress(|progress: git2::Progress| {
         update_progress_bar_callback(progress, &progress_bar)
     });
 
@@ -164,7 +164,7 @@ fn download_files(
 }
 
 // Update progress bar with cloning progress.
-fn update_progress_bar_callback(progress: Progress, progress_bar: &ProgressBar) -> bool {
+fn update_progress_bar_callback(progress: git2::Progress, progress_bar: &ProgressBar) -> bool {
     let received_objects = progress.received_objects();
     let received_bytes = progress.received_bytes();
     let total_objects = progress.total_objects();

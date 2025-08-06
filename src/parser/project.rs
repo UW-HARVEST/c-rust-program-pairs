@@ -14,7 +14,7 @@ struct ProjectMetadata {
     pairs: Vec<ProjectProgramPair>,
 }
 
-// Global information about the project that apply to every program pair.
+// Global information about the project that applies to every program pair.
 #[derive(Debug, Serialize, Deserialize)]
 struct ProjectInformation {
     program_name: String,
