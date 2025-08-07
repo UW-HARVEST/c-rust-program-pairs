@@ -14,11 +14,10 @@ In our CLI tool, we validate metadata files with this schema using the `jsonsche
 
 ### Terminology
 
-- **Fields**: Singular properties, attributes or fields that give us information.
-- **Program**: An individual program that can be executed; each project can contain a single or multiple programs.
-- **Project**: The entire repository or project that has been translated from C to Rust.
-- **Pair**: A pair of C and Rust programs, where the Rust program was translated or inspired by the C program.
-- **Metadata**: A single metadata file containing information about a project and its programs.
+- **Program**: Compiles to a single executable.
+- **Project**: A repository that has been translated from C to Rust.  A project contains one or more programs.
+- **Pair**: A pair of C and Rust programs, where the Rust program was translated from or inspired by the C program.
+- **Metadata**: Gives information about one or more pairs.
 
 ### Schema
 
@@ -85,9 +84,7 @@ In a project metadata file, we have a project containing many C-Rust programs.
 }
 ```
 
-#### Fields
-
-Our schema consists of many fields which specify individual properties or attributes that give information about each C-Rust program pair.
+#### Schema fields
 
 | Field | Type | Description | Valid Values/Examples |
 |-------|------|-------------|----------------------|
