@@ -49,6 +49,7 @@ pub enum Features {
     Subset,
     Equivalent,
     Superset,
+    Overlapping,
 }
 
 // Specifies the language used for the project.

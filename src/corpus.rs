@@ -1,6 +1,6 @@
 use std::{error::Error, fs, path::Path};
 
-use git2::{build::RepoBuilder, FetchOptions, RemoteCallbacks, Repository};
+use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
@@ -82,8 +82,9 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-// Clones a repository copy the relevant files to the program directory.
-// Also prints a progress bar to standard output to track progress.
+// Clones a repository into repository_cache/ and copies the source files
+// specified in each program pair in the `source_files` field to the program
+// directory. Also prints a progress bar to standard output to track progress.
 fn download_files(
     program_name: &str,
     program_language: Language,
@@ -109,13 +110,6 @@ fn download_files(
         update_progress_bar_callback(progress, &progress_bar)
     });
 
-    // Setup up fetch options with our callbacks.
-    let mut fetch_options = FetchOptions::new();
-    fetch_options.remote_callbacks(remote_callbacks);
-
-    // Clone only the latest commit to save time / space.
-    fetch_options.depth(1);
-
     // Check if repository exists in cache, if not clone it.
     // We store repositories in repository_cache/<language>/<repository_name>.
     let language = match program_language {
@@ -128,6 +122,14 @@ fn download_files(
     let repository = match Repository::open(repository_path.join(&repository_name)) {
         Ok(repository) => repository,
         Err(_) => {
+            // Setup fetch options with our callbacks.
+            let mut fetch_options = FetchOptions::new();
+            fetch_options.remote_callbacks(remote_callbacks);
+
+            // Clone only the latest commit to save time / space.
+            fetch_options.depth(1);
+
+            // Clone the repository.
             let mut builder = RepoBuilder::new();
             builder.fetch_options(fetch_options);
             builder.clone(repository_url, &repository_path.join(&repository_name))?

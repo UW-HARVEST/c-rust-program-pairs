@@ -1,27 +1,45 @@
 # C-Rust Program Pairs
 
-This repository contains pairs of programs.
-Each pair consists of a C program and a Rust program.
+This repository makes available a list of C to Rust program pairs that will be available in a `programs/` directory once downloaded. Program pairs only include the source code without any dependencies, so they cannot be compiled.
 
-Each program is provided in its full source code tree.  For example, this is equivalent to a git clone, without the `.git/` subdirectory.
+For example, the following example shows the directory structure for the `cat` program.
 
-There is a script (name TBD) that re-creates or updates the contents of this repository, by downloading from the Internet and optionally doing some postprocessing.
+```
+.
+└── programs/
+    └── cat/
+        ├── c-program/
+        │   └── cat.c
+        └── rust-program/
+            └── cat.rs
+```
+
+The `metadata/` directory contains many metadata files that contain information about our program pairs which is used by our script.
+
+## Terminology
+
+- **Program**: Refers to code that compiles to a single executable.
+- **Project**: A repository that has been translated from C to Rust.  A project contains one or more programs.
+- **Pair**: A pair of C and Rust programs, where the Rust program was translated from or inspired by the C program.
+- **Metadata**: Gives information about one or more pairs.
+
+
+## Usage
+
+To run and download all avalaible program pairs simply use:
+
+```bash
+cargo run
+```
 
 ## Metadata
 
 Metadata files contain information about our C-Rust program pairs and can be validated with our [JSON schema](./metadata/metadata.schema.json).
 In our CLI tool, we validate metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
 
-### Terminology
-
-- **Program**: Compiles to a single executable.
-- **Project**: A repository that has been translated from C to Rust.  A project contains one or more programs.
-- **Pair**: A pair of C and Rust programs, where the Rust program was translated from or inspired by the C program.
-- **Metadata**: Gives information about one or more pairs.
-
 ### Schema
 
-We have two metadata schema types - an *individual* or *project* schema. In an individual metadata file, we group together unrelated C-Rust projects that each only contain one program.
+We have two metadata schema types - an *individual* or *project* schema found in the `metadata/individual/` and `metadata/project/` directories respectively . In an individual metadata file, we group together unrelated C-Rust projects that each only contain one program.
 
 ```json
 {
@@ -36,20 +54,18 @@ We have two metadata schema types - an *individual* or *project* schema. In an i
         "documentation_url": "https://example.com/c-grep",
         "repository_url": "https://github.com/user/c-grep",
         "source_paths": ["grep.c", "utils.h"],
-        "executable_paths": ["./grep"]
       },
       "rust_program": {
         "documentation_url": "https://docs.rs/simple-grep",
         "repository_url": "https://github.com/user/rust-grep",
         "source_paths": ["src/main.rs", "src/lib.rs"],
-        "executable_paths": ["target/release/simple-grep"]
       }
     }
   ]
 }
 ```
 
-In a project metadata file, we have a project containing many C-Rust programs.
+In metadata files in the `project/` directory, we have a project containing many C-Rust programs.
 
 ```json
 {
@@ -73,11 +89,9 @@ In a project metadata file, we have a project containing many C-Rust programs.
       "program_description": "List directory contents",
       "c_program": {
         "source_paths": ["src/ls.c"],
-        "executable_paths": ["src/ls"]
       },
       "rust_program": {
         "source_paths": ["src/uu/ls/src/ls.rs"],
-        "executable_paths": ["target/release/ls"]
       }
     },
   ]
@@ -90,12 +104,12 @@ In a project metadata file, we have a project containing many C-Rust programs.
 |-------|------|-------------|----------------------|
 | `program_name` | string | Name of the program | `"grep"`, `"ls"` |
 | `program_description` | string | Brief description of program functionality | `"Text search utility"` |
-| `repository_url` | string (URI) | Source code repository URL | `"https://github.com/user/repo"` |
-| `documentation_url` | string (URI) | Documentation or project homepage URL | `"https://docs.rs/crate"` |
+| `documentation_url` | URL | Documentation or project homepage URL | `"https://docs.rs/crate"` |
+| `repository_url` | URL | Source code repository URL | `"https://github.com/user/repo"` |
 | `translation_method` | string | Translation process type | `"manual"`, `"semi-automatic"`, `"automatic"` |
 | `translation_tool` | string | Tool used for translation | `"c2rust"`, `"manual-rewrite"` |
 | `feature_relationship` | string | Feature comparison with C version | `"superset"`, `"subset"`, `"equivalent"`, `"overlapping"` |
-| `source_paths` | array | Paths to source files/directories | `["src/main.rs", "src/lib.rs"]` |
+| `source_paths` | array of paths | Paths to source files/directories | `["src/main.rs", "src/lib.rs"]` |
 
 **Translation Method Values:**
 
@@ -112,17 +126,7 @@ In a project metadata file, we have a project containing many C-Rust programs.
 
 #### Program Configuration
 
-Each C or Rust program have different configuration options, specified under the `c_program` or `rust_program` fields. Note that *project metadata* files have two program configurations. The first is the *global program configuration*, specified as the `project_global_program` field in our schema, which specifies fields that apply to every program pair in the project. This includes fields like `repository_url`, `documentation_url`, `build_commands`, `test_commands`, and `dependencies`. The next *program configuration* is listed as `project_program` in our schema and only applies to individual program pairs, containing the `source_paths` and `executable_paths` fields which are unique to each program.
-
-## Corpus Tool
-
-### Specification
-
-1. Create a folder with the name of the program-pair.
-2. Clone the C repository into a temporary directory, but check if this has already been done.
-3. Copy the C program from the cloned repository into our folder.
-4. Clone the Rust repository into a temporary directory, but check if this has already been done.
-5. Copy the Rust program from the cloned repository into our folder.
+Each C or Rust program have different configuration options, specified under the `c_program` or `rust_program` fields in `metadata.schema.json`. Note that metadata files in `/project` have two program configurations. The first is the *global program configuration*, specified as the `project_global_program` field in our schema, which specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The next *program configuration* is listed as `project_program` in our schema and only applies to individual program pairs, containing the `source_paths` field which are unique to each program.
 
 ## Resources
 

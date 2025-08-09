@@ -9,11 +9,11 @@
             "c_program": {
                 "documentation_url": "https://git-scm.com/doc",
                 "repository_url": "https://github.com/git/git",
-                "source_paths": ["src/ls.c", "src/ls.h"]
+                "source_paths": []
             },
             "rust_program": {
-                "documentation_url": "https://github.com/eza-community/eza/blob/main/README.md",
-                "repository_url": "https://github.com/eza-community/eza",
+                "documentation_url": "https://github.com/GitoxideLabs/gitoxide",
+                "repository_url": "https://github.com/GitoxideLabs/gitoxide.git",
                 "source_paths": ["src"]
             }
         }
