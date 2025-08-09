@@ -22,18 +22,21 @@
             "format": "uri",
             "description": "URL to detailed description or documentation"
         },
-        "translation_method": {
-            "type": "string",
-            "enum": ["manual", "semi-automatic", "automatic"],
-            "description": "Translation process type. Manual: hand-written from scratch. Semi-automatic: mix of automated tools and manual work. Automatic: primarily tool-generated"
-        },
-        "translation_tool": {
-            "type": "string",
-            "description": "Tool used for the translation process"
+        "translation_tools": {
+            "type": "array",
+            "description": "Tools used for the translation process",
+            "items": {
+                "type": "string"
+            }
         },
         "feature_relationship": {
             "type": "string",
-            "enum": ["superset", "subset", "equivalent", "overlapping"],
+            "enum": [
+                "rust_superset_of_c",
+                "rust_subset_of_c",
+                "rust_equivalent_to_c",
+                "overlapping"
+            ],
             "description": "Feature relationship between C and Rust implementations"
         },
         "source_paths": {
@@ -45,7 +48,7 @@
         },
         "project_program": {
             "type": "object",
-            "description": "Program-specific configuration (per individual pair)",
+            "description": "Program-specific configuration (per individual pair) in project metadata files",
             "properties": {
                 "source_paths": {
                     "$ref": "#/definitions/source_paths"
@@ -55,7 +58,7 @@
         },
         "project_global_program": {
             "type": "object",
-            "description": "Global program configuration (shared across all pairs)",
+            "description": "Global program configuration (shared across all pairs) in project metadata files",
             "properties": {
                 "documentation_url": {
                     "$ref": "#/definitions/documentation_url"
@@ -75,7 +78,7 @@
                     "$ref": "#/definitions/project_global_program"
                 }
             ],
-            "description": "Complete program configuration combining global and specific settings"
+            "description": "Complete program configuration combining global and specific settings in individual metadata files"
         },
         "individual_program_pair": {
             "type": "object",
@@ -87,11 +90,8 @@
                 "program_description": {
                     "$ref": "#/definitions/program_description"
                 },
-                "translation_method": {
-                    "$ref": "#/definitions/translation_method"
-                },
-                "translation_tool": {
-                    "$ref": "#/definitions/translation_tool"
+                "translation_tools": {
+                    "$ref": "#/definitions/translation_tools"
                 },
                 "feature_relationship": {
                     "$ref": "#/definitions/feature_relationship"
@@ -163,11 +163,8 @@
                         "program_name": {
                             "$ref": "#/definitions/program_name"
                         },
-                        "translation_method": {
-                            "$ref": "#/definitions/translation_method"
-                        },
-                        "translation_tool": {
-                            "$ref": "#/definitions/translation_tool"
+                        "translation_tools": {
+                            "$ref": "#/definitions/translation_tools"
                         },
                         "feature_relationship": {
                             "$ref": "#/definitions/feature_relationship"
@@ -179,12 +176,7 @@
                             "$ref": "#/definitions/project_global_program"
                         }
                     },
-                    "required": [
-                        "program_name",
-                        "translation_method",
-                        "c_program",
-                        "rust_program"
-                    ]
+                    "required": ["program_name", "c_program", "rust_program"]
                 },
                 "pairs": {
                     "type": "array",

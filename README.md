@@ -47,9 +47,8 @@ We have two metadata schema types - an *individual* or *project* schema found in
     {
       "program_name": "simple-grep",
       "program_description": "A basic text search utility",
-      "translation_method": "manual",
-      "translation_tool": "hand-written",
-      "feature_relationship": "subset",
+      "translation_tool": ["manual"],
+      "feature_relationship": "rust_subset_of_c",
       "c_program": {
         "documentation_url": "https://example.com/c-grep",
         "repository_url": "https://github.com/user/c-grep",
@@ -71,9 +70,8 @@ In metadata files in the `project/` directory, we have a project containing many
 {
   "project_information": {
     "program_name": "coreutils",
-    "translation_method": "semi-automatic",
-    "translation_tool": "c2rust with manual cleanup",
-    "feature_relationship": "equivalent",
+    "translation_tools": ["c2rust", "manual"],
+    "feature_relationship": "rust_equivalent_to_c",
     "c_program": {
       "documentation_url": "https://www.gnu.org/software/coreutils/",
       "repository_url": "https://github.com/coreutils/coreutils",
@@ -106,9 +104,8 @@ In metadata files in the `project/` directory, we have a project containing many
 | `program_description` | string | Brief description of program functionality | `"Text search utility"` |
 | `documentation_url` | URL | Documentation or project homepage URL | `"https://docs.rs/crate"` |
 | `repository_url` | URL | Source code repository URL | `"https://github.com/user/repo"` |
-| `translation_method` | string | Translation process type | `"manual"`, `"semi-automatic"`, `"automatic"` |
-| `translation_tool` | string | Tool used for translation | `"c2rust"`, `"manual-rewrite"` |
-| `feature_relationship` | string | Feature comparison with C version | `"superset"`, `"subset"`, `"equivalent"`, `"overlapping"` |
+| `translation_tools` | array of strings | Tools used for translation | `"c2rust"`, `"manual"` |
+| `feature_relationship` | string | Feature comparison with C version | `"overlapping"` |
 | `source_paths` | array of paths | Paths to source files/directories | `["src/main.rs", "src/lib.rs"]` |
 
 **Translation Method Values:**
@@ -119,9 +116,9 @@ In metadata files in the `project/` directory, we have a project containing many
 
 **Feature Relationship Values:**
 
-- `superset` - Rust has all C features plus more
-- `subset` - Rust implements only some C features
-- `equivalent` - Same feature set as C version
+- `rust_superset_of_c` - Rust has all C features plus more
+- `rust_subset_of_c` - Rust implements only some C features
+- `rust_equivalent_to_c` - Same feature set as C version
 - `overlapping` - Some matching, some different features
 
 #### Program Configuration

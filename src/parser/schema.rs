@@ -18,8 +18,7 @@ pub struct Metadata {
 pub struct ProgramPair {
     pub program_name: String,
     pub program_description: String,
-    pub translation_method: Translation,
-    pub translation_tool: String,
+    pub translation_tools: Vec<String>,
     pub feature_relationship: Features,
     pub c_program: Program,
     pub rust_program: Program,
