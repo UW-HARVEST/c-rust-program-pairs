@@ -62,7 +62,7 @@ use std::path::Path;
 
 use crate::{
     corpus::download_metadata_dir,
-    parser::schema::MetadataType,
+    parser::canonical::MetadataType,
     paths::{INDIVIDUAL_METADATA_DIRECTORY, PROJECT_METADATA_DIRECTORY},
 };
 

@@ -1,0 +1,1382 @@
+/// Error types.
+pub mod error {
+    /// Error from a `TryFrom` or `FromStr` implementation.
+    pub struct ConversionError(::std::borrow::Cow<'static, str>);
+    impl ::std::error::Error for ConversionError {}
+    impl ::std::fmt::Display for ConversionError {
+        fn fmt(
+            &self,
+            f: &mut ::std::fmt::Formatter<'_>,
+        ) -> Result<(), ::std::fmt::Error> {
+            ::std::fmt::Display::fmt(&self.0, f)
+        }
+    }
+    impl ::std::fmt::Debug for ConversionError {
+        fn fmt(
+            &self,
+            f: &mut ::std::fmt::Formatter<'_>,
+        ) -> Result<(), ::std::fmt::Error> {
+            ::std::fmt::Debug::fmt(&self.0, f)
+        }
+    }
+    impl From<&'static str> for ConversionError {
+        fn from(value: &'static str) -> Self {
+            Self(value.into())
+        }
+    }
+    impl From<String> for ConversionError {
+        fn from(value: String) -> Self {
+            Self(value.into())
+        }
+    }
+}
+///Complete schema for C-to-Rust program translation projects and individual pairs
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "title": "C-to-Rust Translation Schema",
+///  "description": "Complete schema for C-to-Rust program translation projects and individual pairs",
+///  "oneOf": [
+///    {
+///      "title": "Individual Pairs Metadata",
+///      "description": "Schema for standalone C-to-Rust program pairs",
+///      "type": "object",
+///      "required": [
+///        "pairs"
+///      ],
+///      "properties": {
+///        "pairs": {
+///          "description": "Array of standalone program pair configurations",
+///          "type": "array",
+///          "items": {
+///            "$ref": "#/definitions/individual_program_pair"
+///          }
+///        }
+///      }
+///    },
+///    {
+///      "title": "Project Pairs Metadata",
+///      "description": "Schema for C-to-Rust project program pairs",
+///      "type": "object",
+///      "required": [
+///        "pairs",
+///        "project_information"
+///      ],
+///      "properties": {
+///        "pairs": {
+///          "description": "Array of individual program pairs within the project",
+///          "type": "array",
+///          "items": {
+///            "$ref": "#/definitions/project_program_pair"
+///          }
+///        },
+///        "project_information": {
+///          "description": "Global project information and build configuration",
+///          "type": "object",
+///          "required": [
+///            "c_program",
+///            "feature_relationship",
+///            "program_name",
+///            "rust_program",
+///            "translation_tools"
+///          ],
+///          "properties": {
+///            "c_program": {
+///              "$ref": "#/definitions/project_global_program"
+///            },
+///            "feature_relationship": {
+///              "$ref": "#/definitions/feature_relationship"
+///            },
+///            "program_name": {
+///              "$ref": "#/definitions/program_name"
+///            },
+///            "rust_program": {
+///              "$ref": "#/definitions/project_global_program"
+///            },
+///            "translation_tools": {
+///              "$ref": "#/definitions/translation_tools"
+///            }
+///          }
+///        }
+///      }
+///    }
+///  ]
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+#[serde(untagged)]
+pub enum CToRustTranslationSchema {
+    IndividualPairsMetadata {
+        ///Array of standalone program pair configurations
+        pairs: ::std::vec::Vec<IndividualProgramPair>,
+    },
+    ProjectPairsMetadata {
+        ///Array of individual program pairs within the project
+        pairs: ::std::vec::Vec<ProjectProgramPair>,
+        project_information: ProjectPairsMetadataProjectInformation,
+    },
+}
+impl ::std::convert::From<&Self> for CToRustTranslationSchema {
+    fn from(value: &CToRustTranslationSchema) -> Self {
+        value.clone()
+    }
+}
+///URL to detailed description or documentation
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "URL to detailed description or documentation",
+///  "type": "string",
+///  "format": "uri"
+///}
+/// ```
+/// </details>
+#[derive(
+    ::serde::Deserialize,
+    ::serde::Serialize,
+    Clone,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd
+)]
+#[serde(transparent)]
+pub struct DocumentationUrl(pub ::std::string::String);
+impl ::std::ops::Deref for DocumentationUrl {
+    type Target = ::std::string::String;
+    fn deref(&self) -> &::std::string::String {
+        &self.0
+    }
+}
+impl ::std::convert::From<DocumentationUrl> for ::std::string::String {
+    fn from(value: DocumentationUrl) -> Self {
+        value.0
+    }
+}
+impl ::std::convert::From<&DocumentationUrl> for DocumentationUrl {
+    fn from(value: &DocumentationUrl) -> Self {
+        value.clone()
+    }
+}
+impl ::std::convert::From<::std::string::String> for DocumentationUrl {
+    fn from(value: ::std::string::String) -> Self {
+        Self(value)
+    }
+}
+impl ::std::str::FromStr for DocumentationUrl {
+    type Err = ::std::convert::Infallible;
+    fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+        Ok(Self(value.to_string()))
+    }
+}
+impl ::std::fmt::Display for DocumentationUrl {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+///Feature relationship between C and Rust implementations
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Feature relationship between C and Rust implementations",
+///  "type": "string",
+///  "enum": [
+///    "rust_superset_of_c",
+///    "rust_subset_of_c",
+///    "rust_equivalent_to_c",
+///    "overlapping"
+///  ]
+///}
+/// ```
+/// </details>
+#[derive(
+    ::serde::Deserialize,
+    ::serde::Serialize,
+    Clone,
+    Copy,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd
+)]
+pub enum FeatureRelationship {
+    #[serde(rename = "rust_superset_of_c")]
+    RustSupersetOfC,
+    #[serde(rename = "rust_subset_of_c")]
+    RustSubsetOfC,
+    #[serde(rename = "rust_equivalent_to_c")]
+    RustEquivalentToC,
+    #[serde(rename = "overlapping")]
+    Overlapping,
+}
+impl ::std::convert::From<&Self> for FeatureRelationship {
+    fn from(value: &FeatureRelationship) -> Self {
+        value.clone()
+    }
+}
+impl ::std::fmt::Display for FeatureRelationship {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match *self {
+            Self::RustSupersetOfC => write!(f, "rust_superset_of_c"),
+            Self::RustSubsetOfC => write!(f, "rust_subset_of_c"),
+            Self::RustEquivalentToC => write!(f, "rust_equivalent_to_c"),
+            Self::Overlapping => write!(f, "overlapping"),
+        }
+    }
+}
+impl ::std::str::FromStr for FeatureRelationship {
+    type Err = self::error::ConversionError;
+    fn from_str(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        match value {
+            "rust_superset_of_c" => Ok(Self::RustSupersetOfC),
+            "rust_subset_of_c" => Ok(Self::RustSubsetOfC),
+            "rust_equivalent_to_c" => Ok(Self::RustEquivalentToC),
+            "overlapping" => Ok(Self::Overlapping),
+            _ => Err("invalid value".into()),
+        }
+    }
+}
+impl ::std::convert::TryFrom<&str> for FeatureRelationship {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<&::std::string::String> for FeatureRelationship {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<::std::string::String> for FeatureRelationship {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+///Complete program configuration combining global and specific settings in individual metadata files
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Complete program configuration combining global and specific settings in individual metadata files",
+///  "allOf": [
+///    {
+///      "$ref": "#/definitions/project_program"
+///    },
+///    {
+///      "$ref": "#/definitions/project_global_program"
+///    }
+///  ]
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct IndividualProgram {
+    pub documentation_url: DocumentationUrl,
+    pub repository_url: RepositoryUrl,
+    pub source_paths: SourcePaths,
+}
+impl ::std::convert::From<&IndividualProgram> for IndividualProgram {
+    fn from(value: &IndividualProgram) -> Self {
+        value.clone()
+    }
+}
+impl IndividualProgram {
+    pub fn builder() -> builder::IndividualProgram {
+        Default::default()
+    }
+}
+///A single C-to-Rust program pair
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "A single C-to-Rust program pair",
+///  "type": "object",
+///  "required": [
+///    "c_program",
+///    "feature_relationship",
+///    "program_description",
+///    "program_name",
+///    "rust_program",
+///    "translation_tools"
+///  ],
+///  "properties": {
+///    "c_program": {
+///      "$ref": "#/definitions/individual_program"
+///    },
+///    "feature_relationship": {
+///      "$ref": "#/definitions/feature_relationship"
+///    },
+///    "program_description": {
+///      "$ref": "#/definitions/program_description"
+///    },
+///    "program_name": {
+///      "$ref": "#/definitions/program_name"
+///    },
+///    "rust_program": {
+///      "$ref": "#/definitions/individual_program"
+///    },
+///    "translation_tools": {
+///      "$ref": "#/definitions/translation_tools"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct IndividualProgramPair {
+    pub c_program: IndividualProgram,
+    pub feature_relationship: FeatureRelationship,
+    pub program_description: ProgramDescription,
+    pub program_name: ProgramName,
+    pub rust_program: IndividualProgram,
+    pub translation_tools: TranslationTools,
+}
+impl ::std::convert::From<&IndividualProgramPair> for IndividualProgramPair {
+    fn from(value: &IndividualProgramPair) -> Self {
+        value.clone()
+    }
+}
+impl IndividualProgramPair {
+    pub fn builder() -> builder::IndividualProgramPair {
+        Default::default()
+    }
+}
+///Brief description of what the program does
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Brief description of what the program does",
+///  "type": "string"
+///}
+/// ```
+/// </details>
+#[derive(
+    ::serde::Deserialize,
+    ::serde::Serialize,
+    Clone,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd
+)]
+#[serde(transparent)]
+pub struct ProgramDescription(pub ::std::string::String);
+impl ::std::ops::Deref for ProgramDescription {
+    type Target = ::std::string::String;
+    fn deref(&self) -> &::std::string::String {
+        &self.0
+    }
+}
+impl ::std::convert::From<ProgramDescription> for ::std::string::String {
+    fn from(value: ProgramDescription) -> Self {
+        value.0
+    }
+}
+impl ::std::convert::From<&ProgramDescription> for ProgramDescription {
+    fn from(value: &ProgramDescription) -> Self {
+        value.clone()
+    }
+}
+impl ::std::convert::From<::std::string::String> for ProgramDescription {
+    fn from(value: ::std::string::String) -> Self {
+        Self(value)
+    }
+}
+impl ::std::str::FromStr for ProgramDescription {
+    type Err = ::std::convert::Infallible;
+    fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+        Ok(Self(value.to_string()))
+    }
+}
+impl ::std::fmt::Display for ProgramDescription {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+///Name of the program
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Name of the program",
+///  "type": "string",
+///  "minLength": 1
+///}
+/// ```
+/// </details>
+#[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[serde(transparent)]
+pub struct ProgramName(::std::string::String);
+impl ::std::ops::Deref for ProgramName {
+    type Target = ::std::string::String;
+    fn deref(&self) -> &::std::string::String {
+        &self.0
+    }
+}
+impl ::std::convert::From<ProgramName> for ::std::string::String {
+    fn from(value: ProgramName) -> Self {
+        value.0
+    }
+}
+impl ::std::convert::From<&ProgramName> for ProgramName {
+    fn from(value: &ProgramName) -> Self {
+        value.clone()
+    }
+}
+impl ::std::str::FromStr for ProgramName {
+    type Err = self::error::ConversionError;
+    fn from_str(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        if value.chars().count() < 1usize {
+            return Err("shorter than 1 characters".into());
+        }
+        Ok(Self(value.to_string()))
+    }
+}
+impl ::std::convert::TryFrom<&str> for ProgramName {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &str,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<&::std::string::String> for ProgramName {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: &::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl ::std::convert::TryFrom<::std::string::String> for ProgramName {
+    type Error = self::error::ConversionError;
+    fn try_from(
+        value: ::std::string::String,
+    ) -> ::std::result::Result<Self, self::error::ConversionError> {
+        value.parse()
+    }
+}
+impl<'de> ::serde::Deserialize<'de> for ProgramName {
+    fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+    where
+        D: ::serde::Deserializer<'de>,
+    {
+        ::std::string::String::deserialize(deserializer)?
+            .parse()
+            .map_err(|e: self::error::ConversionError| {
+                <D::Error as ::serde::de::Error>::custom(e.to_string())
+            })
+    }
+}
+///Global program configuration (shared across all pairs) in project metadata files
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Global program configuration (shared across all pairs) in project metadata files",
+///  "type": "object",
+///  "required": [
+///    "documentation_url",
+///    "repository_url"
+///  ],
+///  "properties": {
+///    "documentation_url": {
+///      "$ref": "#/definitions/documentation_url"
+///    },
+///    "repository_url": {
+///      "$ref": "#/definitions/repository_url"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct ProjectGlobalProgram {
+    pub documentation_url: DocumentationUrl,
+    pub repository_url: RepositoryUrl,
+}
+impl ::std::convert::From<&ProjectGlobalProgram> for ProjectGlobalProgram {
+    fn from(value: &ProjectGlobalProgram) -> Self {
+        value.clone()
+    }
+}
+impl ProjectGlobalProgram {
+    pub fn builder() -> builder::ProjectGlobalProgram {
+        Default::default()
+    }
+}
+///Global project information and build configuration
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Global project information and build configuration",
+///  "type": "object",
+///  "required": [
+///    "c_program",
+///    "feature_relationship",
+///    "program_name",
+///    "rust_program",
+///    "translation_tools"
+///  ],
+///  "properties": {
+///    "c_program": {
+///      "$ref": "#/definitions/project_global_program"
+///    },
+///    "feature_relationship": {
+///      "$ref": "#/definitions/feature_relationship"
+///    },
+///    "program_name": {
+///      "$ref": "#/definitions/program_name"
+///    },
+///    "rust_program": {
+///      "$ref": "#/definitions/project_global_program"
+///    },
+///    "translation_tools": {
+///      "$ref": "#/definitions/translation_tools"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct ProjectPairsMetadataProjectInformation {
+    pub c_program: ProjectGlobalProgram,
+    pub feature_relationship: FeatureRelationship,
+    pub program_name: ProgramName,
+    pub rust_program: ProjectGlobalProgram,
+    pub translation_tools: TranslationTools,
+}
+impl ::std::convert::From<&ProjectPairsMetadataProjectInformation>
+for ProjectPairsMetadataProjectInformation {
+    fn from(value: &ProjectPairsMetadataProjectInformation) -> Self {
+        value.clone()
+    }
+}
+impl ProjectPairsMetadataProjectInformation {
+    pub fn builder() -> builder::ProjectPairsMetadataProjectInformation {
+        Default::default()
+    }
+}
+///Program-specific configuration (per individual pair) in project metadata files
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Program-specific configuration (per individual pair) in project metadata files",
+///  "type": "object",
+///  "required": [
+///    "source_paths"
+///  ],
+///  "properties": {
+///    "source_paths": {
+///      "$ref": "#/definitions/source_paths"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct ProjectProgram {
+    pub source_paths: SourcePaths,
+}
+impl ::std::convert::From<&ProjectProgram> for ProjectProgram {
+    fn from(value: &ProjectProgram) -> Self {
+        value.clone()
+    }
+}
+impl ProjectProgram {
+    pub fn builder() -> builder::ProjectProgram {
+        Default::default()
+    }
+}
+///A program pair within a project context
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "A program pair within a project context",
+///  "type": "object",
+///  "required": [
+///    "c_program",
+///    "program_description",
+///    "program_name",
+///    "rust_program"
+///  ],
+///  "properties": {
+///    "c_program": {
+///      "$ref": "#/definitions/project_program"
+///    },
+///    "program_description": {
+///      "$ref": "#/definitions/program_description"
+///    },
+///    "program_name": {
+///      "$ref": "#/definitions/program_name"
+///    },
+///    "rust_program": {
+///      "$ref": "#/definitions/project_program"
+///    }
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+pub struct ProjectProgramPair {
+    pub c_program: ProjectProgram,
+    pub program_description: ProgramDescription,
+    pub program_name: ProgramName,
+    pub rust_program: ProjectProgram,
+}
+impl ::std::convert::From<&ProjectProgramPair> for ProjectProgramPair {
+    fn from(value: &ProjectProgramPair) -> Self {
+        value.clone()
+    }
+}
+impl ProjectProgramPair {
+    pub fn builder() -> builder::ProjectProgramPair {
+        Default::default()
+    }
+}
+///Repository URL (GitHub, GitLab, etc.)
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Repository URL (GitHub, GitLab, etc.)",
+///  "type": "string",
+///  "format": "uri"
+///}
+/// ```
+/// </details>
+#[derive(
+    ::serde::Deserialize,
+    ::serde::Serialize,
+    Clone,
+    Debug,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd
+)]
+#[serde(transparent)]
+pub struct RepositoryUrl(pub ::std::string::String);
+impl ::std::ops::Deref for RepositoryUrl {
+    type Target = ::std::string::String;
+    fn deref(&self) -> &::std::string::String {
+        &self.0
+    }
+}
+impl ::std::convert::From<RepositoryUrl> for ::std::string::String {
+    fn from(value: RepositoryUrl) -> Self {
+        value.0
+    }
+}
+impl ::std::convert::From<&RepositoryUrl> for RepositoryUrl {
+    fn from(value: &RepositoryUrl) -> Self {
+        value.clone()
+    }
+}
+impl ::std::convert::From<::std::string::String> for RepositoryUrl {
+    fn from(value: ::std::string::String) -> Self {
+        Self(value)
+    }
+}
+impl ::std::str::FromStr for RepositoryUrl {
+    type Err = ::std::convert::Infallible;
+    fn from_str(value: &str) -> ::std::result::Result<Self, Self::Err> {
+        Ok(Self(value.to_string()))
+    }
+}
+impl ::std::fmt::Display for RepositoryUrl {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        self.0.fmt(f)
+    }
+}
+///Paths to source files
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Paths to source files",
+///  "type": "array",
+///  "items": {
+///    "type": "string"
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+#[serde(transparent)]
+pub struct SourcePaths(pub ::std::vec::Vec<::std::string::String>);
+impl ::std::ops::Deref for SourcePaths {
+    type Target = ::std::vec::Vec<::std::string::String>;
+    fn deref(&self) -> &::std::vec::Vec<::std::string::String> {
+        &self.0
+    }
+}
+impl ::std::convert::From<SourcePaths> for ::std::vec::Vec<::std::string::String> {
+    fn from(value: SourcePaths) -> Self {
+        value.0
+    }
+}
+impl ::std::convert::From<&SourcePaths> for SourcePaths {
+    fn from(value: &SourcePaths) -> Self {
+        value.clone()
+    }
+}
+impl ::std::convert::From<::std::vec::Vec<::std::string::String>> for SourcePaths {
+    fn from(value: ::std::vec::Vec<::std::string::String>) -> Self {
+        Self(value)
+    }
+}
+///Tools used for the translation process
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "Tools used for the translation process",
+///  "type": "array",
+///  "items": {
+///    "type": "string"
+///  }
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+#[serde(transparent)]
+pub struct TranslationTools(pub ::std::vec::Vec<::std::string::String>);
+impl ::std::ops::Deref for TranslationTools {
+    type Target = ::std::vec::Vec<::std::string::String>;
+    fn deref(&self) -> &::std::vec::Vec<::std::string::String> {
+        &self.0
+    }
+}
+impl ::std::convert::From<TranslationTools> for ::std::vec::Vec<::std::string::String> {
+    fn from(value: TranslationTools) -> Self {
+        value.0
+    }
+}
+impl ::std::convert::From<&TranslationTools> for TranslationTools {
+    fn from(value: &TranslationTools) -> Self {
+        value.clone()
+    }
+}
+impl ::std::convert::From<::std::vec::Vec<::std::string::String>> for TranslationTools {
+    fn from(value: ::std::vec::Vec<::std::string::String>) -> Self {
+        Self(value)
+    }
+}
+/// Types for composing complex structures.
+pub mod builder {
+    #[derive(Clone, Debug)]
+    pub struct IndividualProgram {
+        documentation_url: ::std::result::Result<
+            super::DocumentationUrl,
+            ::std::string::String,
+        >,
+        repository_url: ::std::result::Result<
+            super::RepositoryUrl,
+            ::std::string::String,
+        >,
+        source_paths: ::std::result::Result<super::SourcePaths, ::std::string::String>,
+    }
+    impl ::std::default::Default for IndividualProgram {
+        fn default() -> Self {
+            Self {
+                documentation_url: Err(
+                    "no value supplied for documentation_url".to_string(),
+                ),
+                repository_url: Err("no value supplied for repository_url".to_string()),
+                source_paths: Err("no value supplied for source_paths".to_string()),
+            }
+        }
+    }
+    impl IndividualProgram {
+        pub fn documentation_url<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::DocumentationUrl>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.documentation_url = value
+                .try_into()
+                .map_err(|e| {
+                    format!(
+                        "error converting supplied value for documentation_url: {}", e
+                    )
+                });
+            self
+        }
+        pub fn repository_url<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::RepositoryUrl>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.repository_url = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for repository_url: {}", e)
+                });
+            self
+        }
+        pub fn source_paths<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::SourcePaths>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.source_paths = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for source_paths: {}", e)
+                });
+            self
+        }
+    }
+    impl ::std::convert::TryFrom<IndividualProgram> for super::IndividualProgram {
+        type Error = super::error::ConversionError;
+        fn try_from(
+            value: IndividualProgram,
+        ) -> ::std::result::Result<Self, super::error::ConversionError> {
+            Ok(Self {
+                documentation_url: value.documentation_url?,
+                repository_url: value.repository_url?,
+                source_paths: value.source_paths?,
+            })
+        }
+    }
+    impl ::std::convert::From<super::IndividualProgram> for IndividualProgram {
+        fn from(value: super::IndividualProgram) -> Self {
+            Self {
+                documentation_url: Ok(value.documentation_url),
+                repository_url: Ok(value.repository_url),
+                source_paths: Ok(value.source_paths),
+            }
+        }
+    }
+    #[derive(Clone, Debug)]
+    pub struct IndividualProgramPair {
+        c_program: ::std::result::Result<
+            super::IndividualProgram,
+            ::std::string::String,
+        >,
+        feature_relationship: ::std::result::Result<
+            super::FeatureRelationship,
+            ::std::string::String,
+        >,
+        program_description: ::std::result::Result<
+            super::ProgramDescription,
+            ::std::string::String,
+        >,
+        program_name: ::std::result::Result<super::ProgramName, ::std::string::String>,
+        rust_program: ::std::result::Result<
+            super::IndividualProgram,
+            ::std::string::String,
+        >,
+        translation_tools: ::std::result::Result<
+            super::TranslationTools,
+            ::std::string::String,
+        >,
+    }
+    impl ::std::default::Default for IndividualProgramPair {
+        fn default() -> Self {
+            Self {
+                c_program: Err("no value supplied for c_program".to_string()),
+                feature_relationship: Err(
+                    "no value supplied for feature_relationship".to_string(),
+                ),
+                program_description: Err(
+                    "no value supplied for program_description".to_string(),
+                ),
+                program_name: Err("no value supplied for program_name".to_string()),
+                rust_program: Err("no value supplied for rust_program".to_string()),
+                translation_tools: Err(
+                    "no value supplied for translation_tools".to_string(),
+                ),
+            }
+        }
+    }
+    impl IndividualProgramPair {
+        pub fn c_program<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::IndividualProgram>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.c_program = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for c_program: {}", e)
+                });
+            self
+        }
+        pub fn feature_relationship<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::FeatureRelationship>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.feature_relationship = value
+                .try_into()
+                .map_err(|e| {
+                    format!(
+                        "error converting supplied value for feature_relationship: {}", e
+                    )
+                });
+            self
+        }
+        pub fn program_description<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProgramDescription>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.program_description = value
+                .try_into()
+                .map_err(|e| {
+                    format!(
+                        "error converting supplied value for program_description: {}", e
+                    )
+                });
+            self
+        }
+        pub fn program_name<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProgramName>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.program_name = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for program_name: {}", e)
+                });
+            self
+        }
+        pub fn rust_program<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::IndividualProgram>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.rust_program = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for rust_program: {}", e)
+                });
+            self
+        }
+        pub fn translation_tools<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::TranslationTools>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.translation_tools = value
+                .try_into()
+                .map_err(|e| {
+                    format!(
+                        "error converting supplied value for translation_tools: {}", e
+                    )
+                });
+            self
+        }
+    }
+    impl ::std::convert::TryFrom<IndividualProgramPair>
+    for super::IndividualProgramPair {
+        type Error = super::error::ConversionError;
+        fn try_from(
+            value: IndividualProgramPair,
+        ) -> ::std::result::Result<Self, super::error::ConversionError> {
+            Ok(Self {
+                c_program: value.c_program?,
+                feature_relationship: value.feature_relationship?,
+                program_description: value.program_description?,
+                program_name: value.program_name?,
+                rust_program: value.rust_program?,
+                translation_tools: value.translation_tools?,
+            })
+        }
+    }
+    impl ::std::convert::From<super::IndividualProgramPair> for IndividualProgramPair {
+        fn from(value: super::IndividualProgramPair) -> Self {
+            Self {
+                c_program: Ok(value.c_program),
+                feature_relationship: Ok(value.feature_relationship),
+                program_description: Ok(value.program_description),
+                program_name: Ok(value.program_name),
+                rust_program: Ok(value.rust_program),
+                translation_tools: Ok(value.translation_tools),
+            }
+        }
+    }
+    #[derive(Clone, Debug)]
+    pub struct ProjectGlobalProgram {
+        documentation_url: ::std::result::Result<
+            super::DocumentationUrl,
+            ::std::string::String,
+        >,
+        repository_url: ::std::result::Result<
+            super::RepositoryUrl,
+            ::std::string::String,
+        >,
+    }
+    impl ::std::default::Default for ProjectGlobalProgram {
+        fn default() -> Self {
+            Self {
+                documentation_url: Err(
+                    "no value supplied for documentation_url".to_string(),
+                ),
+                repository_url: Err("no value supplied for repository_url".to_string()),
+            }
+        }
+    }
+    impl ProjectGlobalProgram {
+        pub fn documentation_url<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::DocumentationUrl>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.documentation_url = value
+                .try_into()
+                .map_err(|e| {
+                    format!(
+                        "error converting supplied value for documentation_url: {}", e
+                    )
+                });
+            self
+        }
+        pub fn repository_url<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::RepositoryUrl>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.repository_url = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for repository_url: {}", e)
+                });
+            self
+        }
+    }
+    impl ::std::convert::TryFrom<ProjectGlobalProgram> for super::ProjectGlobalProgram {
+        type Error = super::error::ConversionError;
+        fn try_from(
+            value: ProjectGlobalProgram,
+        ) -> ::std::result::Result<Self, super::error::ConversionError> {
+            Ok(Self {
+                documentation_url: value.documentation_url?,
+                repository_url: value.repository_url?,
+            })
+        }
+    }
+    impl ::std::convert::From<super::ProjectGlobalProgram> for ProjectGlobalProgram {
+        fn from(value: super::ProjectGlobalProgram) -> Self {
+            Self {
+                documentation_url: Ok(value.documentation_url),
+                repository_url: Ok(value.repository_url),
+            }
+        }
+    }
+    #[derive(Clone, Debug)]
+    pub struct ProjectPairsMetadataProjectInformation {
+        c_program: ::std::result::Result<
+            super::ProjectGlobalProgram,
+            ::std::string::String,
+        >,
+        feature_relationship: ::std::result::Result<
+            super::FeatureRelationship,
+            ::std::string::String,
+        >,
+        program_name: ::std::result::Result<super::ProgramName, ::std::string::String>,
+        rust_program: ::std::result::Result<
+            super::ProjectGlobalProgram,
+            ::std::string::String,
+        >,
+        translation_tools: ::std::result::Result<
+            super::TranslationTools,
+            ::std::string::String,
+        >,
+    }
+    impl ::std::default::Default for ProjectPairsMetadataProjectInformation {
+        fn default() -> Self {
+            Self {
+                c_program: Err("no value supplied for c_program".to_string()),
+                feature_relationship: Err(
+                    "no value supplied for feature_relationship".to_string(),
+                ),
+                program_name: Err("no value supplied for program_name".to_string()),
+                rust_program: Err("no value supplied for rust_program".to_string()),
+                translation_tools: Err(
+                    "no value supplied for translation_tools".to_string(),
+                ),
+            }
+        }
+    }
+    impl ProjectPairsMetadataProjectInformation {
+        pub fn c_program<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProjectGlobalProgram>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.c_program = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for c_program: {}", e)
+                });
+            self
+        }
+        pub fn feature_relationship<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::FeatureRelationship>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.feature_relationship = value
+                .try_into()
+                .map_err(|e| {
+                    format!(
+                        "error converting supplied value for feature_relationship: {}", e
+                    )
+                });
+            self
+        }
+        pub fn program_name<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProgramName>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.program_name = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for program_name: {}", e)
+                });
+            self
+        }
+        pub fn rust_program<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProjectGlobalProgram>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.rust_program = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for rust_program: {}", e)
+                });
+            self
+        }
+        pub fn translation_tools<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::TranslationTools>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.translation_tools = value
+                .try_into()
+                .map_err(|e| {
+                    format!(
+                        "error converting supplied value for translation_tools: {}", e
+                    )
+                });
+            self
+        }
+    }
+    impl ::std::convert::TryFrom<ProjectPairsMetadataProjectInformation>
+    for super::ProjectPairsMetadataProjectInformation {
+        type Error = super::error::ConversionError;
+        fn try_from(
+            value: ProjectPairsMetadataProjectInformation,
+        ) -> ::std::result::Result<Self, super::error::ConversionError> {
+            Ok(Self {
+                c_program: value.c_program?,
+                feature_relationship: value.feature_relationship?,
+                program_name: value.program_name?,
+                rust_program: value.rust_program?,
+                translation_tools: value.translation_tools?,
+            })
+        }
+    }
+    impl ::std::convert::From<super::ProjectPairsMetadataProjectInformation>
+    for ProjectPairsMetadataProjectInformation {
+        fn from(value: super::ProjectPairsMetadataProjectInformation) -> Self {
+            Self {
+                c_program: Ok(value.c_program),
+                feature_relationship: Ok(value.feature_relationship),
+                program_name: Ok(value.program_name),
+                rust_program: Ok(value.rust_program),
+                translation_tools: Ok(value.translation_tools),
+            }
+        }
+    }
+    #[derive(Clone, Debug)]
+    pub struct ProjectProgram {
+        source_paths: ::std::result::Result<super::SourcePaths, ::std::string::String>,
+    }
+    impl ::std::default::Default for ProjectProgram {
+        fn default() -> Self {
+            Self {
+                source_paths: Err("no value supplied for source_paths".to_string()),
+            }
+        }
+    }
+    impl ProjectProgram {
+        pub fn source_paths<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::SourcePaths>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.source_paths = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for source_paths: {}", e)
+                });
+            self
+        }
+    }
+    impl ::std::convert::TryFrom<ProjectProgram> for super::ProjectProgram {
+        type Error = super::error::ConversionError;
+        fn try_from(
+            value: ProjectProgram,
+        ) -> ::std::result::Result<Self, super::error::ConversionError> {
+            Ok(Self {
+                source_paths: value.source_paths?,
+            })
+        }
+    }
+    impl ::std::convert::From<super::ProjectProgram> for ProjectProgram {
+        fn from(value: super::ProjectProgram) -> Self {
+            Self {
+                source_paths: Ok(value.source_paths),
+            }
+        }
+    }
+    #[derive(Clone, Debug)]
+    pub struct ProjectProgramPair {
+        c_program: ::std::result::Result<super::ProjectProgram, ::std::string::String>,
+        program_description: ::std::result::Result<
+            super::ProgramDescription,
+            ::std::string::String,
+        >,
+        program_name: ::std::result::Result<super::ProgramName, ::std::string::String>,
+        rust_program: ::std::result::Result<
+            super::ProjectProgram,
+            ::std::string::String,
+        >,
+    }
+    impl ::std::default::Default for ProjectProgramPair {
+        fn default() -> Self {
+            Self {
+                c_program: Err("no value supplied for c_program".to_string()),
+                program_description: Err(
+                    "no value supplied for program_description".to_string(),
+                ),
+                program_name: Err("no value supplied for program_name".to_string()),
+                rust_program: Err("no value supplied for rust_program".to_string()),
+            }
+        }
+    }
+    impl ProjectProgramPair {
+        pub fn c_program<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProjectProgram>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.c_program = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for c_program: {}", e)
+                });
+            self
+        }
+        pub fn program_description<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProgramDescription>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.program_description = value
+                .try_into()
+                .map_err(|e| {
+                    format!(
+                        "error converting supplied value for program_description: {}", e
+                    )
+                });
+            self
+        }
+        pub fn program_name<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProgramName>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.program_name = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for program_name: {}", e)
+                });
+            self
+        }
+        pub fn rust_program<T>(mut self, value: T) -> Self
+        where
+            T: ::std::convert::TryInto<super::ProjectProgram>,
+            T::Error: ::std::fmt::Display,
+        {
+            self.rust_program = value
+                .try_into()
+                .map_err(|e| {
+                    format!("error converting supplied value for rust_program: {}", e)
+                });
+            self
+        }
+    }
+    impl ::std::convert::TryFrom<ProjectProgramPair> for super::ProjectProgramPair {
+        type Error = super::error::ConversionError;
+        fn try_from(
+            value: ProjectProgramPair,
+        ) -> ::std::result::Result<Self, super::error::ConversionError> {
+            Ok(Self {
+                c_program: value.c_program?,
+                program_description: value.program_description?,
+                program_name: value.program_name?,
+                rust_program: value.rust_program?,
+            })
+        }
+    }
+    impl ::std::convert::From<super::ProjectProgramPair> for ProjectProgramPair {
+        fn from(value: super::ProjectProgramPair) -> Self {
+            Self {
+                c_program: Ok(value.c_program),
+                program_description: Ok(value.program_description),
+                program_name: Ok(value.program_name),
+                rust_program: Ok(value.rust_program),
+            }
+        }
+    }
+}

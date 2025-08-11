@@ -1,4 +1,5 @@
+pub mod canonical;
 pub mod individual;
+// mod map;
 pub mod project;
-pub mod schema;
 mod validator;

@@ -3,7 +3,7 @@ use std::{error::Error, fs, path::Path};
 use serde::{Deserialize, Serialize};
 
 use crate::parser::{
-    schema::{Features, Language, Metadata, Program, ProgramPair},
+    canonical::{Features, Language, Metadata, Program, ProgramPair},
     validator,
 };
 

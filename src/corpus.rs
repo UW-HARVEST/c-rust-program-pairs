@@ -5,8 +5,8 @@ use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
     parser::{
+        canonical::{Language, Metadata, MetadataType, ProgramPair},
         individual, project,
-        schema::{Language, Metadata, MetadataType, ProgramPair},
     },
     paths::{PROGRAMS_DIRECTORY, REPOSITORY_CACHE_DIRECTORY},
 };
