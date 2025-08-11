@@ -5,8 +5,8 @@ use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
     parser::{
+        self,
         canonical::{Language, Metadata, MetadataType, ProgramPair},
-        individual, project,
     },
     paths::{PROGRAMS_DIRECTORY, REPOSITORY_CACHE_DIRECTORY},
 };
@@ -19,8 +19,8 @@ pub fn download_metadata_dir(directory: &Path, metadata_type: MetadataType) {
     {
         if let Ok(metadata_file) = metadata_file {
             let parsed_result = match metadata_type {
-                MetadataType::Individual => individual::parse(&metadata_file.path()),
-                MetadataType::Project => project::parse(&metadata_file.path()),
+                MetadataType::Individual => parser::parse(&metadata_file.path()),
+                MetadataType::Project => parser::parse(&metadata_file.path()),
             };
             match parsed_result {
                 Ok(metadata) => {
