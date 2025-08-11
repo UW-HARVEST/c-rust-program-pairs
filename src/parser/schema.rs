@@ -33,21 +33,16 @@ pub struct Program {
     pub source_paths: Vec<String>,
 }
 
-// Specifies the method of translating from C to Rust.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum Translation {
-    Manual,
-    Automatic,
-}
-
 // Specifies the features of the Rust project in relation to its C counterpart.
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
 pub enum Features {
+    #[serde(rename = "rust_subset_of_c")]
     Subset,
+    #[serde(rename = "rust_equivalent_to_c")]
     Equivalent,
+    #[serde(rename = "rust_superset_of_c")]
     Superset,
+    #[serde(rename = "overlapping")]
     Overlapping,
 }
 

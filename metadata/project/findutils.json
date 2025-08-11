@@ -1,9 +1,8 @@
 {
     "project_information": {
         "program_name": "findutils",
-        "translation_method": "manual",
-        "translation_tool": "",
-        "feature_relationship": "equivalent",
+        "translation_tools": ["manual"],
+        "feature_relationship": "rust_equivalent_to_c",
         "c_program": {
             "documentation_url": "https://www.gnu.org/software/findutils/",
             "repository_url": "https://git.savannah.gnu.org/git/findutils.git"

@@ -3,7 +3,7 @@ use std::{error::Error, fs, path::Path};
 use serde::{Deserialize, Serialize};
 
 use crate::parser::{
-    schema::{Features, Language, Metadata, Program, ProgramPair, Translation},
+    schema::{Features, Language, Metadata, Program, ProgramPair},
     validator,
 };
 
@@ -18,8 +18,7 @@ struct ProjectMetadata {
 #[derive(Debug, Serialize, Deserialize)]
 struct ProjectInformation {
     program_name: String,
-    translation_method: Translation,
-    translation_tool: String,
+    translation_tools: Vec<String>,
     feature_relationship: Features,
     c_program: ProjectGlobalProgram,
     rust_program: ProjectGlobalProgram,
@@ -63,8 +62,7 @@ pub fn parse(path: &Path) -> Result<Metadata, Box<dyn Error>> {
         .map(|pair| ProgramPair {
             program_name: pair.program_name,
             program_description: pair.program_description,
-            translation_method: global_metadata.translation_method.clone(),
-            translation_tool: global_metadata.translation_tool.clone(),
+            translation_tools: global_metadata.translation_tools.clone(),
             feature_relationship: global_metadata.feature_relationship.clone(),
             c_program: Program {
                 language: Language::C,

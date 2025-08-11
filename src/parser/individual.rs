@@ -3,7 +3,7 @@ use std::{error::Error, fs, path::Path};
 use serde::{Deserialize, Serialize};
 
 use crate::parser::{
-    schema::{Features, Language, Metadata, Program, ProgramPair, Translation},
+    schema::{Features, Language, Metadata, Program, ProgramPair},
     validator,
 };
 
@@ -18,8 +18,7 @@ struct IndividualMetadata {
 struct IndividualProgramPair {
     program_name: String,
     program_description: String,
-    translation_method: Translation,
-    translation_tool: String,
+    translation_tools: Vec<String>,
     feature_relationship: Features,
     c_program: IndividualProgram,
     rust_program: IndividualProgram,
@@ -48,8 +47,7 @@ pub fn parse(path: &Path) -> Result<Metadata, Box<dyn Error>> {
         .map(|pair| ProgramPair {
             program_name: pair.program_name,
             program_description: pair.program_description,
-            translation_method: pair.translation_method,
-            translation_tool: pair.translation_tool,
+            translation_tools: pair.translation_tools,
             feature_relationship: pair.feature_relationship,
             c_program: Program {
                 language: Language::C,

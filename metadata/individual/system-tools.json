@@ -3,9 +3,8 @@
         {
             "program_name": "eza",
             "program_description": "A modern alternative to ls.",
-            "translation_method": "manual",
-            "translation_tool": "",
-            "feature_relationship": "superset",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
             "c_program": {
                 "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html",
                 "repository_url": "https://github.com/coreutils/coreutils",
@@ -20,9 +19,8 @@
         {
             "program_name": "bat",
             "program_description": "A cat(1) clone with wings.",
-            "translation_method": "manual",
-            "translation_tool": "",
-            "feature_relationship": "superset",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
             "c_program": {
                 "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html",
                 "repository_url": "https://github.com/coreutils/coreutils",
@@ -38,9 +36,8 @@
         {
             "program_name": "fd",
             "program_description": "A simple, fast and user-friendly alternative to 'find'.",
-            "translation_method": "manual",
-            "translation_tool": "",
-            "feature_relationship": "superset",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
             "c_program": {
                 "documentation_url": "https://www.gnu.org/software/findutils/manual/html_mono/find.html",
                 "repository_url": "https://git.savannah.gnu.org/git/findutils.git",

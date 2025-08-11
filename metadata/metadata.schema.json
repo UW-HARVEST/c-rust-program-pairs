@@ -106,6 +106,8 @@
             "required": [
                 "program_name",
                 "program_description",
+                "translation_tools",
+                "feature_relationship",
                 "c_program",
                 "rust_program"
             ]
@@ -176,7 +178,13 @@
                             "$ref": "#/definitions/project_global_program"
                         }
                     },
-                    "required": ["program_name", "c_program", "rust_program"]
+                    "required": [
+                        "program_name",
+                        "translation_tools",
+                        "feature_relationship",
+                        "c_program",
+                        "rust_program"
+                    ]
                 },
                 "pairs": {
                     "type": "array",
