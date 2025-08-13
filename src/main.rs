@@ -8,7 +8,7 @@
 //! ## Modules
 //!
 //! - [`corpus`] — Handles fetching and storing metadata.
-//! - [`parser`] — Contains logic for parsing metadata files into Rust structures.
+//! - [`metadata`] — Contains logic for parsing metadata files into Rust structures.
 //! - [`paths`] — Defines filesystem paths used for metadata storage.
 //!
 //! ## Usage
@@ -16,18 +16,14 @@
 //! Running the binary will download the latest metadata for both
 //! projects and individual files into their respective directories.
 
-#![warn(missing_docs)]
-#![warn(rustdoc::missing_crate_level_docs)]
-#![warn(rustdoc::unescaped_backticks)]
-
 mod corpus;
-mod parser;
+mod metadata;
 mod paths;
 
 #[cfg(test)]
 mod tests {
     use crate::{
-        parser,
+        metadata,
         paths::{INDIVIDUAL_METADATA_DIRECTORY, PROJECT_METADATA_DIRECTORY},
     };
 
@@ -37,7 +33,7 @@ mod tests {
     #[test]
     fn test_parse_project() {
         let metadata_file = Path::new(PROJECT_METADATA_DIRECTORY).join("diffutils.json");
-        let result = parser::parse(&metadata_file);
+        let result = metadata::parse(&metadata_file);
         assert!(
             result.is_ok(),
             "Failed to parse project metadata: {:?}",
@@ -49,7 +45,7 @@ mod tests {
     #[test]
     fn test_parse_individual() {
         let metadata_file = Path::new(INDIVIDUAL_METADATA_DIRECTORY).join("system-tools.json");
-        let result = parser::parse(&metadata_file);
+        let result = metadata::parse(&metadata_file);
         assert!(
             result.is_ok(),
             "Failed to parse individual metadata: {:?}",
@@ -58,22 +54,12 @@ mod tests {
     }
 }
 
-use std::path::Path;
-
-use crate::{
-    corpus::download_metadata_dir,
-    parser::canonical::MetadataType,
-    paths::{INDIVIDUAL_METADATA_DIRECTORY, PROJECT_METADATA_DIRECTORY},
-};
+use crate::corpus::download_metadata;
 
 /// Entry point for the metadata downloader.
 ///
 /// Downloads metadata for both projects and individual files into
 /// the directories defined in [`paths`].
 fn main() {
-    download_metadata_dir(Path::new(PROJECT_METADATA_DIRECTORY), MetadataType::Project);
-    download_metadata_dir(
-        Path::new(INDIVIDUAL_METADATA_DIRECTORY),
-        MetadataType::Individual,
-    );
+    download_metadata();
 }

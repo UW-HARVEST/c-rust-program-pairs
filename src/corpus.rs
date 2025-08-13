@@ -1,27 +1,50 @@
+//! # Corpus
+//!
+//! This module manages the corpus of C to Rust program pairs.
+//!
+//! This includes downloading program-pairs from metadata files, for which
+//! [`download_metadata`] is used to download all JSON metadata files in
+//! metadata/.
+
 use std::{error::Error, fs, path::Path};
 
 use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
-    parser::{
+    metadata::{
         self,
-        canonical::{Language, Metadata, MetadataType, ProgramPair},
+        schema::{Language, Metadata, ProgramPair},
     },
-    paths::{PROGRAMS_DIRECTORY, REPOSITORY_CACHE_DIRECTORY},
+    paths::{
+        INDIVIDUAL_METADATA_DIRECTORY, PROGRAMS_DIRECTORY, PROJECT_METADATA_DIRECTORY,
+        REPOSITORY_CACHE_DIRECTORY,
+    },
 };
 
-// Download all metadata files from a directory.
-pub fn download_metadata_dir(directory: &Path, metadata_type: MetadataType) {
+/// Download all metadata in `metadata/`.
+pub fn download_metadata() {
+    download_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
+    download_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
+}
+
+/// Download all program pairs in metadata files from either
+/// metadata/individual/ or metadata/projects.
+///
+/// We iterate through each metadata JSON file, then parse and download
+/// the program pairs.
+///
+/// # Arguments
+///
+/// - `directory` - A path to the directory containing the metadata JSON
+///                 files.
+fn download_metadata_directory(directory: &Path) {
     for metadata_file in directory
         .read_dir()
         .expect("Failed to read metadata directory")
     {
         if let Ok(metadata_file) = metadata_file {
-            let parsed_result = match metadata_type {
-                MetadataType::Individual => parser::parse(&metadata_file.path()),
-                MetadataType::Project => parser::parse(&metadata_file.path()),
-            };
+            let parsed_result = metadata::parse(&metadata_file.path());
             match parsed_result {
                 Ok(metadata) => {
                     println!("Successfully parsed {:?}", metadata_file.path().file_name());
@@ -46,9 +69,21 @@ fn download_metadata_file(metadata: &Metadata) {
     }
 }
 
-// Downloads a program-pair into the ./programs directory.
-// The C source files will be downloaded to ./programs/<program_name>/c-program.
-// The Rust source files will be downloaded to ./programs/<program_name>/rust-program.
+/// Downloads a C-to-Rust program pair.
+///
+/// Check if the C and Rust repositories exist, and clone them if they don't
+/// Copy the C source files to programs/<program_name>/c-program.
+/// Copy the Rust source files to programs/<program_name>/rust-program.
+///
+/// # Arguments
+///
+/// - `pair` - Reference to a `ProgramPair` struct which contains information
+///            about the program pair.
+///
+/// # Errors
+///
+/// Returns an error if we fail to create the relevant directories or if
+/// `download_files` fails.
 fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
     let program_name = &pair.program_name;
     let base_program_path = Path::new(PROGRAMS_DIRECTORY).join(program_name);
@@ -82,27 +117,53 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-// Clones a repository into repository_cache/ and copies the source files
-// specified in each program pair in the `source_files` field to the program
-// directory. Also prints a progress bar to standard output to track progress.
+/// Downloads the specified source files from a Git repository.
+///
+/// This function clones the repository (if not already cached) into
+/// `repository_cache/<language>/<repository_name>`, then copies the listed
+/// `source_files` into the given `program_directory`.
+///
+/// A progress bar is displayed on standard output to track cloning and copying.
+///
+/// Side effects:
+///
+/// - Creates cache and destination directories if they don’t exist.
+/// - May overwrite files in the destination.
+///
+/// # Arguments
+///
+/// - `program_name` — Name of the program being downloaded (used for progress messages).
+/// - `program_language` — Language of the program (affects repository cache path).
+/// - `program_directory` — Destination directory for the downloaded source files.
+/// - `repository_url` — Git URL of the repository to clone.
+/// - `source_files` — Paths (relative to repo root) of files or directories to copy.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if all files were successfully downloaded and copied.
+///
+/// # Errors
+///
+/// Returns an error if cloning the repository fails, any source files are missing,
+/// or file copying encounters an error.
 fn download_files(
     program_name: &str,
     program_language: Language,
     program_directory: &Path,
     repository_url: &str,
-    files: &[String],
+    source_files: &[String],
 ) -> Result<(), Box<dyn Error>> {
     // Create a progress bar.
     let progress_bar = ProgressBar::new(100);
+    progress_bar.set_message(format!("Cloning {program_name}..."));
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template(
                 "{spinner:.cyan} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos:>7}/{len:7} {msg}",
             )
-            .unwrap()
+            .expect("Failed to set progress bar")
             .progress_chars("##-"),
     );
-    progress_bar.set_message(format!("Cloning {program_name}..."));
 
     // Set up remote callbacks for progress tracking.
     let mut remote_callbacks = RemoteCallbacks::new();
@@ -112,13 +173,8 @@ fn download_files(
 
     // Check if repository exists in cache, if not clone it.
     // We store repositories in repository_cache/<language>/<repository_name>.
-    let language = match program_language {
-        Language::C => "c",
-        Language::Rust => "rust",
-    };
-    let repository_path = Path::new(REPOSITORY_CACHE_DIRECTORY).join(language);
-    let repository_name =
-        get_repository_name(repository_url).ok_or("Failed to get repository name from URL.")?;
+    let repository_path = Path::new(REPOSITORY_CACHE_DIRECTORY).join(program_language.to_str());
+    let repository_name = get_repository_name(repository_url)?;
     let repository = match Repository::open(repository_path.join(&repository_name)) {
         Ok(repository) => repository,
         Err(_) => {
@@ -136,36 +192,47 @@ fn download_files(
         }
     };
 
-    progress_bar.set_message("Copying files...");
-    progress_bar.set_style(ProgressStyle::default_spinner());
+    let total_files = source_files.len();
+    progress_bar.set_message(format!("Copying files: 0/{}", total_files));
+    progress_bar.set_length(total_files as u64);
+    progress_bar.set_position(0);
 
     // Copy given files from the repository to the given directory.
-    for file_path in files.iter() {
+    let repository_directory = repository.workdir().ok_or("Failed to find repository")?;
+    for file_path in source_files.iter() {
         let file_name = Path::new(file_path)
             .file_name()
             .ok_or("Invalid file path.")?;
-        let source = repository
-            .workdir()
-            .ok_or("Failed to find source file in repository.")?
-            .join(&file_path);
+        let source = repository_directory.join(&file_path);
         let destination = program_directory.join(file_name);
-        if !destination.exists() {
-            if source.is_dir() {
-                copy_dir(&source, &destination)?;
-            } else {
-                fs::copy(source, destination)?;
-            }
+
+        // Copy files from destination to source.
+        if source.is_dir() {
+            copy_dir(&source, &destination, &progress_bar)?;
+        } else {
+            fs::copy(source, destination)?;
+            progress_bar.inc(1);
         }
     }
 
     progress_bar.finish_with_message(format!(
         "Successfully downloaded {} ({})!",
-        program_name, language
+        program_name,
+        program_language.to_str()
     ));
     Ok(())
 }
 
-// Update progress bar with cloning progress.
+/// Callback used to update the progress bar as a repository is cloned.
+///
+/// # Arguments
+///
+/// - `progress` - Contains information about the current status of the download.
+/// - `progress_bar` - The progress bar to update.
+///
+/// # Returns
+///
+/// The callback function must return `true`.
 fn update_progress_bar_callback(progress: git2::Progress, progress_bar: &ProgressBar) -> bool {
     let received_objects = progress.received_objects();
     let received_bytes = progress.received_bytes();
@@ -195,17 +262,52 @@ fn update_progress_bar_callback(progress: git2::Progress, progress_bar: &Progres
     true
 }
 
-// Get the name of the repository from the URL.
-fn get_repository_name(url: &str) -> Option<String> {
-    url.split("/")
-        .last()?
-        .strip_suffix(".git")
-        .or_else(|| url.split("/").last())
-        .map(|s| s.to_string())
+/// Helper function to extract a repository's name from its URL.
+///
+/// # Arguments
+///
+/// - `url` - Git repository URL; must point to a valid, accessible repo.
+///
+/// # Returns
+///
+/// A `Result` containing the name of the repository.
+///
+/// # Errors
+///
+/// Throws an error if we are unable to extract the repository's name.
+fn get_repository_name(url: &str) -> Result<String, Box<dyn Error>> {
+    let last_segment = url
+        .trim_end_matches('/')
+        .split('/')
+        .last()
+        .ok_or("Failed to retrieve repository name")?;
+    let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
+    Ok(name.to_string())
 }
 
-// Copy a directory recursively from source to destination.
-fn copy_dir(source: &Path, destination: &Path) -> Result<(), Box<dyn Error>> {
+/// Helper function to copy a directory recursively from source to destination.
+///
+/// Also updates the progress bar for every file we copy.
+///
+/// # Arguments
+///
+/// - `source` - The source directory which we want to copy all files from.
+/// - `destination` - The destination directory which we want to copy all
+///                   files to.
+/// - `progress_bar` - The progress bar to update each time we copy a file.
+///
+/// # Returns
+///
+/// Returns `Ok(())` if the directory was copied successfully.
+///
+/// # Errors
+///
+/// Throws an error if we failed to copy the files.
+fn copy_dir(
+    source: &Path,
+    destination: &Path,
+    progress_bar: &ProgressBar,
+) -> Result<(), Box<dyn Error>> {
     fs::create_dir_all(destination)?;
 
     for entry in fs::read_dir(source)? {
@@ -215,9 +317,10 @@ fn copy_dir(source: &Path, destination: &Path) -> Result<(), Box<dyn Error>> {
         let entry_destination = destination.join(entry.file_name());
 
         if file_type.is_dir() {
-            copy_dir(&entry_source, &entry_destination)?;
+            copy_dir(&entry_source, &entry_destination, progress_bar)?;
         } else {
             fs::copy(&entry_source, &entry_destination)?;
+            progress_bar.inc(1);
         }
     }
 

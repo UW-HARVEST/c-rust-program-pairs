@@ -1,19 +1,18 @@
+//! Metadata Schema
+//!
+//! This module defines the schema of our final data structure which we use
+//! to store information about our program pairs.
+
 use serde::{Deserialize, Serialize};
 
-// Indicates the type of metadata file.
-pub enum MetadataType {
-    Individual,
-    Project,
-}
-
-// Our final, metadata data structure that we extract from individual /
-// project metadata files.
+/// Represents the metadata from a single .json metadata file, containing
+/// an array of program pairs.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Metadata {
     pub pairs: Vec<ProgramPair>,
 }
 
-// Contains information about each C-to-Rust program pair.
+/// Contains information about each C to Rust program pair.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProgramPair {
     pub program_name: String,
@@ -24,7 +23,7 @@ pub struct ProgramPair {
     pub rust_program: Program,
 }
 
-// Contains information about each C or Rust program.
+/// Contains information about each individual C or Rust program.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Program {
     pub language: Language,
@@ -33,7 +32,7 @@ pub struct Program {
     pub source_paths: Vec<String>,
 }
 
-// Specifies the features of the Rust project in relation to its C counterpart.
+/// Specifies the features of the Rust project in relation to its C counterpart.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Features {
     #[serde(rename = "rust_subset_of_c")]
@@ -46,10 +45,24 @@ pub enum Features {
     Overlapping,
 }
 
-// Specifies the language used for the project.
+/// Specifies the language used for the program.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Language {
     C,
     Rust,
+}
+
+impl Language {
+    /// Converts the enum type to a string.
+    ///
+    /// # Returns
+    ///
+    /// A static string; "c" or "rust".
+    pub fn to_str(&self) -> &'static str {
+        match self {
+            Language::C => "c",
+            Language::Rust => "rust",
+        }
+    }
 }

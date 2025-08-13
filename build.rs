@@ -1,4 +1,30 @@
-// Copyright 2023 Oxide Computer Company
+//! # Build Script
+//!
+//! This build script generates Rust type definitions from the JSON Schema
+//! located at `metadata/metadata.schema.json`. The generated code is written
+//! to `metadata/metadata_schema.rs` and is included in the build output.
+//!
+//! ## Purpose
+//!
+//! - Ensure the Rust data structures used in this crate stay in sync with the
+//!   JSON schema.
+//! - Avoid manual type definition updates when the schema changes.
+//!
+//! ## How It Works
+//!
+//! 1. Reads the JSON Schema from `metadata/metadata.schema.json`.
+//! 2. Parses it into a `schemars::schema::RootSchema`.
+//! 3. Uses [`typify`] with [`TypeSpace`] to generate Rust types, enabling
+//!    the `struct_builder` option for builder-pattern struct construction.
+//! 4. Formats the generated Rust code using [`prettyplease`].
+//! 5. Writes the result to `metadata/metadata_schema.rs`.
+//!
+//! ## Notes
+//!
+//! - This script runs **before every build**. Cargo will rerun it only if
+//!   `metadata/metadata.schema.json` changes.
+//! - The generated file is **checked in** (if you want reproducible builds)
+//!   or **.gitignored** (if you prefer to regenerate each time).
 
 use std::{fs, path::Path};
 
@@ -14,7 +40,7 @@ fn main() {
     let contents =
         prettyplease::unparse(&syn::parse2::<syn::File>(type_space.to_stream()).unwrap());
 
-    let mut out_file = Path::new("src/parser/").to_path_buf();
+    let mut out_file = Path::new("metadata").to_path_buf();
     out_file.push("metadata_schema.rs");
     fs::write(out_file, contents).unwrap();
 }
