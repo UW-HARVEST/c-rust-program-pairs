@@ -1,16 +1,16 @@
 # Metadata
 
-Metadata files contain information about our C-Rust program pairs and can be validated with our [JSON schema](./metadata.schema.json).
+Metadata files contain information about C-Rust program pairs.
 
 ## Validation
 
-In our CLI tool, we validate metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
+Our CLI tool validates metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
 
-In our script, we automatically validate all metadata files against our schema. We use a [`build.rs`](../build.rs) script to automatically convert our JSON schema to Rust structs at build time.
+Our script validates all metadata files against our schema. We use a [`build.rs`](../build.rs) script to automatically convert our [JSON schema](./metadata.schema.json) to Rust structs at build time.
 
 The generated rust structs can be found at [`metadata/metadata_schema.rs`](./metadata_schema.rs).
 
-To use any of these structs, we use the `import_types` macro provided by `typify`:
+A Rust file that uses any of these structs needs the `import_types` macro provided by `typify`:
 
 ```rust
 import_types!(schema = "metadata/metadata.schema.json");

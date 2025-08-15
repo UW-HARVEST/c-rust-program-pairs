@@ -6,6 +6,9 @@ programs
 # Where we store repositories we have downloaded.
 repository_cache
 
+# Generated program
+metadata/metadata_schema.rs
+
 progress-reports
 
 .DS_Store
