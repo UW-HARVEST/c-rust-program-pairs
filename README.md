@@ -35,3 +35,8 @@ cargo run
 
 - [Awesome Rust](https://github.com/rust-unofficial/awesome-rust): Contains a list of awesome Rust projects - many of which might be translated from C projects.
 - [JSON Schema Validator](https://www.jsonschemavalidator.net/): Used to validate JSON schemas.
+
+## Possible TODOs
+
+- Single, unified metadata file.
+- Asynchronous downloads of repositories.

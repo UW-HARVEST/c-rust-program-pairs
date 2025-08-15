@@ -85,20 +85,16 @@ In metadata files in the `project/` directory, we have a project containing many
 | `repository_url` | URL | Source code repository URL | `"https://github.com/user/repo"` |
 | `translation_tools` | array of strings | Tools used for translation | `"c2rust"`, `"manual"` |
 | `feature_relationship` | string | Feature comparison with C version | `"overlapping"` |
-| `source_paths` | array of paths | Paths to source files/directories | `["src/main.rs", "src/lib.rs"]` |
+| `source_paths` | array of paths | Paths to source files/directories | `["src/main.rs", "src/"]` |
 
-**Translation Method Values:**
-
-- `manual` - Hand-written from scratch
-- `semi-automatic` - Mix of automated tools and manual work
-- `automatic` - Primarily tool-generated
-
-**Feature Relationship Values:**
-
-- `rust_superset_of_c` - Rust has all C features plus more
-- `rust_subset_of_c` - Rust implements only some C features
-- `rust_equivalent_to_c` - Same feature set as C version
-- `overlapping` - Some matching, some different features
+- `source_paths`: This field should include only files that contain the source code of the program.
+  - A Single File: A single file of source code.
+  - Directory: Includes all files including the directory. Only specify directories if we are sure that every file in there is source code (no READMEs, etc.).
+- `feature_relationship` Enum:
+  - `rust_superset_of_c` - Rust has all C features plus more
+  - `rust_subset_of_c` - Rust implements only some C features
+  - `rust_equivalent_to_c` - Same feature set as C version
+  - `overlapping` - Some matching, some different features
 
 ## Program Configuration
 
