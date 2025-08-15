@@ -4,7 +4,7 @@ target
 programs
 
 # Where we store repositories we have downloaded.
-repository_cache
+repository_clones
 
 # Generated program
 metadata/metadata_schema.rs

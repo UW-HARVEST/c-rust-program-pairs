@@ -8,7 +8,7 @@
 
 use std::{error::Error, fs, path::Path};
 
-use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
+use git2::{build::RepoBuilder, FetchOptions, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
@@ -18,14 +18,14 @@ use crate::{
     },
     paths::{
         INDIVIDUAL_METADATA_DIRECTORY, PROGRAMS_DIRECTORY, PROJECT_METADATA_DIRECTORY,
-        REPOSITORY_CACHE_DIRECTORY,
+        REPOSITORY_CLONES_DIRECTORY,
     },
 };
 
 /// Download all metadata in `metadata/`.
 pub fn download_metadata() {
-    download_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
-    download_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
+    download_from_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
+    download_from_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
 }
 
 /// Download all program pairs in metadata files from either
@@ -36,9 +36,8 @@ pub fn download_metadata() {
 ///
 /// # Arguments
 ///
-/// - `directory` - A path to the directory containing the metadata JSON
-///                 files.
-fn download_metadata_directory(directory: &Path) {
+/// - `directory` - The directory containing the metadata JSON files.
+fn download_from_metadata_directory(directory: &Path) {
     for metadata_file in directory
         .read_dir()
         .expect("Failed to read metadata directory")
@@ -77,8 +76,7 @@ fn download_metadata_file(metadata: &Metadata) {
 ///
 /// # Arguments
 ///
-/// - `pair` - Reference to a `ProgramPair` struct which contains information
-///            about the program pair.
+/// - `pair` - A program pair.
 ///
 /// # Errors
 ///
@@ -120,7 +118,7 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
 /// Downloads the specified source files from a Git repository.
 ///
 /// This function clones the repository (if not already cached) into
-/// `repository_cache/<language>/<repository_name>`, then copies the listed
+/// `repository_clones/<language>/<repository_name>`, then copies the listed
 /// `source_files` into the given `program_directory`.
 ///
 /// A progress bar is displayed on standard output to track cloning and copying.
@@ -172,8 +170,8 @@ fn download_files(
     });
 
     // Check if repository exists in cache, if not clone it.
-    // We store repositories in repository_cache/<language>/<repository_name>.
-    let repository_path = Path::new(REPOSITORY_CACHE_DIRECTORY).join(program_language.to_str());
+    // We clone repositories in repository_clones/<language>/<repository_name>.
+    let repository_path = Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
     let repository_name = get_repository_name(repository_url)?;
     let repository = match Repository::open(repository_path.join(&repository_name)) {
         Ok(repository) => repository,
@@ -182,7 +180,7 @@ fn download_files(
             let mut fetch_options = FetchOptions::new();
             fetch_options.remote_callbacks(remote_callbacks);
 
-            // Clone only the latest commit to save time / space.
+            // Clone only the latest commit to save time and space.
             fetch_options.depth(1);
 
             // Clone the repository.
@@ -216,7 +214,7 @@ fn download_files(
     }
 
     progress_bar.finish_with_message(format!(
-        "Successfully downloaded {} ({})!",
+        "Downloaded {} ({}).",
         program_name,
         program_language.to_str()
     ));

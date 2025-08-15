@@ -1,13 +1,12 @@
 //! # Corpus
 //!
-//! This module handles the loading, validation, and transformation  of
-//! metadata files into strongly-typed Rust structures for use.
+//! This module transforms metadata files into strongly-typed Rust structs.
 //!
 //! ## Modules
 //!
 //! - [`downloader`] — Downloads program pairs form metadata/.
-//! - [`parser`] — Reads and deserializes raw JSON files into intermediate structures.
-//! - [`schema`] — Defines the final strongly-typed Rust structures.
+//! - [`parser`] — Reads JSON files into data structures.
+//! - [`schema`] — Defines the strongly-typed Rust data structures.
 
 pub mod downloader;
 pub mod parser;

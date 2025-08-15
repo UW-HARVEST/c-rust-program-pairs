@@ -34,11 +34,11 @@ import_types!(schema = "metadata/metadata.schema.json");
 ///
 /// # Arguments
 ///
-/// - `path` — Path to the JSON metadata file.
+/// - `path` — The JSON metadata file.
 ///
 /// # Returns
 ///
-/// A [`Metadata`] instance containing validated and normalized program pair data.
+/// A [`Metadata`] instance containing program pair data.
 ///
 /// # Errors
 ///

@@ -1,18 +1,17 @@
 //! Metadata Schema
 //!
-//! This module defines the schema of our final data structure which we use
-//! to store information about our program pairs.
+//! This module data structures that store information about program pairs.
 
 use serde::{Deserialize, Serialize};
 
-/// Represents the metadata from a single .json metadata file, containing
+/// The metadata from a single .json metadata file, containing
 /// an array of program pairs.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Metadata {
     pub pairs: Vec<ProgramPair>,
 }
 
-/// Contains information about each C-Rust program pair.
+/// One C-Rust program pair.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProgramPair {
     pub program_name: String,
@@ -23,7 +22,7 @@ pub struct ProgramPair {
     pub rust_program: Program,
 }
 
-/// Contains information about each individual C or Rust program.
+/// One C or Rust program.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Program {
     pub language: Language,
@@ -32,7 +31,7 @@ pub struct Program {
     pub source_paths: Vec<String>,
 }
 
-/// Specifies the features of the Rust project in relation to its C counterpart.
+/// Specifies the feature set of the Rust project in relation to its C counterpart.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Features {
     #[serde(rename = "rust_subset_of_c")]
@@ -45,7 +44,7 @@ pub enum Features {
     Overlapping,
 }
 
-/// Specifies the language used for the program.
+/// The language in which the program is written.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Language {
