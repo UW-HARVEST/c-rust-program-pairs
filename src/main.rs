@@ -7,8 +7,7 @@
 //!
 //! ## Modules
 //!
-//! - [`corpus`] — Handles fetching and storing metadata.
-//! - [`metadata`] — Contains logic for parsing metadata files into Rust structures.
+//! - [`corpus`] — Manages the corpus of C to Rust program pairs.
 //! - [`paths`] — Defines filesystem paths used for metadata storage.
 //!
 //! ## Usage
@@ -17,13 +16,12 @@
 //! projects and individual files into their respective directories.
 
 mod corpus;
-mod metadata;
 mod paths;
 
 #[cfg(test)]
 mod tests {
     use crate::{
-        metadata,
+        corpus,
         paths::{INDIVIDUAL_METADATA_DIRECTORY, PROJECT_METADATA_DIRECTORY},
     };
 
@@ -33,7 +31,7 @@ mod tests {
     #[test]
     fn test_parse_project() {
         let metadata_file = Path::new(PROJECT_METADATA_DIRECTORY).join("diffutils.json");
-        let result = metadata::parse(&metadata_file);
+        let result = corpus::parse(&metadata_file);
         assert!(
             result.is_ok(),
             "Failed to parse project metadata: {:?}",
@@ -45,7 +43,7 @@ mod tests {
     #[test]
     fn test_parse_individual() {
         let metadata_file = Path::new(INDIVIDUAL_METADATA_DIRECTORY).join("system-tools.json");
-        let result = metadata::parse(&metadata_file);
+        let result = corpus::parse(&metadata_file);
         assert!(
             result.is_ok(),
             "Failed to parse individual metadata: {:?}",
@@ -54,12 +52,10 @@ mod tests {
     }
 }
 
-use crate::corpus::download_metadata;
-
 /// Entry point for the metadata downloader.
 ///
 /// Downloads metadata for both projects and individual files into
 /// the directories defined in [`paths`].
 fn main() {
-    download_metadata();
+    corpus::download_metadata();
 }

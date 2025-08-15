@@ -15,7 +15,7 @@ use serde_json::Value;
 use typify::import_types;
 
 use crate::{
-    metadata::schema::{Features, Language, Metadata, Program, ProgramPair},
+    corpus::schema::{Features, Language, Metadata, Program, ProgramPair},
     paths::METADATA_SCHEMA_FILE,
 };
 
