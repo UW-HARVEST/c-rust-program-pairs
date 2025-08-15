@@ -18,7 +18,7 @@ pub const PROJECT_METADATA_DIRECTORY: &str = "./metadata/project";
 /// program (e.g. git).
 pub const INDIVIDUAL_METADATA_DIRECTORY: &str = "./metadata/individual";
 
-/// Directory containing C to Rust program pairs.
+/// Directory containing C-Rust program pairs.
 pub const PROGRAMS_DIRECTORY: &str = "./programs";
 
 /// Directory used as a local cache for repository data to avoid repeatedly

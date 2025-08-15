@@ -1,6 +1,6 @@
 //! # Program Pair Downloader
 //!
-//! This module helps with downloading our corpus of C to Rust program pairs.
+//! This module helps with downloading our corpus of C-Rust program pairs.
 //!
 //! We downloading program-pairs from metadata files, for which
 //! [`download_metadata`] is used to download all JSON metadata files in
@@ -69,7 +69,7 @@ fn download_metadata_file(metadata: &Metadata) {
     }
 }
 
-/// Downloads a C-to-Rust program pair.
+/// Downloads a C-Rust program pair.
 ///
 /// Check if the C and Rust repositories exist, and clone them if they don't
 /// Copy the C source files to programs/<program_name>/c-program.

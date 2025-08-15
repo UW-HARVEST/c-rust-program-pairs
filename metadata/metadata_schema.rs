@@ -35,18 +35,18 @@ pub mod error {
         }
     }
 }
-///Complete schema for C-to-Rust program translation projects and individual pairs
+///Complete schema for C-Rust program translation projects and individual pairs
 ///
 /// <details><summary>JSON schema</summary>
 ///
 /// ```json
 ///{
-///  "title": "C-to-Rust Translation Schema",
-///  "description": "Complete schema for C-to-Rust program translation projects and individual pairs",
+///  "title": "C-Rust Translation Schema",
+///  "description": "Complete schema for C-Rust program translation projects and individual pairs",
 ///  "oneOf": [
 ///    {
 ///      "title": "Individual Pairs Metadata",
-///      "description": "Schema for standalone C-to-Rust program pairs",
+///      "description": "Schema for standalone C-Rust program pairs",
 ///      "type": "object",
 ///      "required": [
 ///        "pairs"
@@ -63,7 +63,7 @@ pub mod error {
 ///    },
 ///    {
 ///      "title": "Project Pairs Metadata",
-///      "description": "Schema for C-to-Rust project program pairs",
+///      "description": "Schema for C-Rust project program pairs",
 ///      "type": "object",
 ///      "required": [
 ///        "pairs",
@@ -113,7 +113,7 @@ pub mod error {
 /// </details>
 #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
 #[serde(untagged)]
-pub enum CToRustTranslationSchema {
+pub enum CRustTranslationSchema {
     IndividualPairsMetadata {
         ///Array of standalone program pair configurations
         pairs: ::std::vec::Vec<IndividualProgramPair>,
@@ -124,8 +124,8 @@ pub enum CToRustTranslationSchema {
         project_information: ProjectPairsMetadataProjectInformation,
     },
 }
-impl ::std::convert::From<&Self> for CToRustTranslationSchema {
-    fn from(value: &CToRustTranslationSchema) -> Self {
+impl ::std::convert::From<&Self> for CRustTranslationSchema {
+    fn from(value: &CRustTranslationSchema) -> Self {
         value.clone()
     }
 }
@@ -312,13 +312,13 @@ impl IndividualProgram {
         Default::default()
     }
 }
-///A single C-to-Rust program pair
+///A single C-Rust program pair
 ///
 /// <details><summary>JSON schema</summary>
 ///
 /// ```json
 ///{
-///  "description": "A single C-to-Rust program pair",
+///  "description": "A single C-Rust program pair",
 ///  "type": "object",
 ///  "required": [
 ///    "c_program",

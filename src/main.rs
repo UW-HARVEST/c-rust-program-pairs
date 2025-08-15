@@ -1,13 +1,13 @@
-//! # C-to-Rust Metadata Downloader
+//! # C-Rust Metadata Downloader
 //!
 //! This crate provides utilities for downloading and parsing metadata files
-//! used in the C-to-Rust conversion research project. It supports both
+//! used in the C-Rust conversion research project. It supports both
 //! project-level and individual-file metadata, storing them in the programs directory
 //! for further analysis.
 //!
 //! ## Modules
 //!
-//! - [`corpus`] — Manages the corpus of C to Rust program pairs.
+//! - [`corpus`] — Manages the corpus of C-Rust program pairs.
 //! - [`paths`] — Defines filesystem paths used for metadata storage.
 //!
 //! ## Usage

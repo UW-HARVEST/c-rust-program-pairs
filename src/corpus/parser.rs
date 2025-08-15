@@ -1,6 +1,6 @@
 //! # Metadata Parsing and Validation
 //!
-//! This module loads C-to-Rust metadata files, validates them against the
+//! This module loads C-Rust metadata files, validates them against the
 //! project's JSON schema, and converts them into a normalized [`Metadata`]
 //! structure.
 //!
@@ -22,13 +22,13 @@ use crate::{
 // Import automatically generated types from our metadata schema.
 import_types!(schema = "metadata/metadata.schema.json");
 
-/// Parses a JSON metadata file describing C-to-Rust program pairs into a
+/// Parses a JSON metadata file describing C-Rust program pairs into a
 /// normalized [`Metadata`] struct.
 ///
 /// Steps:
 ///
 /// 1. Reads the JSON file from `path`.
-/// 2. Deserializes it into a [`CToRustTranslationSchema`] enum.
+/// 2. Deserializes it into a [`CRustTranslationSchema`] enum.
 /// 3. Validates it against the metadata JSON schema.
 /// 4. Converts it into the [`Metadata`] format used throughout the project.
 ///
@@ -44,7 +44,7 @@ import_types!(schema = "metadata/metadata.schema.json");
 ///
 /// Returns an error if:
 /// - The file cannot be read.
-/// - The JSON cannot be deserialized into [`CToRustTranslationSchema`].
+/// - The JSON cannot be deserialized into [`CRustTranslationSchema`].
 /// - Schema validation fails.
 ///
 /// # Example
@@ -58,18 +58,18 @@ import_types!(schema = "metadata/metadata.schema.json");
 pub fn parse(path: &Path) -> Result<Metadata, Box<dyn Error>> {
     // Read metadata file.
     let raw_metadata = fs::read_to_string(path)?;
-    let metadata: CToRustTranslationSchema = serde_json::from_str(&raw_metadata)?;
+    let metadata: CRustTranslationSchema = serde_json::from_str(&raw_metadata)?;
 
     // Validate metadata file with our JSON schema.
     validate_metadata(&metadata)?;
 
     // Create data structure conditioned on the metadata type.
     match metadata {
-        CToRustTranslationSchema::IndividualPairsMetadata { pairs } => {
+        CRustTranslationSchema::IndividualPairsMetadata { pairs } => {
             let metadata = parse_individual(&pairs);
             return Ok(metadata);
         }
-        CToRustTranslationSchema::ProjectPairsMetadata {
+        CRustTranslationSchema::ProjectPairsMetadata {
             pairs,
             project_information,
         } => {

@@ -12,7 +12,7 @@ pub struct Metadata {
     pub pairs: Vec<ProgramPair>,
 }
 
-/// Contains information about each C to Rust program pair.
+/// Contains information about each C-Rust program pair.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProgramPair {
     pub program_name: String,
