@@ -18,7 +18,9 @@ import_types!(schema = "metadata/metadata.schema.json");
 
 ## Schema
 
-We have two metadata schema types - an *individual* or *project* schema found in the `metadata/individual/` and `metadata/project/` directories respectively . In an individual metadata file, we group together unrelated C-Rust projects that each only contain one program.
+Thre are two metadata schema types, *individual* and *project*.  They are found in the `metadata/individual/` and `metadata/project/` directories respectively.
+
+An individual metadata file groups together unrelated C-Rust projects that each only contain one program.  Here is an example:
 
 ```json
 {
@@ -43,7 +45,7 @@ We have two metadata schema types - an *individual* or *project* schema found in
 }
 ```
 
-In metadata files in the `project/` directory, we have a project containing many C-Rust programs.
+A project metadata file containings many C-Rust programs.  All the C programs are in a single project, and all the Rust programs are in a single project.
 
 ```json
 {
@@ -75,6 +77,10 @@ In metadata files in the `project/` directory, we have a project containing many
 }
 ```
 
+### Program Configuration
+
+Each C or Rust program have different configuration options, specified in the `c_program` or `rust_program` fields in `metadata.schema.json`. Note that metadata files in `project` have two program configurations. The first is the *global program configuration*, specified as the `project_global_program` field in our schema, which specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The next *program configuration* is listed as `project_program` in our schema and only applies to individual program pairs, containing the `source_paths` field which are unique to each program.
+
 ### Schema fields
 
 | Field | Type | Description | Valid Values/Examples |
@@ -96,6 +102,3 @@ In metadata files in the `project/` directory, we have a project containing many
   - `rust_equivalent_to_c` - Same feature set as C version
   - `overlapping` - Some matching, some different features
 
-## Program Configuration
-
-Each C or Rust program have different configuration options, specified under the `c_program` or `rust_program` fields in `metadata.schema.json`. Note that metadata files in `/project` have two program configurations. The first is the *global program configuration*, specified as the `project_global_program` field in our schema, which specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The next *program configuration* is listed as `project_program` in our schema and only applies to individual program pairs, containing the `source_paths` field which are unique to each program.
