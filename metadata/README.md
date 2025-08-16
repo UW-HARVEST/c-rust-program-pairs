@@ -2,13 +2,9 @@
 
 Metadata files contain information about our C-Rust program pairs and can be validated with our [JSON schema](./metadata.schema.json).
 
-## Validation
+## Automatically Generated Structs
 
-In our CLI tool, we validate metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
-
-In our script, we automatically validate all metadata files against our schema. We use a [`build.rs`](../build.rs) script to automatically convert our JSON schema to Rust structs at build time.
-
-The generated rust structs can be found at [`metadata/metadata_schema.rs`](./metadata_schema.rs).
+We use a [`build.rs`](../build.rs) script to automatically convert our JSON schema to Rust structs at build time. The generated rust structs can be found at [`metadata/metadata_schema.rs`](./metadata_schema.rs).
 
 To use any of these structs, we use the `import_types` macro provided by `typify`:
 
@@ -19,6 +15,12 @@ import_types!(schema = "metadata/metadata.schema.json");
 ## Schema
 
 We have two metadata schema types - an *individual* or *project* schema found in the `metadata/individual/` and `metadata/project/` directories respectively . In an individual metadata file, we group together unrelated C-Rust projects that each only contain one program.
+
+When downloading program pairs, we first validate metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
+
+### Individual Metadata Schema
+
+- Individual metadata files consist of an array `pairs` containing all C to Rust program pairs.
 
 ```json
 {
@@ -43,7 +45,12 @@ We have two metadata schema types - an *individual* or *project* schema found in
 }
 ```
 
-In metadata files in the `project/` directory, we have a project containing many C-Rust programs.
+### Project Metadata Schema
+
+- Similar to the individual metadata schema, we have a `pairs` field that contains information about specific C to Rust program pairs.
+- However, since all programs are related under the same project, the `project_information` field contains fields that apply to every single program pair.
+  - For example, the `c_program` and `rust_program` fields under `project_information` describes the common `documentation_url` and `repository_url` for all program pairs.
+  - However, the `c_program` and `rust_program` fields found under `pairs` contain the `source_files` specific to each individual program pair.
 
 ```json
 {
@@ -95,7 +102,3 @@ In metadata files in the `project/` directory, we have a project containing many
   - `rust_subset_of_c` - Rust implements only some C features
   - `rust_equivalent_to_c` - Same feature set as C version
   - `overlapping` - Some matching, some different features
-
-## Program Configuration
-
-Each C or Rust program have different configuration options, specified under the `c_program` or `rust_program` fields in `metadata.schema.json`. Note that metadata files in `/project` have two program configurations. The first is the *global program configuration*, specified as the `project_global_program` field in our schema, which specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The next *program configuration* is listed as `project_program` in our schema and only applies to individual program pairs, containing the `source_paths` field which are unique to each program.

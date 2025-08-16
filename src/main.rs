@@ -1,19 +1,12 @@
 //! # C-to-Rust Metadata Downloader
 //!
-//! This crate provides utilities for downloading and parsing metadata files
-//! used in the C-to-Rust conversion research project. It supports both
-//! project-level and individual-file metadata, storing them in the programs directory
-//! for further analysis.
-//!
-//! ## Modules
-//!
-//! - [`corpus`] — Manages the corpus of C to Rust program pairs.
-//! - [`paths`] — Defines filesystem paths used for metadata storage.
+//! This crate parses metadata files and downloads the C and Rust programs,
+//! storing them in the programs/ directory.
 //!
 //! ## Usage
 //!
-//! Running the binary will download the latest metadata for both
-//! projects and individual files into their respective directories.
+//! Running the binary will download the latest program-pairs for both
+//! projects and individual metadata files into their respective directories.
 
 mod corpus;
 mod paths;
