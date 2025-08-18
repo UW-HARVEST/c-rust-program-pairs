@@ -8,6 +8,7 @@
 
 use std::{error::Error, fs, path::Path};
 
+use fs_extra::dir::{self, CopyOptions};
 use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
 use indicatif::{ProgressBar, ProgressStyle};
 
@@ -188,6 +189,9 @@ fn download_files(
     progress_bar.set_message("Copying files...");
     progress_bar.set_style(ProgressStyle::default_spinner());
 
+    // Define options used when copying directories.
+    let copy_options = CopyOptions::new();
+
     // Copy given files from the repository to the given directory.
     let repository_directory = repository
         .workdir()
@@ -201,7 +205,8 @@ fn download_files(
 
         // Copy files from destination to source.
         if source.is_dir() {
-            copy_dir(&source, &destination)?;
+            dir::create_all(&destination, false)?;
+            dir::copy(&source, &destination, &copy_options)?;
         } else {
             fs::copy(source, destination)?;
         }
@@ -271,34 +276,4 @@ fn get_repository_name(url: &str) -> Result<String, Box<dyn Error>> {
         .unwrap_or_else(|| unreachable!("split() always returns at least one element"));
     let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
     Ok(name.to_string())
-}
-
-/// Helper function to copy a directory recursively from source to destination.
-///
-/// # Arguments
-///
-/// - `source` - The source directory which we want to copy all files from.
-/// - `destination` - The destination directory which we want to copy all
-///                   files to.
-///
-/// # Returns
-///
-/// Returns `Ok(())` if the directory was copied successfully.
-fn copy_dir(source: &Path, destination: &Path) -> Result<(), Box<dyn Error>> {
-    fs::create_dir_all(destination)?;
-
-    for entry in fs::read_dir(source)? {
-        let entry = entry?;
-        let file_type = entry.file_type()?;
-        let entry_source = entry.path();
-        let entry_destination = destination.join(entry.file_name());
-
-        if file_type.is_dir() {
-            copy_dir(&entry_source, &entry_destination)?;
-        } else {
-            fs::copy(&entry_source, &entry_destination)?;
-        }
-    }
-
-    Ok(())
 }

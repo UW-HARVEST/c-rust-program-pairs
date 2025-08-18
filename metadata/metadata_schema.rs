@@ -233,10 +233,10 @@ impl ::std::convert::From<&Self> for FeatureRelationship {
 impl ::std::fmt::Display for FeatureRelationship {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match *self {
-            Self::RustSupersetOfC => write!(f, "rust_superset_of_c"),
-            Self::RustSubsetOfC => write!(f, "rust_subset_of_c"),
-            Self::RustEquivalentToC => write!(f, "rust_equivalent_to_c"),
-            Self::Overlapping => write!(f, "overlapping"),
+            Self::RustSupersetOfC => f.write_str("rust_superset_of_c"),
+            Self::RustSubsetOfC => f.write_str("rust_subset_of_c"),
+            Self::RustEquivalentToC => f.write_str("rust_equivalent_to_c"),
+            Self::Overlapping => f.write_str("overlapping"),
         }
     }
 }
