@@ -158,15 +158,13 @@ fn download_files(
 ) -> Result<(), Box<dyn Error>> {
     // Create a progress bar.
     let progress_bar = ProgressBar::new(100);
-    progress_bar.set_message(format!("Cloning {program_name}..."));
     progress_bar.set_style(
         ProgressStyle::default_bar()
-            .template(
-                "{spinner:.cyan} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos:>7}/{len:7} {msg}",
-            )
-            .expect("Failed to set progress bar")
-            .progress_chars("##-"),
+            .template("{spinner:.white} {bar:40.white/white} {pos}/{len} {msg}")
+            .unwrap()
+            .progress_chars("█░"),
     );
+    progress_bar.set_message(format!("Cloning {program_name}..."));
 
     // Set up remote callbacks for progress tracking.
     let mut remote_callbacks = RemoteCallbacks::new();
@@ -195,8 +193,8 @@ fn download_files(
         }
     };
 
-    progress_bar.set_message("Copying files...");
     progress_bar.set_style(ProgressStyle::default_spinner());
+    progress_bar.set_message("Copying files...");
 
     // Define options used when copying directories.
     let copy_options = CopyOptions::new();
@@ -249,9 +247,7 @@ fn update_progress_bar_callback(progress: git2::Progress, progress_bar: &Progres
     if received_objects < total_objects {
         progress_bar.set_length(total_objects as u64);
         progress_bar.set_position(received_objects as u64);
-        progress_bar.set_message(format!(
-            "Receiving objects: {received_objects}/{total_objects} ({received_bytes:.1} B)"
-        ));
+        progress_bar.set_message(format!("Receiving objects: ({received_bytes:.1} B)"));
     }
     // Processing downloaded objects.
     else if indexed_objects < total_objects {
