@@ -8,6 +8,7 @@
 
 use std::{error::Error, fs, path::Path};
 
+use fs_extra::dir::{self, CopyOptions};
 use git2::{build::RepoBuilder, FetchOptions, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
 
@@ -23,9 +24,18 @@ use crate::{
 };
 
 /// Download all metadata in `metadata/`.
-pub fn download_metadata() {
-    download_from_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
-    download_from_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
+///
+/// # Arguments
+///
+/// - `demo` - Specifies if we are running a demo, so we only download the
+///            program-pairs specified in the metadata in `metadata/demo/`.
+pub fn download_metadata(demo: bool) {
+    if demo {
+        download_metadata_directory(Path::new("metadata/demo"));
+    } else {
+        download_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
+        download_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
+    }
 }
 
 /// Download all program pairs in metadata files from either
@@ -37,7 +47,7 @@ pub fn download_metadata() {
 /// # Arguments
 ///
 /// - `directory` - The directory containing the metadata JSON files.
-fn download_from_metadata_directory(directory: &Path) {
+pub fn download_from_metadata_directory(directory: &Path) {
     for metadata_file in directory
         .read_dir()
         .expect(&format!("Failed to read: {}", directory.display()))
@@ -146,15 +156,13 @@ fn download_files(
 ) -> Result<(), Box<dyn Error>> {
     // Create a progress bar.
     let progress_bar = ProgressBar::new(100);
-    progress_bar.set_message(format!("Cloning {program_name}..."));
     progress_bar.set_style(
         ProgressStyle::default_bar()
-            .template(
-                "{spinner:.cyan} [{elapsed_precise}] [{bar:40.cyan/blue}] {pos:>7}/{len:7} {msg}",
-            )
-            .expect("Failed to set progress bar")
-            .progress_chars("##-"),
+            .template("{spinner:.white} {bar:40.white/white} {pos}/{len} {msg}")
+            .unwrap()
+            .progress_chars("█░"),
     );
+    progress_bar.set_message(format!("Cloning {program_name}..."));
 
     // Set up remote callbacks for progress tracking.
     let mut remote_callbacks = RemoteCallbacks::new();
@@ -183,8 +191,11 @@ fn download_files(
         }
     };
 
-    progress_bar.set_message("Copying files...");
     progress_bar.set_style(ProgressStyle::default_spinner());
+    progress_bar.set_message("Copying files...");
+
+    // Define options used when copying directories.
+    let copy_options = CopyOptions::new();
 
     // Copy given files from the repository to the given directory.
     let repository_directory = repository
@@ -199,7 +210,8 @@ fn download_files(
 
         // Copy files from destination to source.
         if source.is_dir() {
-            copy_dir(&source, &destination)?;
+            dir::create_all(&destination, false)?;
+            dir::copy(&source, &destination, &copy_options)?;
         } else {
             fs::copy(source, destination)?;
         }
@@ -233,9 +245,7 @@ fn update_progress_bar_callback(progress: git2::Progress, progress_bar: &Progres
     if received_objects < total_objects {
         progress_bar.set_length(total_objects as u64);
         progress_bar.set_position(received_objects as u64);
-        progress_bar.set_message(format!(
-            "Receiving objects: {received_objects}/{total_objects} ({received_bytes:.1} B)"
-        ));
+        progress_bar.set_message(format!("Receiving objects: ({received_bytes:.1} B)"));
     }
     // Processing downloaded objects.
     else if indexed_objects < total_objects {
@@ -269,34 +279,4 @@ fn get_repository_name(url: &str) -> Result<String, Box<dyn Error>> {
         .unwrap_or_else(|| unreachable!("split() always returns at least one element"));
     let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
     Ok(name.to_string())
-}
-
-/// Helper function to copy a directory recursively from source to destination.
-///
-/// # Arguments
-///
-/// - `source` - The source directory which we want to copy all files from.
-/// - `destination` - The destination directory which we want to copy all
-///                   files to.
-///
-/// # Returns
-///
-/// Returns `Ok(())` if the directory was copied successfully.
-fn copy_dir(source: &Path, destination: &Path) -> Result<(), Box<dyn Error>> {
-    fs::create_dir_all(destination)?;
-
-    for entry in fs::read_dir(source)? {
-        let entry = entry?;
-        let file_type = entry.file_type()?;
-        let entry_source = entry.path();
-        let entry_destination = destination.join(entry.file_name());
-
-        if file_type.is_dir() {
-            copy_dir(&entry_source, &entry_destination)?;
-        } else {
-            fs::copy(&entry_source, &entry_destination)?;
-        }
-    }
-
-    Ok(())
 }

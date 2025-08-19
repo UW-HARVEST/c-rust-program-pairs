@@ -50,5 +50,5 @@ mod tests {
 /// Downloads metadata for both projects and individual files into
 /// the directories defined in [`paths`].
 fn main() {
-    corpus::download_metadata();
+    corpus::download_metadata(true);
 }
