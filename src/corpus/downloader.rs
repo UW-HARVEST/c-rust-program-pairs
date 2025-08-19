@@ -24,9 +24,18 @@ use crate::{
 };
 
 /// Download all metadata in `metadata/`.
-pub fn download_metadata() {
-    download_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
-    download_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
+///
+/// # Arguments
+///
+/// - `demo` - Specifies if we are running a demo, so we only download the
+///            program-pairs specified in the metadata in `metadata/demo/`.
+pub fn download_metadata(demo: bool) {
+    if demo {
+        download_metadata_directory(Path::new("metadata/demo"));
+    } else {
+        download_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
+        download_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
+    }
 }
 
 /// Download all program pairs in metadata files from either
@@ -39,7 +48,7 @@ pub fn download_metadata() {
 ///
 /// - `directory` - A path to the directory containing the metadata JSON
 ///                 files.
-fn download_metadata_directory(directory: &Path) {
+pub fn download_metadata_directory(directory: &Path) {
     for metadata_file in directory
         .read_dir()
         .expect(&format!("Failed to read: {}", directory.display()))
