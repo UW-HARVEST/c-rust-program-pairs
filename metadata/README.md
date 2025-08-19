@@ -2,7 +2,7 @@
 
 Metadata files contain information about C-Rust program pairs.
 
-## Validation
+## Automatically Generated Structs
 
 Our CLI tool validates metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
 
@@ -21,6 +21,12 @@ import_types!(schema = "metadata/metadata.schema.json");
 Thre are two metadata schema types, *individual* and *project*.  They are found in the `metadata/individual/` and `metadata/project/` directories respectively.
 
 An individual metadata file groups together unrelated C-Rust projects that each only contain one program.  Here is an example:
+
+When downloading program pairs, we first validate metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
+
+### Individual Metadata Schema
+
+- Individual metadata files consist of an array `pairs` containing all C to Rust program pairs.
 
 ```json
 {
@@ -101,4 +107,3 @@ Each C or Rust program have different configuration options, specified in the `c
   - `rust_subset_of_c` - Rust implements only some C features
   - `rust_equivalent_to_c` - Same feature set as C version
   - `overlapping` - Some matching, some different features
-

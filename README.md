@@ -39,3 +39,5 @@ cargo run
 
 - Single, unified metadata file.
 - Asynchronous downloads of repositories.
+- Pull repositories in the cache to update them.
+- Require date of download or repository version so we ensure that repositories downloaded are consistent.
