@@ -156,27 +156,29 @@ fn download_files(
     repository_url: &str,
     source_files: &[String],
 ) -> Result<(), Box<dyn Error>> {
+    let repository_cache_path =
+        Path::new(REPOSITORY_CACHE_DIRECTORY).join(program_language.to_str());
+    let repository_name = get_repository_name(repository_url)?;
+
     // Create a progress bar.
     let progress_bar = ProgressBar::new(100);
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{spinner:.white} {bar:40.white/white} {pos}/{len} {msg}")
             .unwrap()
-            .progress_chars("█░"),
+            .progress_chars("##-"),
     );
     progress_bar.set_message(format!("Cloning {program_name}..."));
 
     // Set up remote callbacks for progress tracking.
     let mut remote_callbacks = RemoteCallbacks::new();
     remote_callbacks.transfer_progress(|progress: git2::Progress| {
-        update_progress_bar_callback(progress, &progress_bar)
+        update_progress_bar_callback(progress, &repository_name, &progress_bar)
     });
 
     // Check if repository exists in cache, if not clone it.
     // We store repositories in repository_cache/<language>/<repository_name>.
-    let repository_path = Path::new(REPOSITORY_CACHE_DIRECTORY).join(program_language.to_str());
-    let repository_name = get_repository_name(repository_url)?;
-    let repository = match Repository::open(repository_path.join(&repository_name)) {
+    let repository = match Repository::open(repository_cache_path.join(&repository_name)) {
         Ok(repository) => repository,
         Err(_) => {
             // Setup fetch options with our callbacks.
@@ -189,7 +191,10 @@ fn download_files(
             // Clone the repository.
             let mut builder = RepoBuilder::new();
             builder.fetch_options(fetch_options);
-            builder.clone(repository_url, &repository_path.join(&repository_name))?
+            builder.clone(
+                repository_url,
+                &repository_cache_path.join(&repository_name),
+            )?
         }
     };
 
@@ -231,13 +236,18 @@ fn download_files(
 ///
 /// # Arguments
 ///
+/// - `repository_name` - The repository being cloned.
 /// - `progress` - Contains information about the current status of the download.
 /// - `progress_bar` - The progress bar to update.
 ///
 /// # Returns
 ///
 /// The callback function must return `true`.
-fn update_progress_bar_callback(progress: git2::Progress, progress_bar: &ProgressBar) -> bool {
+fn update_progress_bar_callback(
+    progress: git2::Progress,
+    repository_name: &str,
+    progress_bar: &ProgressBar,
+) -> bool {
     let received_objects = progress.received_objects();
     let received_bytes = progress.received_bytes();
     let total_objects = progress.total_objects();
@@ -247,7 +257,9 @@ fn update_progress_bar_callback(progress: git2::Progress, progress_bar: &Progres
     if received_objects < total_objects {
         progress_bar.set_length(total_objects as u64);
         progress_bar.set_position(received_objects as u64);
-        progress_bar.set_message(format!("Receiving objects: ({received_bytes:.1} B)"));
+        progress_bar.set_message(format!(
+            "Cloning {repository_name}: ({received_bytes:.1} B)"
+        ));
     }
     // Processing downloaded objects.
     else if indexed_objects < total_objects {
