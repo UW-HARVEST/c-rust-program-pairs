@@ -1,4 +1,4 @@
-//! # C-to-Rust Metadata Downloader
+//! # C-Rust Metadata Downloader
 //!
 //! This crate parses metadata files and downloads the C and Rust programs,
 //! storing them in the programs/ directory.

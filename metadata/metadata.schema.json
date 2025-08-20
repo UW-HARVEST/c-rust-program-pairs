@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "title": "C-to-Rust Translation Schema",
-    "description": "Complete schema for C-to-Rust program translation projects and individual pairs",
+    "title": "C-Rust Translation Schema",
+    "description": "Complete schema for C-Rust program translation projects and individual pairs",
     "definitions": {
         "program_name": {
             "type": "string",
@@ -82,7 +82,7 @@
         },
         "individual_program_pair": {
             "type": "object",
-            "description": "A single C-to-Rust program pair",
+            "description": "A single C-Rust program pair",
             "properties": {
                 "program_name": {
                     "$ref": "#/definitions/program_name"
@@ -140,7 +140,7 @@
     "oneOf": [
         {
             "title": "Individual Pairs Metadata",
-            "description": "Schema for standalone C-to-Rust program pairs",
+            "description": "Schema for standalone C-Rust program pairs",
             "type": "object",
             "properties": {
                 "pairs": {
@@ -155,7 +155,7 @@
         },
         {
             "title": "Project Pairs Metadata",
-            "description": "Schema for C-to-Rust project program pairs",
+            "description": "Schema for C-Rust project program pairs",
             "type": "object",
             "properties": {
                 "project_information": {

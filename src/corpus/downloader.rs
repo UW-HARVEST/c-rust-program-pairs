@@ -1,6 +1,6 @@
 //! # Program Pair Downloader
 //!
-//! This module helps with downloading our corpus of C to Rust program pairs.
+//! This module helps with downloading our corpus of C-Rust program pairs.
 //!
 //! We downloading program-pairs from metadata files, for which
 //! [`download_metadata`] is used to download all JSON metadata files in
@@ -19,7 +19,7 @@ use crate::{
     },
     paths::{
         INDIVIDUAL_METADATA_DIRECTORY, PROGRAMS_DIRECTORY, PROJECT_METADATA_DIRECTORY,
-        REPOSITORY_CACHE_DIRECTORY,
+        REPOSITORY_CLONES_DIRECTORY,
     },
 };
 
@@ -31,10 +31,10 @@ use crate::{
 ///            program-pairs specified in the metadata in `metadata/demo/`.
 pub fn download_metadata(demo: bool) {
     if demo {
-        download_metadata_directory(Path::new("metadata/demo"));
+        download_from_metadata_directory(Path::new("metadata/demo"));
     } else {
-        download_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
-        download_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
+        download_from_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
+        download_from_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
     }
 }
 
@@ -46,9 +46,8 @@ pub fn download_metadata(demo: bool) {
 ///
 /// # Arguments
 ///
-/// - `directory` - A path to the directory containing the metadata JSON
-///                 files.
-pub fn download_metadata_directory(directory: &Path) {
+/// - `directory` - The directory containing the metadata JSON files.
+pub fn download_from_metadata_directory(directory: &Path) {
     for metadata_file in directory
         .read_dir()
         .expect(&format!("Failed to read: {}", directory.display()))
@@ -82,7 +81,7 @@ fn download_metadata_file(metadata: &Metadata) {
     }
 }
 
-/// Downloads a C-to-Rust program pair.
+/// Downloads a C-Rust program pair.
 ///
 /// Check if the C and Rust repositories exist, and clone them if they don't
 /// Copy the C source files to programs/<program_name>/c-program.
@@ -90,8 +89,7 @@ fn download_metadata_file(metadata: &Metadata) {
 ///
 /// # Arguments
 ///
-/// - `pair` - Reference to a `ProgramPair` struct which contains information
-///            about the program pair.
+/// - `pair` - A program pair.
 fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
     let program_name = &pair.program_name;
     let base_program_path = Path::new(PROGRAMS_DIRECTORY).join(program_name);
@@ -128,7 +126,7 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
 /// Downloads the specified source files from a Git repository.
 ///
 /// This function clones the repository (if not already cached) into
-/// `repository_cache/<language>/<repository_name>`, then copies the listed
+/// `repository_clones/<language>/<repository_name>`, then copies the listed
 /// `source_files` into the given `program_directory`.
 ///
 /// A progress bar is displayed on standard output to track cloning and copying.
@@ -157,7 +155,7 @@ fn download_files(
     source_files: &[String],
 ) -> Result<(), Box<dyn Error>> {
     let repository_cache_path =
-        Path::new(REPOSITORY_CACHE_DIRECTORY).join(program_language.to_str());
+        Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
     let repository_name = get_repository_name(repository_url)?;
 
     // Create a progress bar.
@@ -185,7 +183,7 @@ fn download_files(
             let mut fetch_options = FetchOptions::new();
             fetch_options.remote_callbacks(remote_callbacks);
 
-            // Clone only the latest commit to save time / space.
+            // Clone only the latest commit to save time and space.
             fetch_options.depth(1);
 
             // Clone the repository.
@@ -225,7 +223,7 @@ fn download_files(
     }
 
     progress_bar.finish_with_message(format!(
-        "Successfully downloaded {} ({})!",
+        "Downloaded {} ({}).",
         program_name,
         program_language.to_str()
     ));
