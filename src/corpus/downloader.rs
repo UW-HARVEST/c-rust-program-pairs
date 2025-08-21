@@ -6,7 +6,11 @@
 //! [`download_metadata`] is used to download all JSON metadata files in
 //! metadata/.
 
-use std::{error::Error, fs, path::Path};
+use std::{
+    error::Error,
+    fs,
+    path::{Path, PathBuf},
+};
 
 use fs_extra::dir::{self, CopyOptions};
 use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
@@ -25,17 +29,64 @@ use crate::{
 
 /// Download all metadata in `metadata/`.
 ///
+/// We also have a progress bar to track the total number of metadata files
+/// processed.
+///
 /// # Arguments
 ///
 /// - `demo` - Specifies if we are running a demo, so we only download the
 ///            program-pairs specified in the metadata in `metadata/demo/`.
 pub fn download_metadata(demo: bool) {
-    if demo {
-        download_from_metadata_directory(Path::new("metadata/demo"));
+    let directories = if demo {
+        vec![PathBuf::from("metadata/demo")]
     } else {
-        download_from_metadata_directory(Path::new(PROJECT_METADATA_DIRECTORY));
-        download_from_metadata_directory(Path::new(INDIVIDUAL_METADATA_DIRECTORY));
+        vec![
+            PathBuf::from(PROJECT_METADATA_DIRECTORY),
+            PathBuf::from(INDIVIDUAL_METADATA_DIRECTORY),
+        ]
+    };
+
+    let mut total_files = 0;
+    for directory in &directories {
+        // TODO: Better error handling.
+        total_files += count_files(&directory).expect(&format!(
+            "Failed to read directory: {}",
+            directory.display()
+        ));
     }
+
+    let progress_bar = ProgressBar::new(total_files as u64);
+    progress_bar.set_style(
+        ProgressStyle::default_bar()
+            .template("{spinner:.white} {bar:40.white/white} {pos}/{len} {msg}")
+            .unwrap()
+            .progress_chars("##-"),
+    );
+    progress_bar.set_message(format!("Downloading program-pairs..."));
+
+    for directory in &directories {
+        download_from_metadata_directory(&directory, &progress_bar);
+    }
+}
+
+/// Helper function to count the number of files in a directory.
+///
+/// # Arguments
+///
+/// `directory` - A path to the directory.
+///
+/// # Returns
+///
+/// A Result containing the number of files.
+fn count_files(directory: &Path) -> Result<i32, Box<dyn Error>> {
+    let mut total_files = 0;
+    for file in directory.read_dir()? {
+        let file = file?;
+        if file.file_type()?.is_file() {
+            total_files += 1;
+        }
+    }
+    Ok(total_files)
 }
 
 /// Download all program pairs in metadata files from either
@@ -47,7 +98,9 @@ pub fn download_metadata(demo: bool) {
 /// # Arguments
 ///
 /// - `directory` - The directory containing the metadata JSON files.
-pub fn download_from_metadata_directory(directory: &Path) {
+/// - `progress_bar` - Update each time we finish downloading program pairs
+///                    from each metadata file.
+pub fn download_from_metadata_directory(directory: &Path, progress_bar: &ProgressBar) {
     for metadata_file in directory
         .read_dir()
         .expect(&format!("Failed to read: {}", directory.display()))
@@ -56,8 +109,7 @@ pub fn download_from_metadata_directory(directory: &Path) {
             let parsed_result = corpus::parse(&metadata_file.path());
             match parsed_result {
                 Ok(metadata) => {
-                    println!("Successfully parsed {:?}", metadata_file.path().display());
-                    download_metadata_file(&metadata);
+                    download_metadata_file(&metadata, &progress_bar);
                 }
                 Err(error) => println!(
                     "Failed to parse {:?}: {error}",
@@ -72,13 +124,18 @@ pub fn download_from_metadata_directory(directory: &Path) {
 ///
 /// Note that we don't want to panic if we fail to download a program pair as
 /// we would rather continue downloading the remaining pairs.
-fn download_metadata_file(metadata: &Metadata) {
+///
+/// # Arguments
+/// - `metadata` - Contains all program-pairs we want to download.
+/// - `progress_bar` - Update each time we finish downloading program pairs
+///                    from each metadata file.
+fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
     for pair in metadata.pairs.iter() {
-        match download_program_pair(pair) {
-            Ok(_) => {}
-            Err(error) => println!("Failed to download {}: {}", pair.program_name, error),
-        }
+        if let Err(error) = download_program_pair(pair) {
+            println!("Failed to download {}: {}", pair.program_name, error)
+        };
     }
+    progress_bar.inc(1);
 }
 
 /// Downloads a C-Rust program pair.
@@ -166,7 +223,7 @@ fn download_files(
             .unwrap()
             .progress_chars("##-"),
     );
-    progress_bar.set_message(format!("Cloning {program_name}..."));
+    progress_bar.set_message(format!("Cloning repository {repository_name}..."));
 
     // Set up remote callbacks for progress tracking.
     let mut remote_callbacks = RemoteCallbacks::new();
