@@ -153,12 +153,6 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
     let c_program_path = base_program_path.join("c-program");
     let rust_program_path = base_program_path.join("rust-program");
 
-    // Don't clone repositories if directories already exist.
-    if base_program_path.exists() {
-        println!("{program_name} already exists!");
-        return Ok(());
-    }
-
     fs::create_dir_all(&c_program_path)?;
     fs::create_dir_all(&rust_program_path)?;
 
