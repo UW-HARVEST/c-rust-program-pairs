@@ -199,3 +199,35 @@ fn map_feature_relationship(relationship: FeatureRelationship) -> Features {
         FeatureRelationship::Overlapping => Features::Overlapping,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::paths::{INDIVIDUAL_METADATA_DIRECTORY, PROJECT_METADATA_DIRECTORY};
+
+    use std::path::Path;
+
+    // Tests that a project-metadata file can be successfully parsed.
+    #[test]
+    fn test_parse_project() {
+        let metadata_file = Path::new(PROJECT_METADATA_DIRECTORY).join("diffutils.json");
+        let result = parse(&metadata_file);
+        assert!(
+            result.is_ok(),
+            "Failed to parse project metadata: {:?}",
+            result.err()
+        );
+    }
+
+    // Tests that an individual-metadata file can be successfully parsed.
+    #[test]
+    fn test_parse_individual() {
+        let metadata_file = Path::new(INDIVIDUAL_METADATA_DIRECTORY).join("system-tools.json");
+        let result = parse(&metadata_file);
+        assert!(
+            result.is_ok(),
+            "Failed to parse individual metadata: {:?}",
+            result.err()
+        );
+    }
+}

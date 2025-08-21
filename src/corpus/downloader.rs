@@ -288,7 +288,7 @@ fn get_repository_name(url: &str) -> Result<String, Box<dyn Error>> {
         .trim_end_matches('/')
         .split('/')
         .last()
-        .unwrap_or_else(|| unreachable!("split() always returns at least one element"));
+        .expect("Error is unreachable since split always returns at least 1 element");
     let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
     Ok(name.to_string())
 }
