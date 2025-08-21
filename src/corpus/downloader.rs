@@ -20,6 +20,7 @@ use crate::{
     corpus::{
         self,
         schema::{Language, Metadata, ProgramPair},
+        utils,
     },
     paths::{
         INDIVIDUAL_METADATA_DIRECTORY, PROGRAMS_DIRECTORY, PROJECT_METADATA_DIRECTORY,
@@ -49,7 +50,7 @@ pub fn download_metadata(demo: bool) {
     let mut total_files = 0;
     for directory in &directories {
         // TODO: Better error handling.
-        total_files += count_files(&directory).expect(&format!(
+        total_files += utils::count_files(&directory).expect(&format!(
             "Failed to read directory: {}",
             directory.display()
         ));
@@ -67,26 +68,6 @@ pub fn download_metadata(demo: bool) {
     for directory in &directories {
         download_from_metadata_directory(&directory, &progress_bar);
     }
-}
-
-/// Helper function to count the number of files in a directory.
-///
-/// # Arguments
-///
-/// `directory` - A path to the directory.
-///
-/// # Returns
-///
-/// A Result containing the number of files.
-fn count_files(directory: &Path) -> Result<i32, Box<dyn Error>> {
-    let mut total_files = 0;
-    for file in directory.read_dir()? {
-        let file = file?;
-        if file.file_type()?.is_file() {
-            total_files += 1;
-        }
-    }
-    Ok(total_files)
 }
 
 /// Download all program pairs in metadata files from either
@@ -207,7 +188,7 @@ fn download_files(
 ) -> Result<(), Box<dyn Error>> {
     let repository_cache_path =
         Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
-    let repository_name = get_repository_name(repository_url)?;
+    let repository_name = utils::get_repository_name(repository_url)?;
 
     // Create a progress bar.
     let progress_bar = ProgressBar::new(100);
@@ -323,23 +304,4 @@ fn update_progress_bar_callback(
     }
 
     true
-}
-
-/// Helper function to extract a repository's name from its URL.
-///
-/// # Arguments
-///
-/// - `url` - Git repository URL; must point to a valid, accessible repo.
-///
-/// # Returns
-///
-/// The name of the repository.
-fn get_repository_name(url: &str) -> Result<String, Box<dyn Error>> {
-    let last_segment = url
-        .trim_end_matches('/')
-        .split('/')
-        .last()
-        .expect("Error is unreachable since split always returns at least 1 element");
-    let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
-    Ok(name.to_string())
 }
