@@ -32,7 +32,6 @@
                 "source_paths": ["src"]
             }
         },
-
         {
             "program_name": "fd",
             "program_description": "A simple, fast and user-friendly alternative to 'find'.",
@@ -46,6 +45,38 @@
             "rust_program": {
                 "documentation_url": "https://github.com/sharkdp/fd/blob/master/README.md",
                 "repository_url": "https://github.com/sharkdp/fd.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "ripgrep",
+            "program_description": "A line-oriented search tool that recursively searches the current directory for a regex pattern.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/grep/manual/grep.html",
+                "repository_url": "https://git.savannah.gnu.org/git/grep.git",
+                "source_paths": ["src"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/BurntSushi/ripgrep/blob/master/README.md",
+                "repository_url": "https://github.com/BurntSushi/ripgrep.git",
+                "source_paths": ["crates"]
+            }
+        },
+        {
+            "program_name": "dust",
+            "program_description": "A more intuitive version of du in rust.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/du-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils",
+                "source_paths": ["src/du.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/bootandy/dust/blob/master/README.md",
+                "repository_url": "https://github.com/bootandy/dust.git",
                 "source_paths": ["src"]
             }
         }
