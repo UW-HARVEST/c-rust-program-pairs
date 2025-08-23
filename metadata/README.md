@@ -107,3 +107,15 @@ Each C or Rust program have different configuration options, specified in the `c
   - `rust_subset_of_c` - Rust implements only some C features
   - `rust_equivalent_to_c` - Same feature set as C version
   - `overlapping` - Some matching, some different features
+
+## Finding Program-Pairs
+
+A significant use case for Rust is rewriting and improving existing CLI tools. Most of our corpus consists of these C-to-Rust program pairs.
+
+1. Initial Discovery: Manually identify several high-quality program pairs and create their metadata entries.
+2. AI-Assisted Generation: Use the manually curated examples as prompts for LLMs (like ChatGPT) to suggest additional program pairs.
+3. Manual Verification: Review and validate all AI-generated suggestions to ensure:
+  - The programs actually exist and are maintained
+  - The Rust version is genuinely a rewrite/improvement of the C version
+  - The functionality and scope are comparable
+  - Metadata accuracy and completeness
