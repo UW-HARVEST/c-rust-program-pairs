@@ -12,7 +12,6 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use fs_extra::dir::{self, CopyOptions};
 use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
 use indicatif::{ProgressBar, ProgressStyle};
 
@@ -59,15 +58,17 @@ pub fn download_metadata(demo: bool) {
     let progress_bar = ProgressBar::new(total_files as u64);
     progress_bar.set_style(
         ProgressStyle::default_bar()
-            .template("{spinner:.white} {bar:40.white/white} {pos}/{len} {msg}")
+            .template("{bar:40.white/white} {pos}/{len} {msg}")
             .unwrap()
             .progress_chars("##-"),
     );
-    progress_bar.set_message(format!("Downloading program-pairs..."));
+    progress_bar.set_message(format!("Processing metadata files..."));
 
     for directory in &directories {
         download_from_metadata_directory(&directory, &progress_bar);
     }
+
+    progress_bar.finish_with_message("Downloaded all program pairs!");
 }
 
 /// Download all program pairs in metadata files from either
@@ -194,7 +195,7 @@ fn download_files(
     let progress_bar = ProgressBar::new(100);
     progress_bar.set_style(
         ProgressStyle::default_bar()
-            .template("{spinner:.white} {bar:40.white/white} {pos}/{len} {msg}")
+            .template("{bar:40.white/white} {pos}/{len} {msg}")
             .unwrap()
             .progress_chars("##-"),
     );
@@ -231,9 +232,6 @@ fn download_files(
     progress_bar.set_style(ProgressStyle::default_spinner());
     progress_bar.set_message("Copying files...");
 
-    // Define options used when copying directories.
-    let copy_options = CopyOptions::new();
-
     // Copy given files from the repository to the given directory.
     let repository_directory = repository
         .workdir()
@@ -247,8 +245,7 @@ fn download_files(
 
         // Copy files from destination to source.
         if source.is_dir() {
-            dir::create_all(&destination, false)?;
-            dir::copy(&source, &destination, &copy_options)?;
+            utils::copy_files_from_directory(&source, &program_directory)?;
         } else {
             fs::copy(source, destination)?;
         }
