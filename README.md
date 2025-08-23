@@ -1,8 +1,23 @@
 # C-Rust Program Pairs
 
-This repository contains a list of C-Rust program pairs.  The `metadata/` directory lists the program pairs.  Often the Rust program was translated from or inspired by the C program.  The pairs will be available in a `programs/` directory once downloaded. Program pairs only include the source code without any dependencies, so they cannot be compiled.
+This repository contains a list of C-Rust program pairs.  The `metadata/` directory lists the program pairs.  Often the Rust program was translated from or inspired by the C program.  Program pairs only include the source code without any dependencies, so they cannot be compiled.
 
-For example, the following example shows the directory structure for the `cat` program.
+## Terminology
+
+- **Program**: Code that compiles to a single executable.
+- **Pair**: A pair of C and Rust programs with similar functionality.
+- **Project**: A repository with C or Rust code.  A project contains one or more programs.
+- **Metadata**: Information about one or more pairs.
+
+## Usage
+
+To download all available program pairs into the `programs/` directory:
+
+```sh
+cargo run
+```
+
+Here is the directory structure for the downloaded `cat` program pair:
 
 ```
 .
@@ -15,20 +30,6 @@ For example, the following example shows the directory structure for the `cat` p
 ```
 
 
-## Terminology
-
-- **Program**: Code that compiles to a single executable.
-- **Pair**: A pair of C and Rust programs with similar functionality.
-- **Project**: A repository with C or Rust code.  A project contains one or more programs.
-- **Metadata**: Information about one or more pairs.
-
-## Usage
-
-To download all available program pairs simply use:
-
-```bash
-cargo run
-```
 
 ## Resources
 
@@ -37,7 +38,5 @@ cargo run
 
 ## Possible TODOs
 
-- Single, unified metadata file containing all program-pairs.
-- Asynchronous downloads of repositories.
 - `git pull` repositories in the cache to update them.
-- Require date of download or repository version so we ensure that repositories downloaded are consistent.
+- Require date of download or repository version so we ensure that repositories downloaded are consistent from run to run.

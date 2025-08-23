@@ -2,7 +2,7 @@
 //!
 //! This module helps with downloading our corpus of C-Rust program pairs.
 //!
-//! We downloading program-pairs from metadata files, for which
+//! It downloads program pairs from metadata files, for which
 //! [`download_metadata`] is used to download all JSON metadata files in
 //! metadata/.
 
@@ -12,7 +12,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
+use git2::{build::RepoBuilder, FetchOptions, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
@@ -102,10 +102,10 @@ pub fn download_from_metadata_directory(directory: &Path, progress_bar: &Progres
     }
 }
 
-/// Downloads all program-pairs in a given Metadata object.
+/// Downloads all program pairs in a given Metadata object.
 ///
-/// Note that we don't want to panic if we fail to download a program pair as
-/// we would rather continue downloading the remaining pairs.
+/// The program continues, rather than panics, if it fails to download
+/// a program pair.
 ///
 /// # Arguments
 /// - `metadata` - Contains all program-pairs we want to download.
@@ -122,7 +122,7 @@ fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
 
 /// Downloads a C-Rust program pair.
 ///
-/// Check if the C and Rust repositories exist, and clone them if they don't
+/// Check if the C and Rust repositories exist, and clone them if they don't.
 /// Copy the C source files to programs/<program_name>/c-program.
 /// Copy the Rust source files to programs/<program_name>/rust-program.
 ///
@@ -172,7 +172,7 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
 /// # Arguments
 ///
 /// - `program_name` — Name of the program being downloaded (used for progress messages).
-/// - `program_language` — Language of the program (affects repository cache path).
+/// - `program_language` — Language of the program (affects repository clone path).
 /// - `program_directory` — Destination directory for the downloaded source files.
 /// - `repository_url` — Git URL of the repository to clone.
 /// - `source_files` — Paths (relative to repo root) of files or directories to copy.
@@ -187,7 +187,7 @@ fn download_files(
     repository_url: &str,
     source_files: &[String],
 ) -> Result<(), Box<dyn Error>> {
-    let repository_cache_path =
+    let repository_clones_path =
         Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
     let repository_name = utils::get_repository_name(repository_url)?;
 
@@ -208,8 +208,8 @@ fn download_files(
     });
 
     // Check if repository exists in cache, if not clone it.
-    // We store repositories in repository_cache/<language>/<repository_name>.
-    let repository = match Repository::open(repository_cache_path.join(&repository_name)) {
+    // We store repositories in repository_clones/<language>/<repository_name>.
+    let repository = match Repository::open(repository_clones_path.join(&repository_name)) {
         Ok(repository) => repository,
         Err(_) => {
             // Setup fetch options with our callbacks.
@@ -224,7 +224,7 @@ fn download_files(
             builder.fetch_options(fetch_options);
             builder.clone(
                 repository_url,
-                &repository_cache_path.join(&repository_name),
+                &repository_clones_path.join(&repository_name),
             )?
         }
     };
@@ -232,10 +232,10 @@ fn download_files(
     progress_bar.set_style(ProgressStyle::default_spinner());
     progress_bar.set_message("Copying files...");
 
-    // Copy given files from the repository to the given directory.
     let repository_directory = repository
         .workdir()
         .ok_or(format!("Failed to find repository: {repository_name}"))?;
+    // Copy given files from the repository to the given directory.
     for file_path in source_files.iter() {
         let file_name = Path::new(file_path)
             .file_name()

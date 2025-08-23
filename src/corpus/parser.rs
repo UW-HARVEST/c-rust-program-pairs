@@ -1,11 +1,11 @@
 //! # Metadata Parsing and Validation
 //!
 //! This module loads C-Rust metadata files, validates them against the
-//! project's JSON schema, and converts them into a normalized [`Metadata`]
+//! project's JSON schema, and converts them into a [`Metadata`]
 //! structure.
 //!
 //! The main entry point is [`parse`], which takes a path to a JSON metadata
-//! file and returns a fully validated [`Metadata`] instance ready for use.
+//! file and returns a [`Metadata`] instance.
 
 use std::{error::Error, fs, path::Path};
 
@@ -19,11 +19,11 @@ use crate::{
     paths::METADATA_SCHEMA_FILE,
 };
 
-// Import automatically generated types from our metadata schema.
+// Import automatically generated types.
 import_types!(schema = "metadata/metadata.schema.json");
 
 /// Parses a JSON metadata file describing C-Rust program pairs into a
-/// normalized [`Metadata`] struct.
+/// [`Metadata`] struct.
 ///
 /// Steps:
 ///
@@ -60,7 +60,7 @@ pub fn parse(path: &Path) -> Result<Metadata, Box<dyn Error>> {
     let raw_metadata = fs::read_to_string(path)?;
     let metadata: CRustTranslationSchema = serde_json::from_str(&raw_metadata)?;
 
-    // Validate metadata file with our JSON schema.
+    // Validate metadata with our JSON schema.
     validate_metadata(&metadata)?;
 
     // Create data structure conditioned on the metadata type.
@@ -181,7 +181,7 @@ fn parse_project(
     Metadata { pairs }
 }
 
-/// Helper function to convert from the `feature_relationship` field in
+/// Convert from the `feature_relationship` field in
 /// metadata files to the `Feature` enum used in our final schema.
 ///
 /// # Arguments

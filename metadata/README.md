@@ -51,7 +51,7 @@ When downloading program pairs, we first validate metadata files with this schem
 }
 ```
 
-A project metadata file containings many C-Rust programs.  All the C programs are in a single project, and all the Rust programs are in a single project.
+A project metadata file containing multiple C-Rust programs.  All the C programs are in a single project, and all the Rust programs are in a single project.
 
 ```json
 {
@@ -106,7 +106,7 @@ Each C or Rust program have different configuration options, specified in the `c
   - `rust_superset_of_c` - Rust has all C features plus more
   - `rust_subset_of_c` - Rust implements only some C features
   - `rust_equivalent_to_c` - Same feature set as C version
-  - `overlapping` - Some matching, some different features
+  - `overlapping` - Some matching features and some different features
 
 ## Finding Program-Pairs
 
