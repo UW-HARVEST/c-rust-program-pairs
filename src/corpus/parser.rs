@@ -12,15 +12,17 @@ use std::{error::Error, fs, path::Path};
 use jsonschema::validator_for;
 use serde::Serialize;
 use serde_json::Value;
-use typify::import_types;
 
 use crate::{
-    corpus::schema::{Features, Language, Metadata, Program, ProgramPair},
+    corpus::{
+        metadata_structs::{
+            CRustProgramPairSchema, FeatureRelationship, IndividualProgramPair,
+            ProjectPairsMetadataProjectInformation, ProjectProgramPair,
+        },
+        schema::{Features, Language, Metadata, Program, ProgramPair},
+    },
     paths::METADATA_SCHEMA_FILE,
 };
-
-// Import automatically generated types.
-import_types!(schema = "metadata/metadata.schema.json");
 
 /// Parses a JSON metadata file describing C-Rust program pairs into a
 /// [`Metadata`] struct.
@@ -58,18 +60,18 @@ import_types!(schema = "metadata/metadata.schema.json");
 pub fn parse(path: &Path) -> Result<Metadata, Box<dyn Error>> {
     // Read metadata file.
     let raw_metadata = fs::read_to_string(path)?;
-    let metadata: CRustTranslationSchema = serde_json::from_str(&raw_metadata)?;
+    let metadata: CRustProgramPairSchema = serde_json::from_str(&raw_metadata)?;
 
     // Validate metadata with our JSON schema.
     validate_metadata(&metadata)?;
 
     // Create data structure conditioned on the metadata type.
     match metadata {
-        CRustTranslationSchema::IndividualPairsMetadata { pairs } => {
+        CRustProgramPairSchema::IndividualPairsMetadata { pairs } => {
             let metadata = parse_individual(&pairs);
             return Ok(metadata);
         }
-        CRustTranslationSchema::ProjectPairsMetadata {
+        CRustProgramPairSchema::ProjectPairsMetadata {
             pairs,
             project_information,
         } => {

@@ -7,7 +7,7 @@ programs
 repository_clones
 
 # Generated program
-metadata/metadata_schema.rs
+metadata_structs.rs
 
 progress-reports
 

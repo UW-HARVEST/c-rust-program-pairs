@@ -8,7 +8,7 @@ Our CLI tool validates metadata files with this schema using the `jsonschema` cr
 
 Our script validates all metadata files against our schema. We use a [`build.rs`](../build.rs) script to automatically convert our [JSON schema](./metadata.schema.json) to Rust structs at build time.
 
-The generated rust structs can be found at [`metadata/metadata_schema.rs`](./metadata_schema.rs).
+The generated rust structs can be found at `src/corpus/metadata_structs.rs`.
 
 A Rust file that uses any of these structs needs the `import_types` macro provided by `typify`:
 
@@ -91,7 +91,7 @@ Each C or Rust program have different configuration options, specified in the `c
 
 | Field | Type | Description | Valid Values/Examples |
 |-------|------|-------------|----------------------|
-| `program_name` | string | Name of the program | `"grep"`, `"ls"` |
+| `program_name` | string | Name of the Rust program executable | `"ripgrep"`, `"ls"` |
 | `program_description` | string | Brief description of program functionality | `"Text search utility"` |
 | `documentation_url` | URL | Documentation or project homepage URL | `"https://docs.rs/crate"` |
 | `repository_url` | URL | Source code repository URL | `"https://github.com/user/repo"` |

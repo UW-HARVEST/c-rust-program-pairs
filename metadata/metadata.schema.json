@@ -5,7 +5,7 @@
     "definitions": {
         "program_name": {
             "type": "string",
-            "description": "Name of the program",
+            "description": "Name of the Rust executable program",
             "minLength": 1
         },
         "program_description": {
@@ -160,7 +160,7 @@
             "properties": {
                 "project_information": {
                     "type": "object",
-                    "description": "Project information and build configuration",
+                    "description": "Information about the entire project",
                     "properties": {
                         "program_name": {
                             "$ref": "#/definitions/program_name"

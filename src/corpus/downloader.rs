@@ -2,9 +2,9 @@
 //!
 //! This module helps with downloading our corpus of C-Rust program pairs.
 //!
-//! It downloads program pairs from metadata files, for which
-//! [`download_metadata`] is used to download all JSON metadata files in
-//! metadata/.
+//! It reads program pairs from metadata files, following which
+//! [`download_metadata`] is used to download all program-pairs from the
+//! repository URLs provided in the metadata.
 
 use std::{
     error::Error,
@@ -12,7 +12,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use git2::{build::RepoBuilder, FetchOptions, RemoteCallbacks, Repository};
+use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
