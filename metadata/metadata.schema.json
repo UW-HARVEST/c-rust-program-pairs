@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "title": "C-Rust Translation Schema",
-    "description": "Complete schema for C-Rust program translation projects and individual pairs",
+    "title": "C-Rust Program Pair Schema",
+    "description": "Complete schema for C-Rust projects and program pairs",
     "definitions": {
         "program_name": {
             "type": "string",
@@ -48,7 +48,7 @@
         },
         "project_program": {
             "type": "object",
-            "description": "Program-specific configuration (per individual pair) in project metadata files",
+            "description": "Information about one pair in project metadata",
             "properties": {
                 "source_paths": {
                     "$ref": "#/definitions/source_paths"
@@ -58,7 +58,7 @@
         },
         "project_global_program": {
             "type": "object",
-            "description": "Global program configuration (shared across all pairs) in project metadata files",
+            "description": "Information about all pairs in project metadata",
             "properties": {
                 "documentation_url": {
                     "$ref": "#/definitions/documentation_url"
@@ -114,7 +114,7 @@
         },
         "project_program_pair": {
             "type": "object",
-            "description": "A program pair within a project context",
+            "description": "A program pair within a project",
             "properties": {
                 "program_name": {
                     "$ref": "#/definitions/program_name"
@@ -155,12 +155,12 @@
         },
         {
             "title": "Project Pairs Metadata",
-            "description": "Schema for C-Rust project program pairs",
+            "description": "Schema for C-Rust project pairs",
             "type": "object",
             "properties": {
                 "project_information": {
                     "type": "object",
-                    "description": "Global project information and build configuration",
+                    "description": "Project information and build configuration",
                     "properties": {
                         "program_name": {
                             "$ref": "#/definitions/program_name"
@@ -188,7 +188,7 @@
                 },
                 "pairs": {
                     "type": "array",
-                    "description": "Array of individual program pairs within the project",
+                    "description": "Array of program pairs within the project",
                     "items": {
                         "$ref": "#/definitions/project_program_pair"
                     }

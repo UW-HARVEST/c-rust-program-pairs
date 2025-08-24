@@ -6,7 +6,7 @@ use std::{error::Error, fs, path::Path};
 
 use walkdir::WalkDir;
 
-/// Helper function to count the number of files in a directory.
+/// Count the number of files in a directory.
 ///
 /// # Arguments
 ///
@@ -14,7 +14,7 @@ use walkdir::WalkDir;
 ///
 /// # Returns
 ///
-/// A Result containing the number of files.
+/// The number of files.
 pub fn count_files(directory: &Path) -> Result<i32, Box<dyn Error>> {
     let mut total_files = 0;
     for file in directory.read_dir()? {
@@ -26,7 +26,7 @@ pub fn count_files(directory: &Path) -> Result<i32, Box<dyn Error>> {
     Ok(total_files)
 }
 
-/// Helper function to extract a repository's name from its URL.
+/// Extract a repository's name from its URL.
 ///
 /// # Arguments
 ///
@@ -40,7 +40,7 @@ pub fn get_repository_name(url: &str) -> Result<String, Box<dyn Error>> {
         .trim_end_matches('/')
         .split('/')
         .last()
-        .expect("Error is unreachable since split always returns at least 1 element");
+        .expect("Unreachable because split always returns at least 1 element");
     let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
     Ok(name.to_string())
 }

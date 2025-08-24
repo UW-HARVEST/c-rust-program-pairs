@@ -1,7 +1,7 @@
-//! # C-Rust Metadata Downloader
+//! # C-Rust program pair downloader
 //!
 //! This crate parses metadata files and downloads the C and Rust programs,
-//! storing them in the programs/ directory.
+//! storing them in the `programs/` directory.
 //!
 //! ## Usage
 //!

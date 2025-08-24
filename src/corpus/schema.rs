@@ -1,6 +1,6 @@
 //! Metadata Schema
 //!
-//! This module data structures that store information about program pairs.
+//! This module defines data structures that store information about program pairs.
 
 use serde::{Deserialize, Serialize};
 
@@ -57,7 +57,7 @@ impl Language {
     ///
     /// # Returns
     ///
-    /// A static string; "c" or "rust".
+    /// The string "c" or "rust".
     pub fn to_str(&self) -> &'static str {
         match self {
             Language::C => "c",
