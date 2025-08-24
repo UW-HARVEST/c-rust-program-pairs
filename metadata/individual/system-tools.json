@@ -79,6 +79,38 @@
                 "repository_url": "https://github.com/bootandy/dust.git",
                 "source_paths": ["src"]
             }
+        },
+        {
+            "program_name": "zoxide",
+            "program_description": "A smarter cd command.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-cd",
+                "repository_url": "https://git.savannah.gnu.org/git/bash.git",
+                "source_paths": ["builtins/cd.def"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/ajeetdsouza/zoxide/blob/main/README.md",
+                "repository_url": "https://github.com/ajeetdsouza/zoxide.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "hexyl",
+            "program_description": "A command-line hex viewer.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://linux.die.net/man/1/hexdump",
+                "repository_url": "https://github.com/util-linux/util-linux.git",
+                "source_paths": ["text-utils/hexdump.c", "text-utils/hexdump.h"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/sharkdp/hexyl/blob/master/README.md",
+                "repository_url": "https://github.com/sharkdp/hexyl.git",
+                "source_paths": ["src"]
+            }
         }
     ]
 }
