@@ -216,7 +216,7 @@ fn download_files(
     let repository = match Repository::open(repository_clones_path.join(&repository_name)) {
         Ok(repository) => repository,
         Err(_) => {
-            // Setup fetch options with our callbacks.
+            // Setup fetch options with progress-tracking callbacks.
             let mut fetch_options = FetchOptions::new();
             fetch_options.remote_callbacks(remote_callbacks);
 
