@@ -29,8 +29,7 @@ use crate::{
 
 /// Reads all metadata in `metadata/` and downloads all program-pairs
 ///
-/// We also have a progress bar to track the total number of metadata files
-/// processed.
+/// A progress bar tracks the number of metadata files processed.
 ///
 /// # Arguments
 ///
