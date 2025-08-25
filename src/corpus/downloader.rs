@@ -307,7 +307,7 @@ fn download_files(
     }
 
     progress_bar.finish_with_message(format!(
-        "Downloaded '{}' ({}).",
+        "Downloaded '{}' ({})",
         program_name,
         program_language.to_str()
     ));

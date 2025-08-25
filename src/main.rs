@@ -25,8 +25,8 @@ fn main() {
     let args: Vec<String> = env::args().collect();
 
     match args.get(1).map(|s| s.as_str()) {
-        Some("demo") => corpus::download_metadata(true).unwrap(),
+        None => corpus::download_metadata(false).expect("Failed to download program pairs"),
+        Some("demo") => corpus::download_metadata(true).expect("Failed to run demo"),
         Some(arg) => eprintln!("Invalid argument: {arg}"),
-        None => corpus::download_metadata(false).unwrap(),
     }
 }
