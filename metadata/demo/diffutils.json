@@ -1,0 +1,37 @@
+{
+    "project_information": {
+        "program_name": "diffutils",
+        "translation_tools": ["manual"],
+        "feature_relationship": "rust_equivalent_to_c",
+        "c_program": {
+            "documentation_url": "https://www.gnu.org/software/diffutils/",
+            "repository_url": "https://git.savannah.gnu.org/git/diffutils.git"
+        },
+        "rust_program": {
+            "documentation_url": "https://github.com/uutils/diffutils/blob/main/README.md",
+            "repository_url": "https://github.com/uutils/diffutils"
+        }
+    },
+    "pairs": [
+        {
+            "program_name": "diff",
+            "program_description": "Show differences between two files.",
+            "c_program": {
+                "source_paths": ["src/diff.c", "src/diff.h"]
+            },
+            "rust_program": {
+                "source_paths": ["src/diff.rs"]
+            }
+        },
+        {
+            "program_name": "cmp",
+            "program_description": "Show the offsets and line numbers where two files differ.",
+            "c_program": {
+                "source_paths": ["src/cmp.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/diff.rs"]
+            }
+        }
+    ]
+}

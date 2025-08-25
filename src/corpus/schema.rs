@@ -33,14 +33,11 @@ pub struct Program {
 
 /// Specifies the feature set of the Rust project in relation to its C counterpart.
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Features {
-    #[serde(rename = "rust_subset_of_c")]
-    Subset,
-    #[serde(rename = "rust_equivalent_to_c")]
-    Equivalent,
-    #[serde(rename = "rust_superset_of_c")]
-    Superset,
-    #[serde(rename = "overlapping")]
+    RustSubsetOfC,
+    RustEquivalentToC,
+    RustSupersetOfC,
     Overlapping,
 }
 

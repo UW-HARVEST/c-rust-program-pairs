@@ -7,7 +7,6 @@
 //! repository URLs provided in the metadata.
 
 use std::{
-    error::Error,
     fs,
     path::{Path, PathBuf},
 };
@@ -18,16 +17,17 @@ use indicatif::{ProgressBar, ProgressStyle};
 use crate::{
     corpus::{
         self,
+        errors::DownloadError,
         schema::{Language, Metadata, ProgramPair},
         utils,
     },
     paths::{
-        INDIVIDUAL_METADATA_DIRECTORY, PROGRAMS_DIRECTORY, PROJECT_METADATA_DIRECTORY,
-        REPOSITORY_CLONES_DIRECTORY,
+        DEMO_METADATA_DIRECTORY, INDIVIDUAL_METADATA_DIRECTORY, PROGRAMS_DIRECTORY,
+        PROJECT_METADATA_DIRECTORY, REPOSITORY_CLONES_DIRECTORY,
     },
 };
 
-/// Reads all metadata in `metadata/` and downloads all program-pairs
+/// Reads all metadata files in `metadata/` and downloads all program-pairs
 ///
 /// A progress bar tracks the number of metadata files processed.
 ///
@@ -35,9 +35,13 @@ use crate::{
 ///
 /// - `demo` - Specifies if we are running a demo, so we only download the
 ///            program-pairs specified in the metadata in `metadata/demo/`.
-pub fn download_metadata(demo: bool) {
+///
+/// # Returns
+///
+/// Returns `Ok(())` on success, or a `DownloadError` if any step fails.
+pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
     let directories = if demo {
-        vec![PathBuf::from("metadata/demo")]
+        vec![PathBuf::from(DEMO_METADATA_DIRECTORY)]
     } else {
         vec![
             PathBuf::from(PROJECT_METADATA_DIRECTORY),
@@ -45,29 +49,27 @@ pub fn download_metadata(demo: bool) {
         ]
     };
 
+    // Count total metadata files in the directories we are processing.
     let mut total_files = 0;
     for directory in &directories {
-        // TODO: Better error handling.
-        total_files += utils::count_files(&directory).expect(&format!(
-            "Failed to read directory: {}",
-            directory.display()
-        ));
+        total_files += utils::count_files(&directory)?;
     }
 
     let progress_bar = ProgressBar::new(total_files as u64);
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{bar:40.white/white} {pos}/{len} {msg}")
-            .unwrap()
+            .map_err(|error| DownloadError::ProgressBar(error.to_string()))?
             .progress_chars("##-"),
     );
     progress_bar.set_message(format!("Processing metadata files..."));
 
     for directory in &directories {
-        download_from_metadata_directory(&directory, &progress_bar);
+        download_from_metadata_directory(&directory, &progress_bar)?;
     }
 
     progress_bar.finish_with_message("Downloaded all program pairs!");
+    Ok(())
 }
 
 /// Download all program pairs in metadata files from either
@@ -81,24 +83,39 @@ pub fn download_metadata(demo: bool) {
 /// - `directory` - The directory containing the metadata JSON files.
 /// - `progress_bar` - Update each time we finish downloading program pairs
 ///                    from each metadata file.
-pub fn download_from_metadata_directory(directory: &Path, progress_bar: &ProgressBar) {
-    for metadata_file in directory
+///
+/// # Returns
+///
+/// Returns `Ok(())` on success, or a `DonwloadError` if directory reading
+/// fails.
+pub fn download_from_metadata_directory(
+    directory: &Path,
+    progress_bar: &ProgressBar,
+) -> Result<(), DownloadError> {
+    let entries = directory
         .read_dir()
-        .expect(&format!("Failed to read: {}", directory.display()))
-    {
-        if let Ok(metadata_file) = metadata_file {
-            let parsed_result = corpus::parse(&metadata_file.path());
-            match parsed_result {
-                Ok(metadata) => {
-                    download_metadata_file(&metadata, &progress_bar);
-                }
-                Err(error) => println!(
-                    "Failed to parse {:?}: {error}",
-                    metadata_file.path().display()
-                ),
-            }
+        .map_err(|error| DownloadError::IoRead {
+            path: directory.to_path_buf(),
+            error,
+        })?;
+
+    for entry in entries {
+        let metadata_file = entry.map_err(|error| DownloadError::IoRead {
+            path: directory.to_path_buf(),
+            error,
+        })?;
+
+        match corpus::parse(&metadata_file.path()) {
+            Ok(metadata) => download_metadata_file(&metadata, progress_bar),
+            Err(error) => eprintln!(
+                "Failed to parse {}: {}",
+                metadata_file.path().display(),
+                error
+            ),
         }
     }
+
+    Ok(())
 }
 
 /// Downloads all program pairs in a given Metadata object.
@@ -107,13 +124,14 @@ pub fn download_from_metadata_directory(directory: &Path, progress_bar: &Progres
 /// a program pair.
 ///
 /// # Arguments
+///
 /// - `metadata` - Contains all program-pairs we want to download.
 /// - `progress_bar` - Update each time we finish downloading program pairs
 ///                    from each metadata file.
 fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
     for pair in metadata.pairs.iter() {
         if let Err(error) = download_program_pair(pair) {
-            println!("Failed to download {}: {}", pair.program_name, error)
+            eprintln!("Failed to download {}: {}", pair.program_name, error)
         };
     }
     progress_bar.inc(1);
@@ -133,14 +151,24 @@ fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
 /// # Arguments
 ///
 /// - `pair` - A program pair.
-fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
+///
+/// # Returns
+///
+/// Returns `Ok(())` on success, or a `DownloadError` on failure.
+fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloadError> {
     let program_name = &pair.program_name;
     let base_program_path = Path::new(PROGRAMS_DIRECTORY).join(program_name);
     let c_program_path = base_program_path.join("c-program");
     let rust_program_path = base_program_path.join("rust-program");
 
-    fs::create_dir_all(&c_program_path)?;
-    fs::create_dir_all(&rust_program_path)?;
+    fs::create_dir_all(&c_program_path).map_err(|source| DownloadError::IoCreate {
+        path: c_program_path.clone(),
+        error: source,
+    })?;
+    fs::create_dir_all(&rust_program_path).map_err(|source| DownloadError::IoCreate {
+        path: rust_program_path.clone(),
+        error: source,
+    })?;
 
     download_files(
         program_name,
@@ -190,7 +218,7 @@ fn download_files(
     program_directory: &Path,
     repository_url: &str,
     source_files: &[String],
-) -> Result<(), Box<dyn Error>> {
+) -> Result<(), DownloadError> {
     let repository_clones_path =
         Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
     let repository_name = utils::get_repository_name(repository_url)?;
@@ -200,7 +228,7 @@ fn download_files(
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{bar:40.white/white} {pos}/{len} {msg}")
-            .unwrap()
+            .map_err(|error| DownloadError::ProgressBar(error.to_string()))?
             .progress_chars("##-"),
     );
     progress_bar.set_message(format!("Cloning repository {repository_name}..."));
@@ -226,24 +254,33 @@ fn download_files(
             // Clone the repository.
             let mut builder = RepoBuilder::new();
             builder.fetch_options(fetch_options);
-            builder.clone(
-                repository_url,
-                &repository_clones_path.join(&repository_name),
-            )?
+            builder
+                .clone(
+                    repository_url,
+                    &repository_clones_path.join(&repository_name),
+                )
+                .map_err(|source| DownloadError::CloneRepository {
+                    repository_url: repository_url.to_string(),
+                    error: source,
+                })?
         }
     };
 
     progress_bar.set_style(ProgressStyle::default_spinner());
     progress_bar.set_message("Copying files...");
 
-    let repository_directory = repository
-        .workdir()
-        .ok_or(format!("Failed to find repository: {repository_name}"))?;
+    let repository_directory = repository.workdir().ok_or_else(|| {
+        DownloadError::Io(format!(
+            "Failed to find working directory for repository '{repository_name}'"
+        ))
+    })?;
+
     // Copy given files from the repository to the given directory.
     for file_path in source_files.iter() {
-        let file_name = Path::new(file_path)
-            .file_name()
-            .ok_or(format!("Invalid file path: {}", file_path))?;
+        let file_name = Path::new(file_path).file_name().ok_or_else(|| {
+            DownloadError::Io(format!("Failed to get file name for path '{file_path}'"))
+        })?;
+
         let source = repository_directory.join(&file_path);
         let destination = program_directory.join(file_name);
 
@@ -251,7 +288,11 @@ fn download_files(
         if source.is_dir() {
             utils::copy_files_from_directory(&source, &program_directory)?;
         } else {
-            fs::copy(source, destination)?;
+            fs::copy(&source, &destination).map_err(|error| DownloadError::IoCopy {
+                source: source.to_path_buf(),
+                destination: destination.to_path_buf(),
+                error,
+            })?;
         }
     }
 

@@ -195,9 +195,9 @@ fn parse_project(
 /// The corresponding `Feature` used in our final schema.
 fn map_feature_relationship(relationship: FeatureRelationship) -> Features {
     match relationship {
-        FeatureRelationship::RustSubsetOfC => Features::Subset,
-        FeatureRelationship::RustSupersetOfC => Features::Superset,
-        FeatureRelationship::RustEquivalentToC => Features::Equivalent,
+        FeatureRelationship::RustSubsetOfC => Features::RustSubsetOfC,
+        FeatureRelationship::RustSupersetOfC => Features::RustSupersetOfC,
+        FeatureRelationship::RustEquivalentToC => Features::RustEquivalentToC,
         FeatureRelationship::Overlapping => Features::Overlapping,
     }
 }

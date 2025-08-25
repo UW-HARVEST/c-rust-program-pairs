@@ -2,21 +2,6 @@
 
 This repository contains a list of C-Rust program pairs.  The `metadata/` directory lists the program pairs.  Often the Rust program was translated from or inspired by the C program.  Program pairs only include the source code without any dependencies, so they cannot be compiled.
 
-## Terminology
-
-- **Program**: Code that compiles to a single executable.
-- **Pair**: A pair of C and Rust programs with similar functionality.
-- **Project**: A repository with C or Rust code.  A project contains one or more programs.
-- **Metadata**: Information about one or more pairs.
-
-## Usage
-
-To download all available program pairs into the `programs/` directory:
-
-```sh
-cargo run
-```
-
 Here is the directory structure for the downloaded `cat` program pair:
 
 ```
@@ -29,7 +14,26 @@ Here is the directory structure for the downloaded `cat` program pair:
             └── cat.rs
 ```
 
+## Usage
 
+To download all available program pairs into the `programs/` directory:
+
+```sh
+cargo run
+```
+
+To run a demo and download a small subset of available program pairs:
+
+```sh
+cargo run demo
+```
+
+## Terminology
+
+- **Program**: Code that compiles to a single executable.
+- **Pair**: A pair of C and Rust programs with similar functionality.
+- **Project**: A repository with C or Rust code.  A project contains one or more programs.
+- **Metadata**: Information about one or more pairs.
 
 ## Resources
 

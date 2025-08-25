@@ -25,7 +25,7 @@ fn main() {
     let mut type_space = TypeSpace::new(TypeSpaceSettings::default().with_struct_builder(true));
     type_space.add_root_schema(schema).unwrap();
 
-    // Generate the structs and documentation of metadata_schema.rs.
+    // Generate the structs and documentation from metadata_schema.rs.
     let rust_code =
         prettyplease::unparse(&syn::parse2::<syn::File>(type_space.to_stream()).unwrap());
     let documentation = r#"// # Automatically Generated Metadata Schema. Do not edit.
