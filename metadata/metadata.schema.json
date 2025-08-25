@@ -12,15 +12,15 @@
             "type": "string",
             "description": "Brief description of what the program does"
         },
-        "repository_url": {
-            "type": "string",
-            "format": "uri",
-            "description": "Repository URL (GitHub, GitLab, etc.)"
-        },
         "documentation_url": {
             "type": "string",
             "format": "uri",
             "description": "URL to detailed description or documentation"
+        },
+        "repository_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Repository URL (GitHub, GitLab, etc.)"
         },
         "translation_tools": {
             "type": "array",
@@ -37,11 +37,11 @@
                 "rust_equivalent_to_c",
                 "overlapping"
             ],
-            "description": "Feature relationship between C and Rust implementations"
+            "description": "How Rust features compare to C"
         },
         "source_paths": {
             "type": "array",
-            "description": "Paths to source files",
+            "description": "Paths to source files/directories",
             "items": {
                 "type": "string"
             }

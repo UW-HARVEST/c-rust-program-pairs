@@ -1,6 +1,6 @@
 //! # Program Pair Downloader
 //!
-//! This module helps with downloading our corpus of C-Rust program pairs.
+//! This module downloads our corpus of C-Rust program pairs.
 //!
 //! It reads program pairs from metadata files, following which
 //! [`download_metadata`] is used to download all program-pairs from the
@@ -27,7 +27,7 @@ use crate::{
     },
 };
 
-/// Download all metadata in `metadata/`.
+/// Reads all metadata in `metadata/` and downloads all program-pairs
 ///
 /// We also have a progress bar to track the total number of metadata files
 /// processed.
@@ -126,6 +126,11 @@ fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
 /// Copy the C source files to programs/<program_name>/c-program.
 /// Copy the Rust source files to programs/<program_name>/rust-program.
 ///
+/// # Side Effects
+///
+/// - Creates destination directories for program-pairs at
+///   `programs/<program-name>/`.
+///
 /// # Arguments
 ///
 /// - `pair` - A program pair.
@@ -166,8 +171,8 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), Box<dyn Error>> {
 ///
 /// Side effects:
 ///
-/// - Creates cache and destination directories if they don’t exist.
-/// - May overwrite files in the destination.
+/// - Creates `repository_clones/` to cache repositories.
+/// - May overwrite files at `program_directory`.
 ///
 /// # Arguments
 ///
@@ -192,7 +197,7 @@ fn download_files(
     let repository_name = utils::get_repository_name(repository_url)?;
 
     // Create a progress bar.
-    let progress_bar = ProgressBar::new(100);
+    let progress_bar = ProgressBar::new(80);
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{bar:40.white/white} {pos}/{len} {msg}")

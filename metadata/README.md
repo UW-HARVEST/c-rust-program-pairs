@@ -4,25 +4,13 @@ Metadata files contain information about C-Rust program pairs.
 
 ## Automatically Generated Structs
 
-Our CLI tool validates metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
-
-Our script validates all metadata files against our schema. We use a [`build.rs`](../build.rs) script to automatically convert our [JSON schema](./metadata.schema.json) to Rust structs at build time.
-
-The generated rust structs can be found at `src/corpus/metadata_structs.rs`.
-
-A Rust file that uses any of these structs needs the `import_types` macro provided by `typify`:
-
-```rust
-import_types!(schema = "metadata/metadata.schema.json");
-```
+[`build.rs`](../build.rs) runs before compile time to automatically convert our [JSON schema](./metadata.schema.json) to Rust structs in [`metadata_structs.rs`](../src/corpus/metadata_structs.rs), which is included in the module tree. Then, before downloading program-pairs, our Rust program then validates metadata files using these automatically generated structs.
 
 ## Schema
 
-Thre are two metadata schema types, *individual* and *project*.  They are found in the `metadata/individual/` and `metadata/project/` directories respectively.
+There are two metadata schema types, *individual* and *project*. The `metadata/individual/` and `metadata/project/` directories contain JSON metadata files that conform to the individual and project schema types respectively.
 
 An individual metadata file groups together unrelated C-Rust projects that each only contain one program.  Here is an example:
-
-When downloading program pairs, we first validate metadata files with this schema using the `jsonschema` crate, but you could also do so with any schema validation tool.
 
 ### Individual Metadata Schema
 
@@ -91,17 +79,15 @@ Each C or Rust program have different configuration options, specified in the `c
 
 | Field | Type | Description | Valid Values/Examples |
 |-------|------|-------------|----------------------|
-| `program_name` | string | Name of the Rust program executable | `"ripgrep"`, `"ls"` |
+| `program_name` | string | Name of the Rust executable program | `"ripgrep"`, `"ls"` |
 | `program_description` | string | Brief description of program functionality | `"Text search utility"` |
-| `documentation_url` | URL | Documentation or project homepage URL | `"https://docs.rs/crate"` |
-| `repository_url` | URL | Source code repository URL | `"https://github.com/user/repo"` |
-| `translation_tools` | array of strings | Tools used for translation | `"c2rust"`, `"manual"` |
-| `feature_relationship` | string | Feature comparison with C version | `"overlapping"` |
+| `documentation_url` | URL | URL to detailed description or documentation | `"https://docs.rs/crate"` |
+| `repository_url` | URL | Repository URL (GitHub, GitLab, etc.) | `"https://github.com/user/repo"` |
+| `translation_tools` | array of strings | Tools used for the translation process | `"c2rust"`, `"manual"` |
+| `feature_relationship` | string | How Rust features compare to C | `"overlapping"` |
 | `source_paths` | array of paths | Paths to source files/directories | `["src/main.rs", "src/"]` |
 
-- `source_paths`: This field should include only files that contain the source code of the program.
-  - A Single File: A single file of source code.
-  - Directory: Includes all files including the directory. Only specify directories if we are sure that every file in there is source code (no READMEs, etc.).
+- `source_paths`: Array of paths to files and directories containing source code. When specifying directories, only `.c`, `.h`, and `.rs` files will be included.
 - `feature_relationship` Enum:
   - `rust_superset_of_c` - Rust has all C features plus more
   - `rust_subset_of_c` - Rust implements only some C features

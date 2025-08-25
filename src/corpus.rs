@@ -2,7 +2,7 @@
 //!
 //! This module transforms metadata files into strongly-typed Rust structs.
 //!
-//! ## Modules
+//! ## Submodules
 //!
 //! - [`downloader`] - Downloads program pairs form metadata/.
 //! - [`metadata_structs`] - The Rust structs generated from `metadata.schema.json`.

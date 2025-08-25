@@ -36,7 +36,7 @@ fn main() {
 "#;
     let rust_file_contents = format!("{}{}", documentation, rust_code);
 
-    // Add file contents to metadata_schema.rs.
+    // Write file contents to metadata_schema.rs.
     let mut out_file = Path::new("src/corpus").to_path_buf();
     out_file.push("metadata_structs.rs");
     fs::write(out_file, rust_file_contents).unwrap();
