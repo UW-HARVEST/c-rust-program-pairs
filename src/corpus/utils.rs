@@ -16,7 +16,7 @@ use crate::corpus::errors::DownloadError;
 ///
 /// # Returns
 ///
-/// The number of files in the directory, or a `DownloadError` if the
+/// The number of files in the directory, or a [`DownloadError`] if the
 /// operation fails.
 pub fn count_files(directory: &Path) -> Result<usize, DownloadError> {
     let entries = directory
@@ -54,16 +54,14 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloadError> {
 ///
 /// # Returns
 ///
-/// The name of the repository on success or `DownloadError` on failure.
+/// The name of the repository on success or [`DownloadError`] on failure.
 pub fn get_repository_name(url: &str) -> Result<String, DownloadError> {
     let last_segment = url
         .trim_end_matches('/')
         .split('/')
         .last()
         .expect("Unreachable because split always returns at least 1 element");
-    let name = last_segment
-        .strip_suffix(".git")
-        .ok_or_else(|| DownloadError::Io(format!("Failed to read repository name from '{url}'")))?;
+    let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
     Ok(name.to_string())
 }
 
@@ -79,7 +77,7 @@ pub fn get_repository_name(url: &str) -> Result<String, DownloadError> {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success and `DownloadError` on failure.
+/// Returns `Ok(())` on success and [`DownloadError`] on failure.
 pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<(), DownloadError> {
     // Create destination directory in case it doesn't exist.
     fs::create_dir_all(destination).map_err(|error| DownloadError::IoCopy {

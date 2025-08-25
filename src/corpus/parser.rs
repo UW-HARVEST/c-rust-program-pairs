@@ -7,14 +7,18 @@
 //! The main entry point is [`parse`], which takes a path to a JSON metadata
 //! file and returns a [`Metadata`] instance.
 
-use std::{error::Error, fs, path::Path};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
-use jsonschema::validator_for;
+use jsonschema;
 use serde::Serialize;
 use serde_json::Value;
 
 use crate::{
     corpus::{
+        errors::ParseError,
         metadata_structs::{
             CRustProgramPairSchema, FeatureRelationship, IndividualProgramPair,
             ProjectPairsMetadataProjectInformation, ProjectProgramPair,
@@ -36,18 +40,12 @@ use crate::{
 ///
 /// # Arguments
 ///
-/// - `path` — The JSON metadata file.
+/// - `path` - The JSON metadata file.
 ///
 /// # Returns
 ///
-/// A [`Metadata`] instance containing program pair data.
-///
-/// # Errors
-///
-/// Returns an error if:
-/// - The file cannot be read.
-/// - The JSON cannot be deserialized into [`CRustTranslationSchema`].
-/// - Schema validation fails.
+/// A [`Metadata`] instance containing program pair data on success and
+/// [`ParseError`] on failure.
 ///
 /// # Example
 /// ```no_run
@@ -57,10 +55,14 @@ use crate::{
 /// let metadata = parse(Path::new("metadata.json")).unwrap();
 /// println!("Loaded {} program pairs", metadata.pairs.len());
 /// ```
-pub fn parse(path: &Path) -> Result<Metadata, Box<dyn Error>> {
+pub fn parse(path: &Path) -> Result<Metadata, ParseError> {
     // Read metadata file.
-    let raw_metadata = fs::read_to_string(path)?;
-    let metadata: CRustProgramPairSchema = serde_json::from_str(&raw_metadata)?;
+    let raw_metadata = fs::read_to_string(path).map_err(|error| ParseError::IoRead {
+        path: path.to_path_buf(),
+        error,
+    })?;
+    let metadata: CRustProgramPairSchema =
+        serde_json::from_str(&raw_metadata).map_err(|error| ParseError::Deserialize { error })?;
 
     // Validate metadata with our JSON schema.
     validate_metadata(&metadata)?;
@@ -86,34 +88,48 @@ pub fn parse(path: &Path) -> Result<Metadata, Box<dyn Error>> {
 /// Serializes `metadata` to JSON and checks it against the schema in
 /// [`METADATA_SCHEMA_FILE`].
 ///
-/// # Errors
+/// # Arguments
 ///
-/// Returns an error if:
-/// - The schema file cannot be read or parsed.
-/// - The metadata cannot be serialized.
-/// - Validation fails.
-fn validate_metadata<T: Serialize>(metadata: &T) -> Result<(), Box<dyn Error>> {
-    let schema_str = fs::read_to_string(METADATA_SCHEMA_FILE)?;
-    let schema: Value = serde_json::from_str(&schema_str)?;
-    let validator = validator_for(&schema)?;
-    let metadata_json = serde_json::to_value(metadata)?;
+/// - `metadata` - A JSON serializable struct that represents some metadata.
+///
+/// # Returns
+///
+/// Returns `Ok(())` on success and [`ParseError`] on failure.
+fn validate_metadata<T: Serialize>(metadata: &T) -> Result<(), ParseError> {
+    // Create a validator based on the JSON schema.
+    let schema_str =
+        fs::read_to_string(METADATA_SCHEMA_FILE).map_err(|error| ParseError::IoRead {
+            path: PathBuf::from(METADATA_SCHEMA_FILE),
+            error,
+        })?;
+    let schema: Value =
+        serde_json::from_str(&schema_str).map_err(|error| ParseError::Deserialize { error })?;
+    let validator = jsonschema::validator_for(&schema).map_err(|error| ParseError::Validation {
+        error: error.to_string(),
+    })?;
+
+    // Convert metadata to a JSON `Value` type.
+    let metadata_json =
+        serde_json::to_value(metadata).map_err(|error| ParseError::Serialize { error })?;
 
     if let Err(error) = validator.validate(&metadata_json) {
-        return Err(format!("Failed to validate metadata: {error}").into());
+        return Err(ParseError::Validation {
+            error: format!("Failed to validate metadata: {error}"),
+        });
     }
 
     Ok(())
 }
 
-/// Parses an invidual-type metadata and returns a `Metadata` data structure.
+/// Parses an invidual-type metadata and returns a [`Metadata`] data structure.
 ///
 /// # Arguments
 ///
-/// - `pairs` - An array of `IndividualProgramPair` specified in the JSON schema.
+/// - `pairs` - An array of [`IndividualProgramPair`] specified in the JSON schema.
 ///
 /// # Returns
 ///
-/// A `Metadata` data structure.
+/// A [`Metadata`] data structure.
 fn parse_individual(pairs: &[IndividualProgramPair]) -> Metadata {
     let pairs: Vec<ProgramPair> = pairs
         .into_iter()
@@ -140,15 +156,15 @@ fn parse_individual(pairs: &[IndividualProgramPair]) -> Metadata {
     Metadata { pairs }
 }
 
-/// Parses an project-type metadata and returns a `Metadata` data structure.
+/// Parses an project-type metadata and returns a [`Metadata`] data structure.
 ///
 /// # Arguments
 ///
-/// - `pairs` - An array of `ProjectProgramPair` specified in the JSON schema.
+/// - `pairs` - An array of [`ProjectProgramPair`] specified in the JSON schema.
 ///
 /// # Returns
 ///
-/// A `Metadata` data structure.
+/// A [`Metadata`] data structure.
 fn parse_project(
     pairs: &[ProjectProgramPair],
     project_information: &ProjectPairsMetadataProjectInformation,
@@ -192,7 +208,7 @@ fn parse_project(
 ///
 /// # Returns
 ///
-/// The corresponding `Feature` used in our final schema.
+/// The corresponding [`Feature`] used in our final schema.
 fn map_feature_relationship(relationship: FeatureRelationship) -> Features {
     match relationship {
         FeatureRelationship::RustSubsetOfC => Features::RustSubsetOfC,

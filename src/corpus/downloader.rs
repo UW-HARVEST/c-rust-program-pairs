@@ -38,7 +38,7 @@ use crate::{
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success, or a `DownloadError` if any step fails.
+/// Returns `Ok(())` on success, or a [`DownloadError`] if any step fails.
 pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
     let directories = if demo {
         vec![PathBuf::from(DEMO_METADATA_DIRECTORY)]
@@ -88,7 +88,7 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success, or a `DonwloadError` if directory reading
+/// Returns `Ok(())` on success, or a [`DonwloadError`] if directory reading
 /// fails.
 pub fn download_from_metadata_directory(
     directory: &Path,
@@ -164,7 +164,7 @@ fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success, or a `DownloadError` on failure.
+/// Returns `Ok(())` on success, or a [`DownloadError`] on failure.
 fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloadError> {
     let program_name = &pair.program_name;
     let base_program_path = Path::new(PROGRAMS_DIRECTORY).join(program_name);
@@ -222,7 +222,8 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloadError> {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` if all files were successfully downloaded and copied.
+/// Returns `Ok(())` if all files were successfully downloaded and copied and
+/// [`DownloadError`] on failure.
 fn download_files(
     program_name: &str,
     program_language: Language,

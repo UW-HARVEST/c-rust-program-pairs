@@ -6,6 +6,44 @@ use std::{io, path::PathBuf};
 
 use thiserror;
 
+/// Errors that occur when a metadata file is being parsed.
+#[derive(thiserror::Error, Debug)]
+pub enum ParseError {
+    /// Failed to read a file or directory.
+    #[error("Failed to read '{path}': {error}")]
+    IoRead {
+        /// The path that could not be read.
+        path: PathBuf,
+        /// The underlying I/O error.
+        #[source]
+        error: io::Error,
+    },
+
+    /// Failed to deserialize some JSON string to Rust structs.
+    #[error("Failed to deserialize to JSON: {error}")]
+    Deserialize {
+        /// The underlying deserialization error.
+        #[source]
+        error: serde_json::Error,
+    },
+
+    /// Failed to serialize some Rust struct to a JSON value.
+    #[error("Failed to deserialize to JSON: {error}")]
+    Serialize {
+        /// The underlying serialization error.
+        #[source]
+        error: serde_json::Error,
+    },
+
+    /// Failed to validate some JSON schema.
+    #[error("Failed to deserialize to JSON: {error}")]
+    Validation {
+        /// The underlying `jsonschema::ValidationError`.
+        /// Type string because `ValidationError` requires lifetimes.
+        error: String,
+    },
+}
+
 /// Errors that occur when program-pairs are being downloaded.
 #[derive(thiserror::Error, Debug)]
 pub enum DownloadError {
