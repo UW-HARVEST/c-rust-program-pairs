@@ -33,7 +33,7 @@ use crate::{
 ///
 /// # Arguments
 ///
-/// - `demo` - Specifies if we are running a demo, so we only download the
+/// - `demo` - Specifies if a demo is being run, so only downloads the
 ///            program-pairs specified in the metadata in `metadata/demo/`.
 ///
 /// # Returns
@@ -49,14 +49,14 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
         ]
     };
 
-    // Count total metadata files in the directories we are processing.
+    // Count total metadata files in the directories being processed.
     let mut total_files = 0;
     for directory in &directories {
         total_files += utils::count_files(&directory)?;
     }
 
-    // Create a progress bar to track the number of metadata files we have
-    // proccessed,
+    // Create a progress bar to track the number of metadata files that have
+    // been proccessed,
     let progress_bar = ProgressBar::new(total_files as u64);
     progress_bar.set_style(
         ProgressStyle::default_bar()
@@ -83,8 +83,7 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
 /// # Arguments
 ///
 /// - `directory` - The directory containing the metadata JSON files.
-/// - `progress_bar` - Update each time we finish downloading program pairs
-///                    from each metadata file.
+/// - `progress_bar` - Update each time a metadata file is processed.
 ///
 /// # Returns
 ///
@@ -112,8 +111,8 @@ pub fn download_from_metadata_directory(
             // Download the program-pairs listed in the metadata file.
             Ok(metadata) => download_metadata_file(&metadata, progress_bar),
 
-            // Simply display an error and move on to the next file if we fail
-            // to parse the current file.
+            // Simply display an error and move on to the next file if there
+            // is an error parsing the current file.
             Err(error) => eprintln!(
                 "Failed to parse '{}': {}",
                 metadata_file.path().display(),
@@ -135,9 +134,8 @@ pub fn download_from_metadata_directory(
 ///
 /// # Arguments
 ///
-/// - `metadata` - Contains all program-pairs we want to download.
-/// - `progress_bar` - Update each time we finish downloading program pairs
-///                    from each metadata file.
+/// - `metadata` - Contains all program-pairs to download.
+/// - `progress_bar` - Update each time a metadata file is processed.
 fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
     for pair in metadata.pairs.iter() {
         if let Err(error) = download_program_pair(pair) {
