@@ -73,7 +73,7 @@ A project metadata file containing multiple C-Rust programs.  All the C programs
 
 ### Program Configuration
 
-Each C or Rust program have different configuration options, specified in the `c_program` or `rust_program` fields in `metadata.schema.json`. Note that metadata files in `project` have two program configurations. The first is the *global program configuration*, specified as the `project_global_program` field in our schema, which specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The next *program configuration* is listed as `project_program` in our schema and only applies to individual program pairs, containing the `source_paths` field which are unique to each program.
+That metadata files in `project` have two program configurations. The *global program configuration* specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The *program configuration* applies to one program pair.
 
 ### Schema fields
 
