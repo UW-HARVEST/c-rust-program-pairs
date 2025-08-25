@@ -54,14 +54,16 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloadError> {
 ///
 /// # Returns
 ///
-/// The name of the repository.
+/// The name of the repository on success or `DownloadError` on failure.
 pub fn get_repository_name(url: &str) -> Result<String, DownloadError> {
     let last_segment = url
         .trim_end_matches('/')
         .split('/')
         .last()
         .expect("Unreachable because split always returns at least 1 element");
-    let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
+    let name = last_segment
+        .strip_suffix(".git")
+        .ok_or_else(|| DownloadError::Io(format!("Failed to read repository name from '{url}'")))?;
     Ok(name.to_string())
 }
 
@@ -76,8 +78,10 @@ pub fn get_repository_name(url: &str) -> Result<String, DownloadError> {
 /// - `destination` - The destination directory to copy files to.
 ///
 /// # Returns
+///
+/// Returns `Ok(())` on success and `DownloadError` on failure.
 pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<(), DownloadError> {
-    // Create destination directory if it doesn't exist.
+    // Create destination directory in case it doesn't exist.
     fs::create_dir_all(destination).map_err(|error| DownloadError::IoCopy {
         source: source.to_path_buf(),
         destination: destination.to_path_buf(),
@@ -88,9 +92,11 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
         let path = entry.path();
         if path.is_file() {
             if let Some(extension) = path.extension() {
-                let extension = extension
-                    .to_str()
-                    .expect("Failed to extract file extension");
+                let extension = extension.to_str().ok_or_else(|| {
+                    DownloadError::Io("Failed to retrieve file extension".to_string())
+                })?;
+
+                // Copy all `.c`, `.h`, and `.rs` files.
                 if matches!(extension, "c" | "h" | "rs") {
                     let filename = path.file_name().expect("Failed to extract file name");
                     fs::copy(path, destination.join(filename)).map_err(|error| {
