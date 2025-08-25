@@ -73,7 +73,7 @@ pub fn download_metadata(demo: bool) {
 /// Download all program pairs in metadata files from either
 /// metadata/individual/ or metadata/projects.
 ///
-/// We iterate through each metadata JSON file, then parse and download
+/// The program iterates through each metadata JSON file, then parses and downloads
 /// the program pairs.
 ///
 /// # Arguments
