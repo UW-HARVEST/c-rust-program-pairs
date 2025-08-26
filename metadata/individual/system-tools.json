@@ -87,7 +87,7 @@
             "feature_relationship": "rust_superset_of_c",
             "c_program": {
                 "documentation_url": "https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-cd",
-                "repository_url": "https://git.savannah.gnu.org/git/bash.git",
+                "repository_url": "https://github.com/bminor/bash.git",
                 "source_paths": ["builtins/cd.def"]
             },
             "rust_program": {
