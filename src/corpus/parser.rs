@@ -121,7 +121,7 @@ fn validate_metadata<T: Serialize>(metadata: &T) -> Result<(), ParseError> {
     Ok(())
 }
 
-/// Parses an invidual-type metadata and returns a [`Metadata`] data structure.
+/// Parses an individual-type metadata and returns a [`Metadata`] data structure.
 ///
 /// # Arguments
 ///

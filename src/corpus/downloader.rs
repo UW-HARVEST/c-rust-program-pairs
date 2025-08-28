@@ -56,7 +56,7 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
     }
 
     // Create a progress bar to track the number of metadata files that have
-    // been proccessed,
+    // been processed,
     let progress_bar = ProgressBar::new(total_files as u64);
     progress_bar.set_style(
         ProgressStyle::default_bar()
@@ -87,7 +87,7 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success, or a [`DonwloadError`] if directory reading
+/// Returns `Ok(())` on success, or a [`DownloadError`] if directory reading
 /// fails.
 pub fn download_from_metadata_directory(
     directory: &Path,
