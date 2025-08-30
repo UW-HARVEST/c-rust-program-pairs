@@ -22,7 +22,7 @@ To download all available program pairs into the `programs/` directory:
 cargo run
 ```
 
-To run a demo and download a small subset of available program pairs:
+To download a small subset of available program pairs:
 
 ```sh
 cargo run demo
@@ -43,4 +43,4 @@ cargo run demo
 ## Possible TODOs
 
 - `git pull` repositories in the cache to update them.
-- Require date of download or repository version so we ensure that repositories downloaded are consistent from run to run.
+- Use date or git SHA so repositories downloaded are consistent from run to run.

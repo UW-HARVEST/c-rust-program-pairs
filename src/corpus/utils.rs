@@ -1,6 +1,6 @@
 //! # Utility Functions
 //!
-//! This module provides utility functions needed in other parts of our code.
+//! This module provides utility functions used in other parts of our code.
 
 use std::{fs, path::Path};
 

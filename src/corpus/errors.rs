@@ -44,7 +44,7 @@ pub enum ParseError {
     },
 }
 
-/// Errors that occur when program-pairs are being downloaded.
+/// Errors that occur when program pairs are being downloaded.
 #[derive(thiserror::Error, Debug)]
 pub enum DownloadError {
     /// Failed to read a file or directory.

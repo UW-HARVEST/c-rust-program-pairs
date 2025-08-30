@@ -2,8 +2,8 @@
 //!
 //! This module downloads our corpus of C-Rust program pairs.
 //!
-//! It reads program pairs from metadata files, following which
-//! [`download_metadata`] is used to download all program-pairs from the
+//! First it reads program pairs from metadata files.  Then it
+//! downloads all program pairs from the
 //! repository URLs provided in the metadata.
 
 use std::{
@@ -11,7 +11,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
+use git2::{build::RepoBuilder, FetchOptions, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
@@ -27,14 +27,14 @@ use crate::{
     },
 };
 
-/// Reads all metadata files in `metadata/` and downloads all program-pairs
+/// Reads all metadata files in `metadata/` and downloads all program pairs.
 ///
 /// A progress bar tracks the number of metadata files processed.
 ///
 /// # Arguments
 ///
-/// - `demo` - Specifies if a demo is being run, so only downloads the
-///            program-pairs specified in the metadata in `metadata/demo/`.
+/// - `demo` - True if a demo is being run, in which case the function downloads
+///            only the program pairs specified `metadata/demo/`.
 ///
 /// # Returns
 ///
@@ -56,7 +56,7 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
     }
 
     // Create a progress bar to track the number of metadata files that have
-    // been processed,
+    // been processed.
     let progress_bar = ProgressBar::new(total_files as u64);
     progress_bar.set_style(
         ProgressStyle::default_bar()
@@ -74,15 +74,15 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
     Ok(())
 }
 
-/// Download all program pairs in metadata files from either
-/// metadata/individual/ or metadata/projects/.
+/// Download program pairs in the given metadata files.
 ///
 /// The program iterates through each metadata JSON file, then parses and
 /// downloads the program pairs.
 ///
 /// # Arguments
 ///
-/// - `directory` - The directory containing the metadata JSON files.
+/// - `directory` - The directory containing the metadata JSON files,
+///   typically `metadata/individual/` or `metadata/projects/`.
 /// - `progress_bar` - Update each time a metadata file is processed.
 ///
 /// # Returns
@@ -108,11 +108,11 @@ pub fn download_from_metadata_directory(
 
         // Parse the contents of `metadata_file`.
         match corpus::parse(&metadata_file.path()) {
-            // Download the program-pairs listed in the metadata file.
+            // Download the program pairs listed in the metadata file.
             Ok(metadata) => download_metadata_file(&metadata, progress_bar),
 
-            // Simply display an error and move on to the next file if there
-            // is an error parsing the current file.
+            // If there is an error parsing the current file,
+            // display an error and move on to the next file.
             Err(error) => eprintln!(
                 "Failed to parse '{}': {}",
                 metadata_file.path().display(),
@@ -126,7 +126,7 @@ pub fn download_from_metadata_directory(
 
 /// Downloads all program pairs in a given Metadata object.
 ///
-/// The program continues, rather than panics, if it fails to download
+/// The program continues, rather than halts, if it fails to download
 /// a program pair.
 ///
 /// Increments the progress bar each time a metadata file is finished
@@ -134,8 +134,8 @@ pub fn download_from_metadata_directory(
 ///
 /// # Arguments
 ///
-/// - `metadata` - Contains all program-pairs to download.
-/// - `progress_bar` - Update each time a metadata file is processed.
+/// - `metadata` - The program pairs to download.
+/// - `progress_bar` - Is updated each time a metadata file is processed.
 fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
     for pair in metadata.pairs.iter() {
         if let Err(error) = download_program_pair(pair) {
@@ -153,7 +153,7 @@ fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
 ///
 /// # Side Effects
 ///
-/// - Creates destination directories for program-pairs at
+/// - Creates destination directories for program pairs at
 ///   `programs/<program-name>/`.
 ///
 /// # Arguments
@@ -207,7 +207,7 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloadError> {
 ///
 /// Side effects:
 ///
-/// - Creates `repository_clones/` to cache repositories.
+/// - Creates `repository_clones/`, which is a local cache for git clones.
 /// - May overwrite files at `program_directory`.
 ///
 /// # Arguments
@@ -220,7 +220,7 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloadError> {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` if all files were successfully downloaded and copied and
+/// Returns `Ok(())` if all files were successfully downloaded and copied, or
 /// [`DownloadError`] on failure.
 fn download_files(
     program_name: &str,
@@ -254,7 +254,7 @@ fn download_files(
     let repository = match Repository::open(repository_clones_path.join(&repository_name)) {
         Ok(repository) => repository,
         Err(_) => {
-            // Setup fetch options with progress-tracking callbacks.
+            // Set up fetch options with progress-tracking callbacks.
             let mut fetch_options = FetchOptions::new();
             fetch_options.remote_callbacks(remote_callbacks);
 
@@ -324,7 +324,7 @@ fn download_files(
 ///
 /// # Returns
 ///
-/// The callback function must return `true`.
+/// True.  A progress bar callback function must return `true`.
 fn update_progress_bar_callback(
     progress: git2::Progress,
     repository_name: &str,
