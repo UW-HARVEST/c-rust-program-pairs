@@ -1,6 +1,6 @@
 //! # Corpus
 //!
-//! This module transforms metadata files into strongly-typed Rust structs.
+//! This module transforms schema files into strongly-typed Rust structs.
 //!
 //! ## Submodules
 //!

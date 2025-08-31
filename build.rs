@@ -1,7 +1,7 @@
 //! # Automatically Generate Structs From Metadata Schema
 //!
 //! This build script is run before every build.  It generates Rust
-//! type definitions from the JSON Schema from the schema located
+//! type definitions from the JSON Schema
 //! at `metadata/metadata.schema.json`. The generated code is written
 //! to `src/corpus/metadata_structs.rs`.
 //!

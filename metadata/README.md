@@ -2,19 +2,15 @@
 
 Metadata files contain information about C-Rust program pairs.
 
-## Automatically Generated Structs
-
-[`build.rs`](../build.rs) runs before compile time to automatically convert our [JSON schema](./metadata.schema.json) to Rust structs in [`metadata_structs.rs`](../src/corpus/metadata_structs.rs), which is included in the module tree. Then, before downloading program-pairs, our Rust program then validates metadata files using these automatically generated structs.
-
 ## Schema
 
-There are two metadata schema types, *individual* and *project*. The `metadata/individual/` and `metadata/project/` directories contain JSON metadata files that conform to the individual and project schema types respectively.
+There are two metadata schemas, *individual* and *project*. JSON files in the `metadata/individual/` and `metadata/project/` directories conform to the individual and project schemas respectively.
 
 An individual metadata file groups together unrelated C-Rust projects that each only contain one program.  Here is an example:
 
 ### Individual Metadata Schema
 
-- Individual metadata files consist of an array `pairs` containing all C to Rust program pairs.
+- An individual metadata file consists of an array `pairs` containing C-Rust program pairs.
 
 ```json
 {
@@ -39,7 +35,7 @@ An individual metadata file groups together unrelated C-Rust projects that each 
 }
 ```
 
-A project metadata file containing multiple C-Rust programs.  All the C programs are in a single project, and all the Rust programs are in a single project.
+A project metadata file containing a C project and a Rust project.  Each project contains multiple programs, and each Rust program corresponds to a C program.
 
 ```json
 {
@@ -73,7 +69,7 @@ A project metadata file containing multiple C-Rust programs.  All the C programs
 
 ### Program Configuration
 
-That metadata files in `project` have two program configurations. The *global program configuration* specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The *program configuration* applies to one program pair.
+Each metadata file in `project` has two program configurations. The *global program configuration* specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The *program configuration* applies to one program pair.
 
 ### Schema fields
 

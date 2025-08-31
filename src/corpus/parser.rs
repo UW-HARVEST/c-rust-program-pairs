@@ -1,9 +1,5 @@
 //! # Metadata Parsing and Validation
 //!
-//! This module loads C-Rust metadata files, validates them against the
-//! project's JSON schema, and converts them into a [`Metadata`]
-//! structure.
-//!
 //! The main entry point is [`parse`], which takes a path to a JSON metadata
 //! file and returns a [`Metadata`] instance.
 
