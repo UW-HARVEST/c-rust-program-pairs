@@ -17,7 +17,7 @@ use indicatif::{ProgressBar, ProgressStyle};
 use crate::{
     corpus::{
         self,
-        errors::DownloadError,
+        errors::DownloaderError,
         schema::{Language, Metadata, ProgramPair},
         utils,
     },
@@ -38,8 +38,8 @@ use crate::{
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success, or a [`DownloadError`] if any step fails.
-pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
+/// Returns `Ok(())` on success, or a [`DownloaderError`] if any step fails.
+pub fn download_metadata(demo: bool) -> Result<(), DownloaderError> {
     let directories = if demo {
         vec![PathBuf::from(DEMO_METADATA_DIRECTORY)]
     } else {
@@ -61,7 +61,7 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{bar:40.white/white} {pos}/{len} {msg}")
-            .map_err(|error| DownloadError::ProgressBar(error.to_string()))?
+            .map_err(|error| DownloaderError::ProgressBar(error.to_string()))?
             .progress_chars("##-"),
     );
     progress_bar.set_message(format!("Processing metadata files..."));
@@ -87,21 +87,21 @@ pub fn download_metadata(demo: bool) -> Result<(), DownloadError> {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success, or a [`DownloadError`] if directory reading
+/// Returns `Ok(())` on success, or a [`DownloaderError`] if directory reading
 /// fails.
 pub fn download_from_metadata_directory(
     directory: &Path,
     progress_bar: &ProgressBar,
-) -> Result<(), DownloadError> {
+) -> Result<(), DownloaderError> {
     let metadata_files = directory
         .read_dir()
-        .map_err(|error| DownloadError::IoRead {
+        .map_err(|error| DownloaderError::IoRead {
             path: directory.to_path_buf(),
             error,
         })?;
 
     for metadata_file in metadata_files {
-        let metadata_file = metadata_file.map_err(|error| DownloadError::IoRead {
+        let metadata_file = metadata_file.map_err(|error| DownloaderError::IoRead {
             path: directory.to_path_buf(),
             error,
         })?;
@@ -162,19 +162,19 @@ fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success, or a [`DownloadError`] on failure.
-fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloadError> {
+/// Returns `Ok(())` on success, or a [`DownloaderError`] on failure.
+fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloaderError> {
     let program_name = &pair.program_name;
     let base_program_path = Path::new(PROGRAMS_DIRECTORY).join(program_name);
     let c_program_path = base_program_path.join("c-program");
     let rust_program_path = base_program_path.join("rust-program");
 
     // Create the destination directories for the C and Rust source files.
-    fs::create_dir_all(&c_program_path).map_err(|source| DownloadError::IoCreate {
+    fs::create_dir_all(&c_program_path).map_err(|source| DownloaderError::IoCreate {
         path: c_program_path.clone(),
         error: source,
     })?;
-    fs::create_dir_all(&rust_program_path).map_err(|source| DownloadError::IoCreate {
+    fs::create_dir_all(&rust_program_path).map_err(|source| DownloaderError::IoCreate {
         path: rust_program_path.clone(),
         error: source,
     })?;
@@ -221,14 +221,14 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloadError> {
 /// # Returns
 ///
 /// Returns `Ok(())` if all files were successfully downloaded and copied and
-/// [`DownloadError`] on failure.
+/// [`DownloaderError`] on failure.
 fn download_files(
     program_name: &str,
     program_language: Language,
     program_directory: &Path,
     repository_url: &str,
     source_files: &[String],
-) -> Result<(), DownloadError> {
+) -> Result<(), DownloaderError> {
     let repository_clones_path =
         Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
     let repository_name = utils::get_repository_name(repository_url)?;
@@ -238,7 +238,7 @@ fn download_files(
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{bar:40.white/white} {pos}/{len} {msg}")
-            .map_err(|error| DownloadError::ProgressBar(error.to_string()))?
+            .map_err(|error| DownloaderError::ProgressBar(error.to_string()))?
             .progress_chars("##-"),
     );
     progress_bar.set_message(format!("Cloning repository {repository_name}..."));
@@ -269,7 +269,7 @@ fn download_files(
                     repository_url,
                     &repository_clones_path.join(&repository_name),
                 )
-                .map_err(|error| DownloadError::CloneRepository {
+                .map_err(|error| DownloaderError::CloneRepository {
                     repository_url: repository_url.to_string(),
                     error,
                 })?
@@ -280,7 +280,7 @@ fn download_files(
     progress_bar.set_message("Copying files...");
 
     let repository_directory = repository.workdir().ok_or_else(|| {
-        DownloadError::Io(format!(
+        DownloaderError::Io(format!(
             "Failed to find working directory for repository '{repository_name}'"
         ))
     })?;
@@ -288,7 +288,7 @@ fn download_files(
     // Copy given files from the repository to the given directory.
     for file_path in source_files {
         let file_name = Path::new(file_path).file_name().ok_or_else(|| {
-            DownloadError::Io(format!("Failed to get file name for path '{file_path}'"))
+            DownloaderError::Io(format!("Failed to get file name for path '{file_path}'"))
         })?;
 
         let source = repository_directory.join(file_path);
@@ -298,7 +298,7 @@ fn download_files(
         if source.is_dir() {
             utils::copy_files_from_directory(&source, &program_directory)?;
         } else {
-            fs::copy(&source, &destination).map_err(|error| DownloadError::IoCopy {
+            fs::copy(&source, &destination).map_err(|error| DownloaderError::IoCopy {
                 source: source.to_path_buf(),
                 destination: destination.to_path_buf(),
                 error,

@@ -6,7 +6,7 @@ use std::{fs, path::Path};
 
 use walkdir::WalkDir;
 
-use crate::corpus::errors::DownloadError;
+use crate::corpus::errors::DownloaderError;
 
 /// Count the number of files in a directory.
 ///
@@ -16,24 +16,24 @@ use crate::corpus::errors::DownloadError;
 ///
 /// # Returns
 ///
-/// The number of files in the directory, or a [`DownloadError`] if the
+/// The number of files in the directory, or a [`DownloaderError`] if the
 /// operation fails.
-pub fn count_files(directory: &Path) -> Result<usize, DownloadError> {
+pub fn count_files(directory: &Path) -> Result<usize, DownloaderError> {
     let entries = directory
         .read_dir()
-        .map_err(|error| DownloadError::IoRead {
+        .map_err(|error| DownloaderError::IoRead {
             path: directory.to_path_buf(),
             error,
         })?;
 
     let mut total_files = 0;
     for entry in entries {
-        let entry = entry.map_err(|error| DownloadError::IoRead {
+        let entry = entry.map_err(|error| DownloaderError::IoRead {
             path: directory.to_path_buf(),
             error,
         })?;
 
-        let file_type = entry.file_type().map_err(|error| DownloadError::IoRead {
+        let file_type = entry.file_type().map_err(|error| DownloaderError::IoRead {
             path: directory.to_path_buf(),
             error,
         })?;
@@ -54,8 +54,8 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloadError> {
 ///
 /// # Returns
 ///
-/// The name of the repository on success or [`DownloadError`] on failure.
-pub fn get_repository_name(url: &str) -> Result<String, DownloadError> {
+/// The name of the repository on success or [`DownloaderError`] on failure.
+pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
     let last_segment = url
         .trim_end_matches('/')
         .split('/')
@@ -77,10 +77,10 @@ pub fn get_repository_name(url: &str) -> Result<String, DownloadError> {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success and [`DownloadError`] on failure.
-pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<(), DownloadError> {
+/// Returns `Ok(())` on success and [`DownloaderError`] on failure.
+pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<(), DownloaderError> {
     // Create destination directory in case it doesn't exist.
-    fs::create_dir_all(destination).map_err(|error| DownloadError::IoCopy {
+    fs::create_dir_all(destination).map_err(|error| DownloaderError::IoCopy {
         source: source.to_path_buf(),
         destination: destination.to_path_buf(),
         error,
@@ -91,14 +91,14 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
         if path.is_file() {
             if let Some(extension) = path.extension() {
                 let extension = extension.to_str().ok_or_else(|| {
-                    DownloadError::Io("Failed to retrieve file extension".to_string())
+                    DownloaderError::Io("Failed to retrieve file extension".to_string())
                 })?;
 
                 // Copy all `.c`, `.h`, and `.rs` files.
                 if matches!(extension, "c" | "h" | "rs") {
                     let filename = path.file_name().expect("Failed to extract file name");
                     fs::copy(path, destination.join(filename)).map_err(|error| {
-                        DownloadError::IoCopy {
+                        DownloaderError::IoCopy {
                             source: source.to_path_buf(),
                             destination: destination.to_path_buf(),
                             error,

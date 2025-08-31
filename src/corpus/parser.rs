@@ -18,7 +18,7 @@ use serde_json::Value;
 
 use crate::{
     corpus::{
-        errors::ParseError,
+        errors::ParserError,
         metadata_structs::{
             CRustProgramPairSchema, FeatureRelationship, IndividualProgramPair,
             ProjectPairsMetadataProjectInformation, ProjectProgramPair,
@@ -45,24 +45,15 @@ use crate::{
 /// # Returns
 ///
 /// A [`Metadata`] instance containing program pair data on success and
-/// [`ParseError`] on failure.
-///
-/// # Example
-/// ```no_run
-/// use std::path::Path;
-/// use mycrate::map::parse;
-///
-/// let metadata = parse(Path::new("metadata.json")).unwrap();
-/// println!("Loaded {} program pairs", metadata.pairs.len());
-/// ```
-pub fn parse(path: &Path) -> Result<Metadata, ParseError> {
+/// [`ParserError`] on failure.
+pub fn parse(path: &Path) -> Result<Metadata, ParserError> {
     // Read metadata file.
-    let raw_metadata = fs::read_to_string(path).map_err(|error| ParseError::IoRead {
+    let raw_metadata = fs::read_to_string(path).map_err(|error| ParserError::IoRead {
         path: path.to_path_buf(),
         error,
     })?;
     let metadata: CRustProgramPairSchema =
-        serde_json::from_str(&raw_metadata).map_err(|error| ParseError::Deserialize { error })?;
+        serde_json::from_str(&raw_metadata).map_err(|error| ParserError::Deserialize { error })?;
 
     // Validate metadata with our JSON schema.
     validate_metadata(&metadata)?;
@@ -94,26 +85,27 @@ pub fn parse(path: &Path) -> Result<Metadata, ParseError> {
 ///
 /// # Returns
 ///
-/// Returns `Ok(())` on success and [`ParseError`] on failure.
-fn validate_metadata<T: Serialize>(metadata: &T) -> Result<(), ParseError> {
+/// Returns `Ok(())` on success and [`ParserError`] on failure.
+fn validate_metadata<T: Serialize>(metadata: &T) -> Result<(), ParserError> {
     // Create a validator based on the JSON schema.
     let schema_str =
-        fs::read_to_string(METADATA_SCHEMA_FILE).map_err(|error| ParseError::IoRead {
+        fs::read_to_string(METADATA_SCHEMA_FILE).map_err(|error| ParserError::IoRead {
             path: PathBuf::from(METADATA_SCHEMA_FILE),
             error,
         })?;
     let schema: Value =
-        serde_json::from_str(&schema_str).map_err(|error| ParseError::Deserialize { error })?;
-    let validator = jsonschema::validator_for(&schema).map_err(|error| ParseError::Validation {
-        error: error.to_string(),
-    })?;
+        serde_json::from_str(&schema_str).map_err(|error| ParserError::Deserialize { error })?;
+    let validator =
+        jsonschema::validator_for(&schema).map_err(|error| ParserError::Validation {
+            error: error.to_string(),
+        })?;
 
     // Convert metadata to a JSON `Value` type.
     let metadata_json =
-        serde_json::to_value(metadata).map_err(|error| ParseError::Serialize { error })?;
+        serde_json::to_value(metadata).map_err(|error| ParserError::Serialize { error })?;
 
     if let Err(error) = validator.validate(&metadata_json) {
-        return Err(ParseError::Validation {
+        return Err(ParserError::Validation {
             error: format!("Failed to validate metadata: {error}"),
         });
     }

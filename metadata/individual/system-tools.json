@@ -111,6 +111,118 @@
                 "repository_url": "https://github.com/sharkdp/hexyl.git",
                 "source_paths": ["src"]
             }
+        },
+        {
+            "program_name": "sd",
+            "program_description": "Intuitive find & replace CLI (sed alternative).",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/sed/manual/sed.html",
+                "repository_url": "https://github.com/mirror/sed.git",
+                "source_paths": ["sed"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/chmln/sd/blob/master/README.md",
+                "repository_url": "https://github.com/chmln/sd.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "choose",
+            "program_description": "A human-friendly and fast alternative to cut and (sometimes) awk.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/cut-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils",
+                "source_paths": ["src/cut.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/theryangeary/choose/blob/master/README.md",
+                "repository_url": "https://github.com/theryangeary/choose.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "procs",
+            "program_description": "A modern replacement for ps written in Rust.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://man7.org/linux/man-pages/man1/ps.1.html",
+                "repository_url": "https://gitlab.com/procps-ng/procps.git",
+                "source_paths": ["src/ps"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/dalance/procs/blob/master/README.md",
+                "repository_url": "https://github.com/dalance/procs.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "dog",
+            "program_description": "A command-line DNS lookup tool.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://linux.die.net/man/1/dig",
+                "repository_url": "https://github.com/isc-projects/bind9",
+                "source_paths": ["bin/dig"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/ogham/dog/blob/master/README.md",
+                "repository_url": "https://github.com/ogham/dog",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "gping",
+            "program_description": "Ping, but with a graph.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://linux.die.net/man/8/ping",
+                "repository_url": "https://github.com/iputils/iputils.git",
+                "source_paths": ["ping/ping.c", "ping/ping6.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/orf/gping/blob/master/README.md",
+                "repository_url": "https://github.com/orf/gping.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "broot",
+            "program_description": "A better way to navigate directories.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "http://mama.indstate.edu/users/ice/tree/",
+                "repository_url": "https://github.com/Old-Man-Programmer/tree",
+                "source_paths": ["tree.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/Canop/broot/blob/master/README.md",
+                "repository_url": "https://github.com/Canop/broot",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "huniq",
+            "program_description": "Filter out duplicates on the command line. Faster than sort | uniq.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/uniq-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils.git",
+                "source_paths": ["src/uniq.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/koraa/huniq/blob/master/README.md",
+                "repository_url": "https://github.com/koraa/huniq.git",
+                "source_paths": ["src"]
+            }
         }
     ]
 }

@@ -8,7 +8,7 @@ use thiserror;
 
 /// Errors that occur when a metadata file is being parsed.
 #[derive(thiserror::Error, Debug)]
-pub enum ParseError {
+pub enum ParserError {
     /// Failed to read a file or directory.
     #[error("Failed to read '{path}': {error}")]
     IoRead {
@@ -46,7 +46,7 @@ pub enum ParseError {
 
 /// Errors that occur when program-pairs are being downloaded.
 #[derive(thiserror::Error, Debug)]
-pub enum DownloadError {
+pub enum DownloaderError {
     /// Failed to read a file or directory.
     #[error("Failed to read '{path}': {error}")]
     IoRead {
