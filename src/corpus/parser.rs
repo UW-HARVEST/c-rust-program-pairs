@@ -27,13 +27,6 @@ use crate::{
 /// Parses a JSON metadata file describing C-Rust program pairs into a
 /// [`Metadata`] struct.
 ///
-/// Steps:
-///
-/// 1. Reads the JSON file from `path`.
-/// 2. Deserializes it into a [`CRustTranslationSchema`] enum.
-/// 3. Validates it against the metadata JSON schema.
-/// 4. Converts it into the [`Metadata`] format used throughout the project.
-///
 /// # Arguments
 ///
 /// - `path` - The JSON metadata file.
@@ -43,7 +36,8 @@ use crate::{
 /// A [`Metadata`] instance containing program pair data on success and
 /// [`ParserError`] on failure.
 pub fn parse(path: &Path) -> Result<Metadata, ParserError> {
-    // Read metadata file.
+    // Read metadata file and deserializes it into a
+    // [`CRustTranslationSchema`] enum.
     let raw_metadata = fs::read_to_string(path).map_err(|error| ParserError::IoRead {
         path: path.to_path_buf(),
         error,
