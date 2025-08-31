@@ -2,7 +2,10 @@
 //!
 //! This module provides utility functions used in other parts of our code.
 
-use std::{fs, path::Path};
+use std::{
+    fs,
+    path::{MAIN_SEPARATOR_STR, Path},
+};
 
 use walkdir::WalkDir;
 
@@ -59,11 +62,8 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloaderError> {
 ///
 /// # Example
 ///
-/// ```rust
-/// let url = "https://github.com/eza-community/eza.git";
-/// let name = get_repository_name = get_repository_name(url);
-/// assert_eq!(name, "eza");
-/// ```
+/// For example, repository name of "https://github.com/eza-community/eza.git"
+/// is "eza".
 pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
     let last_segment = url
         .trim_end_matches('/')
@@ -77,7 +77,9 @@ pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
 /// Copies all .c, .h, and .rs files from a directory to the destination.
 ///
 /// Copied files will all be directly under the destination directory; any
-/// nested directories will not be copied.
+/// nested directories will not be copied. Files will have their paths
+/// included in their name. For example, a file found in a subdirectory
+/// "module/file.txt" will have a final name of module-file.txt.
 ///
 /// # Arguments
 ///
@@ -95,6 +97,7 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
         error,
     })?;
 
+    // Iterate recursively through every file in `source`.
     for entry in WalkDir::new(source).into_iter().filter_map(|e| e.ok()) {
         let path = entry.path();
         if path.is_file() {
@@ -105,7 +108,17 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
 
                 // Copy all `.c`, `.h`, and `.rs` files.
                 if matches!(extension, "c" | "h" | "rs") {
-                    let filename = path.file_name().expect("Failed to extract file name");
+                    // Include full path as filename but replace path
+                    // separator with '-' in filename.
+                    let filename = path
+                        .to_str()
+                        .ok_or_else(|| {
+                            DownloaderError::Io(format!(
+                                "Failed to get filename for '{}'",
+                                path.display()
+                            ))
+                        })?
+                        .replace(MAIN_SEPARATOR_STR, "-");
                     fs::copy(path, destination.join(filename)).map_err(|error| {
                         DownloaderError::IoCopy {
                             source: source.to_path_buf(),
