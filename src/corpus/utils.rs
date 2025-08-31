@@ -8,7 +8,8 @@ use walkdir::WalkDir;
 
 use crate::corpus::errors::DownloaderError;
 
-/// Count the number of files in a directory.
+/// Count the number of immediate files in a directory, not including any
+/// files in sub-directories.
 ///
 /// # Arguments
 ///
@@ -16,8 +17,8 @@ use crate::corpus::errors::DownloaderError;
 ///
 /// # Returns
 ///
-/// The number of files in the directory, or a [`DownloaderError`] if the
-/// operation fails.
+/// The number of immediate files in the directory, or a [`DownloaderError`]
+/// if the operation fails.
 pub fn count_files(directory: &Path) -> Result<usize, DownloaderError> {
     let entries = directory
         .read_dir()
