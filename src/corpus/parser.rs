@@ -66,9 +66,6 @@ pub fn parse(path: &Path) -> Result<Metadata, ParserError> {
 
 /// Validates metadata against the project's JSON schema.
 ///
-/// Serializes `metadata` to JSON and checks it against the schema in
-/// [`METADATA_SCHEMA_FILE`].
-///
 /// # Arguments
 ///
 /// - `metadata` - A JSON serializable struct that represents some metadata.
