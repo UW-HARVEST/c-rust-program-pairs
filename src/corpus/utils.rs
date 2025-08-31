@@ -56,6 +56,14 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloaderError> {
 /// # Returns
 ///
 /// The name of the repository on success or [`DownloaderError`] on failure.
+///
+/// # Example
+///
+/// ```rust
+/// let url = "https://github.com/eza-community/eza.git";
+/// let name = get_repository_name = get_repository_name(url);
+/// assert_eq!(name, "eza");
+/// ```
 pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
     let last_segment = url
         .trim_end_matches('/')
