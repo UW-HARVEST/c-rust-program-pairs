@@ -1,6 +1,8 @@
-//! Metadata Schema
+//! Parsed Metadata Schema
 //!
-//! This module defines data structures that store information about program pairs.
+//! This module defines data structures that represent the parsed output from
+//! JSON metadata files. These structures store the actual metadata information
+//! about program pairs after JSON parsing is complete.
 
 use serde::{Deserialize, Serialize};
 
