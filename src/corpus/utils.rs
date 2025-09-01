@@ -110,7 +110,8 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
                 if matches!(extension, "c" | "h" | "rs") {
                     // Include full path as filename but replace path
                     // separator with '-' in filename.
-                    let filename = path
+                    let relative_path = path.strip_prefix(source).unwrap_or(path);
+                    let filename = relative_path
                         .to_str()
                         .ok_or_else(|| {
                             DownloaderError::Io(format!(
