@@ -20,7 +20,16 @@
                 "source_paths": ["src/diff.c", "src/diff.h"]
             },
             "rust_program": {
-                "source_paths": ["src/diff.rs"]
+                "source_paths": [
+                    "src/diff.rs",
+                    "src/params.rs",
+                    "src/utils.rs",
+                    "src/context_diff.rs",
+                    "src/ed_diff.rs",
+                    "src/normal_diff.rs",
+                    "src/side_diff.rs",
+                    "src/unified_diff.rs"
+                ]
             }
         },
         {
@@ -30,7 +39,7 @@
                 "source_paths": ["src/cmp.c"]
             },
             "rust_program": {
-                "source_paths": ["src/diff.rs"]
+                "source_paths": ["src/cmp.rs", "src/utils.rs"]
             }
         }
     ]
