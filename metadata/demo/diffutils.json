@@ -17,7 +17,21 @@
             "program_name": "diff",
             "program_description": "Show differences between two files.",
             "c_program": {
-                "source_paths": ["src/diff.c", "src/diff.h"]
+                "source_paths": [
+                    "src/diff.c",
+                    "src/diff.h",
+                    "src/analyze.c",
+                    "src/context.c",
+                    "src/dir.c",
+                    "src/ed.c",
+                    "src/ifdef.c",
+                    "src/io.c",
+                    "src/normal.c",
+                    "src/side.c",
+                    "src/system.c",
+                    "src/system.h",
+                    "src/util.c"
+                ]
             },
             "rust_program": {
                 "source_paths": [
@@ -36,7 +50,7 @@
             "program_name": "cmp",
             "program_description": "Show the offsets and line numbers where two files differ.",
             "c_program": {
-                "source_paths": ["src/cmp.c"]
+                "source_paths": ["src/cmp.c", "src/system.c"]
             },
             "rust_program": {
                 "source_paths": ["src/cmp.rs", "src/utils.rs"]
