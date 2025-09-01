@@ -4,7 +4,7 @@
 
 use std::{
     fs,
-    path::{MAIN_SEPARATOR_STR, Path},
+    path::{Path, MAIN_SEPARATOR_STR},
 };
 
 use walkdir::WalkDir;
@@ -50,7 +50,8 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloaderError> {
     Ok(total_files)
 }
 
-/// Extract a repository's name from its URL.
+/// Extract a repository's name from its URL.  The repository name of
+/// "https://github.com/eza-community/eza.git" is "eza".
 ///
 /// # Arguments
 ///
@@ -59,11 +60,6 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloaderError> {
 /// # Returns
 ///
 /// The name of the repository on success or [`DownloaderError`] on failure.
-///
-/// # Example
-///
-/// For example, repository name of "https://github.com/eza-community/eza.git"
-/// is "eza".
 pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
     let last_segment = url
         .trim_end_matches('/')
@@ -76,7 +72,7 @@ pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
 
 /// Copies all .c, .h, and .rs files from a directory to the destination.
 ///
-/// Copied files will all be directly under the destination directory; any
+/// Copied files will all be directly under the destination directory;
 /// nested directories will not be copied. Files will have their paths
 /// included in their name. For example, a file found in a subdirectory
 /// "module/file.txt" will have a final name of module-file.txt.

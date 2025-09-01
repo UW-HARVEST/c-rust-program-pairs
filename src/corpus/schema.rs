@@ -2,7 +2,8 @@
 //!
 //! This module defines data structures that represent the parsed output from
 //! JSON metadata files. These structures store the actual metadata information
-//! about program pairs after JSON parsing is complete.
+//! about program pairs after JSON parsing is complete. By contrast, structs
+//! defined in file `metadata-structs.rs` are used during JSON parsing.
 
 use serde::{Deserialize, Serialize};
 
