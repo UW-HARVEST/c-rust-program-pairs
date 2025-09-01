@@ -1,0 +1,228 @@
+{
+    "pairs": [
+        {
+            "program_name": "eza",
+            "program_description": "A modern alternative to ls.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/ls-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils",
+                "source_paths": ["src/ls.c", "src/ls.h"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/eza-community/eza/blob/main/README.md",
+                "repository_url": "https://github.com/eza-community/eza",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "bat",
+            "program_description": "A cat(1) clone with wings.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/cat-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils",
+                "source_paths": ["src/cat.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/sharkdp/bat/blob/master/README.md",
+                "repository_url": "https://github.com/sharkdp/bat",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "fd",
+            "program_description": "A simple, fast and user-friendly alternative to 'find'.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/findutils/manual/html_mono/find.html",
+                "repository_url": "https://git.savannah.gnu.org/git/findutils.git",
+                "source_paths": ["find"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/sharkdp/fd/blob/master/README.md",
+                "repository_url": "https://github.com/sharkdp/fd.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "ripgrep",
+            "program_description": "A line-oriented search tool that recursively searches the current directory for a regex pattern.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/grep/manual/grep.html",
+                "repository_url": "https://git.savannah.gnu.org/git/grep.git",
+                "source_paths": ["src"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/BurntSushi/ripgrep/blob/master/README.md",
+                "repository_url": "https://github.com/BurntSushi/ripgrep.git",
+                "source_paths": ["crates"]
+            }
+        },
+        {
+            "program_name": "dust",
+            "program_description": "A more intuitive version of du in rust.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/du-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils",
+                "source_paths": ["src/du.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/bootandy/dust/blob/master/README.md",
+                "repository_url": "https://github.com/bootandy/dust.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "zoxide",
+            "program_description": "A smarter cd command.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-cd",
+                "repository_url": "https://github.com/bminor/bash.git",
+                "source_paths": ["builtins/cd.def"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/ajeetdsouza/zoxide/blob/main/README.md",
+                "repository_url": "https://github.com/ajeetdsouza/zoxide.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "hexyl",
+            "program_description": "A command-line hex viewer.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://linux.die.net/man/1/hexdump",
+                "repository_url": "https://github.com/util-linux/util-linux.git",
+                "source_paths": ["text-utils/hexdump.c", "text-utils/hexdump.h"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/sharkdp/hexyl/blob/master/README.md",
+                "repository_url": "https://github.com/sharkdp/hexyl.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "sd",
+            "program_description": "Intuitive find & replace CLI (sed alternative).",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/sed/manual/sed.html",
+                "repository_url": "https://github.com/mirror/sed.git",
+                "source_paths": ["sed"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/chmln/sd/blob/master/README.md",
+                "repository_url": "https://github.com/chmln/sd.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "choose",
+            "program_description": "A human-friendly and fast alternative to cut and (sometimes) awk.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/cut-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils",
+                "source_paths": ["src/cut.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/theryangeary/choose/blob/master/README.md",
+                "repository_url": "https://github.com/theryangeary/choose.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "procs",
+            "program_description": "A modern replacement for ps written in Rust.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://man7.org/linux/man-pages/man1/ps.1.html",
+                "repository_url": "https://gitlab.com/procps-ng/procps.git",
+                "source_paths": ["src/ps"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/dalance/procs/blob/master/README.md",
+                "repository_url": "https://github.com/dalance/procs.git",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "dog",
+            "program_description": "A command-line DNS lookup tool.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://linux.die.net/man/1/dig",
+                "repository_url": "https://github.com/isc-projects/bind9",
+                "source_paths": ["bin/dig"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/ogham/dog/blob/master/README.md",
+                "repository_url": "https://github.com/ogham/dog",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "gping",
+            "program_description": "Ping, but with a graph.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://linux.die.net/man/8/ping",
+                "repository_url": "https://github.com/iputils/iputils.git",
+                "source_paths": ["ping", "iputils_common.c", "iputils_common.h"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/orf/gping/blob/master/README.md",
+                "repository_url": "https://github.com/orf/gping.git",
+                "source_paths": ["pinger/src"]
+            }
+        },
+        {
+            "program_name": "broot",
+            "program_description": "A better way to navigate directories.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "http://mama.indstate.edu/users/ice/tree/",
+                "repository_url": "https://github.com/Old-Man-Programmer/tree",
+                "source_paths": ["tree.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/Canop/broot/blob/master/README.md",
+                "repository_url": "https://github.com/Canop/broot",
+                "source_paths": ["src"]
+            }
+        },
+        {
+            "program_name": "huniq",
+            "program_description": "Filter out duplicates on the command line. Faster than sort | uniq.",
+            "translation_tools": ["manual"],
+            "feature_relationship": "rust_superset_of_c",
+            "c_program": {
+                "documentation_url": "https://www.gnu.org/software/coreutils/manual/html_node/uniq-invocation.html",
+                "repository_url": "https://github.com/coreutils/coreutils.git",
+                "source_paths": ["src/uniq.c"]
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/koraa/huniq/blob/master/README.md",
+                "repository_url": "https://github.com/koraa/huniq.git",
+                "source_paths": ["src"]
+            }
+        }
+    ]
+}

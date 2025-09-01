@@ -1,0 +1,191 @@
+{
+    "project_information": {
+        "program_name": "util-linux",
+        "translation_tools": ["manual"],
+        "feature_relationship": "rust_equivalent_to_c",
+        "c_program": {
+            "documentation_url": "https://github.com/util-linux/util-linux/blob/master/Documentation/releases/v2.40-ReleaseNotes",
+            "repository_url": "https://github.com/util-linux/util-linux"
+        },
+        "rust_program": {
+            "documentation_url": "https://github.com/uutils/util-linux/blob/main/README.md",
+            "repository_url": "https://github.com/uutils/util-linux"
+        }
+    },
+    "pairs": [
+        {
+            "program_name": "blockdev",
+            "program_description": "Performs block device operations such as getting/setting block size, read-only status, and other device parameters.",
+            "c_program": {
+                "source_paths": ["disk-utils/blockdev.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/blockdev/src/blockdev.rs"]
+            }
+        },
+        {
+            "program_name": "chcpu",
+            "program_description": "Configures CPUs by enabling or disabling them on systems that support CPU hotplug.",
+            "c_program": {
+                "source_paths": ["sys-utils/chcpu.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/chcpu/src/chcpu.rs"]
+            }
+        },
+        {
+            "program_name": "ctrlaltdel",
+            "program_description": "Sets the function of the Ctrl+Alt+Del key combination.",
+            "c_program": {
+                "source_paths": ["sys-utils/ctrlaltdel.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/ctrlaltdel/src/ctrlaltdel.rs"]
+            }
+        },
+        {
+            "program_name": "dmesg",
+            "program_description": "Displays kernel ring buffer messages and system boot messages.",
+            "c_program": {
+                "source_paths": ["sys-utils/dmesg.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/dmesg/src/dmesg.rs"]
+            }
+        },
+        {
+            "program_name": "fsfreeze",
+            "program_description": "Suspends and resumes access to a filesystem to create consistent snapshots.",
+            "c_program": {
+                "source_paths": ["sys-utils/fsfreeze.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/fsfreeze/src/fsfreeze.rs"]
+            }
+        },
+        {
+            "program_name": "last",
+            "program_description": "Shows a listing of last logged in users and system boot times.",
+            "c_program": {
+                "source_paths": ["login-utils/last.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/last/src/last.rs"]
+            }
+        },
+        {
+            "program_name": "lscpu",
+            "program_description": "Displays information about the CPU architecture and processing units.",
+            "c_program": {
+                "source_paths": [
+                    "sys-utils/lscpu.c",
+                    "sys-utils/lscpu-arm.c",
+                    "sys-utils/lscpu-dmi.c"
+                ]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/lscpu/src/lscpu.rs"]
+            }
+        },
+        {
+            "program_name": "lsipc",
+            "program_description": "Shows information about active inter-process communication facilities.",
+            "c_program": {
+                "source_paths": ["sys-utils/lsipc.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/lsipc/src/lsipc.rs"]
+            }
+        },
+        {
+            "program_name": "lslocks",
+            "program_description": "Lists local system locks held by processes.",
+            "c_program": {
+                "source_paths": ["misc-utils/lslocks.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/lslocks/src/lslocks.rs"]
+            }
+        },
+        {
+            "program_name": "lsmem",
+            "program_description": "Lists the ranges of available memory with their online status.",
+            "c_program": {
+                "source_paths": ["sys-utils/lsmem.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/lsmem/src/lsmem.rs"]
+            }
+        },
+        {
+            "program_name": "mcookie",
+            "program_description": "Generates a 128-bit random hexadecimal number for use as a magic cookie by xauth.",
+            "c_program": {
+                "source_paths": ["misc-utils/mcookie.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/mcookie/src/mcookie.rs"]
+            }
+        },
+        {
+            "program_name": "mesg",
+            "program_description": "Controls write access to your terminal by other users.",
+            "c_program": {
+                "source_paths": ["term-utils/mesg.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/mesg/src/mesg.rs"]
+            }
+        },
+        {
+            "program_name": "mountpoint",
+            "program_description": "Checks whether a directory or file is a mountpoint.",
+            "c_program": {
+                "source_paths": ["sys-utils/mountpoint.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/mountpoint/src/mountpoint.rs"]
+            }
+        },
+        {
+            "program_name": "renice",
+            "program_description": "Alters the scheduling priority of running processes.",
+            "c_program": {
+                "source_paths": ["sys-utils/renice.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/renice/src/renice.rs"]
+            }
+        },
+        {
+            "program_name": "rev",
+            "program_description": "Reverses the order of characters in every line of input text.",
+            "c_program": {
+                "source_paths": ["text-utils/rev.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/rev/src/rev.rs"]
+            }
+        },
+        {
+            "program_name": "setsid",
+            "program_description": "Runs a program in a new session, detached from the terminal.",
+            "c_program": {
+                "source_paths": ["sys-utils/setsid.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/setsid/src/setsid.rs"]
+            }
+        },
+        {
+            "program_name": "uuidgen",
+            "program_description": "Generates universally unique identifiers (UUIDs).",
+            "c_program": {
+                "source_paths": ["misc-utils/uuidgen.c"]
+            },
+            "rust_program": {
+                "source_paths": ["src/uu/uuidgen/src/uuidgen.rs"]
+            }
+        }
+    ]
+}

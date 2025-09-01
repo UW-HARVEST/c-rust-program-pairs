@@ -1,0 +1,29 @@
+[package]
+name = "c-rust-program-pairs"
+version = "0.1.0"
+edition = "2024"
+build = "build.rs"
+
+[dependencies]
+git2 = "0.20.2"
+indicatif = "0.18.0"
+jsonschema = "0.30.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.140"
+thiserror = "2.0.16"
+typify = "0.4.2"
+walkdir = "2.5.0"
+
+[build-dependencies]
+prettyplease = "0.2"
+schemars = "0.8"
+serde_json = "1.0"
+syn = "2.0"
+typify = "0.4.2"
+
+[lints.rust]
+missing_docs = "warn"
+
+[lints.rustdoc]
+missing_crate_level_docs = "warn"
+unescaped_backticks = "warn"

@@ -1,0 +1,14 @@
+target
+
+# Where we store our program pairs.
+programs
+
+# Where we store repositories we have downloaded.
+repository_clones
+
+# Generated program
+metadata_structs.rs
+
+progress-reports
+
+.DS_Store

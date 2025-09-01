@@ -1,12 +1,46 @@
-This repository contains pairs of programs.
-Each pair consists of a C program and a Rust program.
+# C-Rust Program Pairs
 
-Each program is provided in its full source code tree.  For example, this is equivalent to a git clone, without the `.git/` subdirectory.
+This repository contains a list of C-Rust program pairs.  The `metadata/` directory lists the program pairs.  Often the Rust program was translated from or inspired by the C program.  Program pairs only include the source code without any dependencies, so they cannot be compiled.
 
-There is a script (name TBD) that re-creates or updates the contents of this repository, by downloading from the Internet and optionally doing some postprocessing.
+Here is the directory structure for the downloaded `cat` program pair:
 
-There is a metadata file (name and organization TBD) that includes:
- * a URL for the C program
- * a URL for the Rust program
- * a URL that describes the relationship between the programs.  This might be the README for the Rust program, or a blog post, etc.
- * whether the Rust program is a direct translation, a rewrite, or a program inspired by the C program that might have different features.  If a direct translation or a rewrite, then the tests of each version ought to pass on the other implementation -- if they do not, that is a bug rather than a design choice.
+```
+.
+└── programs/
+    └── cat/
+        ├── c-program/
+        │   └── cat.c
+        └── rust-program/
+            └── cat.rs
+```
+
+## Usage
+
+To download all available program pairs into the `programs/` directory:
+
+```sh
+cargo run
+```
+
+To download a small subset of available program pairs:
+
+```sh
+cargo run demo
+```
+
+## Terminology
+
+- **Program**: Code that compiles to a single executable.
+- **Pair**: A pair of C and Rust programs with similar functionality.
+- **Project**: A repository with C or Rust code.  A project contains one or more programs.
+- **Metadata**: Information about one or more pairs.
+
+## Resources
+
+- [Awesome Rust](https://github.com/rust-unofficial/awesome-rust): Contains a list of awesome Rust projects - many of which might be translated from C projects.
+- [JSON Schema Validator](https://www.jsonschemavalidator.net/): Used to validate JSON schemas.
+
+## Possible TODOs
+
+- `git pull` repositories in the cache to update them.
+- Use date or git SHA so repositories downloaded are consistent from run to run.

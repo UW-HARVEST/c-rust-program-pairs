@@ -1,0 +1,20 @@
+{
+    "pairs": [
+        {
+            "program_name": "gitoxide",
+            "program_description": "An idiomatic, lean, fast & safe pure Rust implementation of Git.",
+            "translation_tools": [],
+            "feature_relationship": "rust_subset_of_c",
+            "c_program": {
+                "documentation_url": "https://git-scm.com/doc",
+                "repository_url": "https://github.com/git/git",
+                "source_paths": []
+            },
+            "rust_program": {
+                "documentation_url": "https://github.com/GitoxideLabs/gitoxide",
+                "repository_url": "https://github.com/GitoxideLabs/gitoxide.git",
+                "source_paths": ["src"]
+            }
+        }
+    ]
+}

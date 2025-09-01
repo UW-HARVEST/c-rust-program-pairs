@@ -1,0 +1,200 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "C-Rust Program Pair Schema",
+    "description": "Complete schema for C-Rust projects and program pairs",
+    "definitions": {
+        "program_name": {
+            "type": "string",
+            "description": "Name of the Rust executable program",
+            "minLength": 1
+        },
+        "program_description": {
+            "type": "string",
+            "description": "Brief description of what the program does"
+        },
+        "documentation_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to detailed description or documentation"
+        },
+        "repository_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Repository URL (GitHub, GitLab, etc.)"
+        },
+        "translation_tools": {
+            "type": "array",
+            "description": "Tools used for the translation process",
+            "items": {
+                "type": "string"
+            }
+        },
+        "feature_relationship": {
+            "type": "string",
+            "enum": [
+                "rust_superset_of_c",
+                "rust_subset_of_c",
+                "rust_equivalent_to_c",
+                "overlapping"
+            ],
+            "description": "How Rust features compare to C"
+        },
+        "source_paths": {
+            "type": "array",
+            "description": "Paths to source files/directories",
+            "items": {
+                "type": "string"
+            }
+        },
+        "project_program": {
+            "type": "object",
+            "description": "Information about one pair in project metadata",
+            "properties": {
+                "source_paths": {
+                    "$ref": "#/definitions/source_paths"
+                }
+            },
+            "required": ["source_paths"]
+        },
+        "project_global_program": {
+            "type": "object",
+            "description": "Information about all pairs in project metadata",
+            "properties": {
+                "documentation_url": {
+                    "$ref": "#/definitions/documentation_url"
+                },
+                "repository_url": {
+                    "$ref": "#/definitions/repository_url"
+                }
+            },
+            "required": ["documentation_url", "repository_url"]
+        },
+        "individual_program": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/project_program"
+                },
+                {
+                    "$ref": "#/definitions/project_global_program"
+                }
+            ],
+            "description": "Complete program configuration combining global and specific settings in individual metadata files"
+        },
+        "individual_program_pair": {
+            "type": "object",
+            "description": "A single C-Rust program pair",
+            "properties": {
+                "program_name": {
+                    "$ref": "#/definitions/program_name"
+                },
+                "program_description": {
+                    "$ref": "#/definitions/program_description"
+                },
+                "translation_tools": {
+                    "$ref": "#/definitions/translation_tools"
+                },
+                "feature_relationship": {
+                    "$ref": "#/definitions/feature_relationship"
+                },
+                "c_program": {
+                    "$ref": "#/definitions/individual_program"
+                },
+                "rust_program": {
+                    "$ref": "#/definitions/individual_program"
+                }
+            },
+            "required": [
+                "program_name",
+                "program_description",
+                "translation_tools",
+                "feature_relationship",
+                "c_program",
+                "rust_program"
+            ]
+        },
+        "project_program_pair": {
+            "type": "object",
+            "description": "A program pair within a project",
+            "properties": {
+                "program_name": {
+                    "$ref": "#/definitions/program_name"
+                },
+                "program_description": {
+                    "$ref": "#/definitions/program_description"
+                },
+                "c_program": {
+                    "$ref": "#/definitions/project_program"
+                },
+                "rust_program": {
+                    "$ref": "#/definitions/project_program"
+                }
+            },
+            "required": [
+                "program_name",
+                "program_description",
+                "c_program",
+                "rust_program"
+            ]
+        }
+    },
+    "oneOf": [
+        {
+            "title": "Individual Pairs Metadata",
+            "description": "Schema for standalone C-Rust program pairs",
+            "type": "object",
+            "properties": {
+                "pairs": {
+                    "type": "array",
+                    "description": "Array of standalone program pair configurations",
+                    "items": {
+                        "$ref": "#/definitions/individual_program_pair"
+                    }
+                }
+            },
+            "required": ["pairs"]
+        },
+        {
+            "title": "Project Pairs Metadata",
+            "description": "Schema for C-Rust project pairs",
+            "type": "object",
+            "properties": {
+                "project_information": {
+                    "type": "object",
+                    "description": "Information about the entire project",
+                    "properties": {
+                        "program_name": {
+                            "$ref": "#/definitions/program_name"
+                        },
+                        "translation_tools": {
+                            "$ref": "#/definitions/translation_tools"
+                        },
+                        "feature_relationship": {
+                            "$ref": "#/definitions/feature_relationship"
+                        },
+                        "c_program": {
+                            "$ref": "#/definitions/project_global_program"
+                        },
+                        "rust_program": {
+                            "$ref": "#/definitions/project_global_program"
+                        }
+                    },
+                    "required": [
+                        "program_name",
+                        "translation_tools",
+                        "feature_relationship",
+                        "c_program",
+                        "rust_program"
+                    ]
+                },
+                "pairs": {
+                    "type": "array",
+                    "description": "Array of program pairs within the project",
+                    "items": {
+                        "$ref": "#/definitions/project_program_pair"
+                    }
+                }
+            },
+            "required": ["project_information", "pairs"]
+        }
+    ]
+}
