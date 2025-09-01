@@ -184,12 +184,12 @@
             "c_program": {
                 "documentation_url": "https://linux.die.net/man/8/ping",
                 "repository_url": "https://github.com/iputils/iputils.git",
-                "source_paths": ["ping/ping.c", "ping/ping6.c"]
+                "source_paths": ["ping", "iputils_common.c", "iputils_common.h"]
             },
             "rust_program": {
                 "documentation_url": "https://github.com/orf/gping/blob/master/README.md",
                 "repository_url": "https://github.com/orf/gping.git",
-                "source_paths": ["src"]
+                "source_paths": ["pinger/src"]
             }
         },
         {
