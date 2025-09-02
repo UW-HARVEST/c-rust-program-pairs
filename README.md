@@ -1,6 +1,10 @@
 # C-Rust Program Pairs
 
-This repository contains a list of C-Rust program pairs.  The `metadata/` directory lists the program pairs.  Often the Rust program was translated from or inspired by the C program.  Program pairs only include the source code without any dependencies, so they cannot be compiled.
+This repository contains a list of C-Rust program pairs.  Each pair consists of
+a C program and a Rust program with similar functionality.  The `metadata/`
+directory lists the program pairs.  Often the Rust program was translated from
+or inspired by the C program.  Program pairs only include the source code
+without any dependencies, so they cannot be compiled.
 
 Here is the directory structure for the downloaded `cat` program pair:
 
@@ -18,7 +22,7 @@ Here is the directory structure for the downloaded `cat` program pair:
 
 You need the SSL development library.  On Ubuntu, run:
 ```
-sudo apt-get install pkg-config libssl-dev -y
+sudo apt-get install -y pkg-config libssl-dev
 ```
 
 ## Usage
