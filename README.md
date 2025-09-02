@@ -14,6 +14,13 @@ Here is the directory structure for the downloaded `cat` program pair:
             └── cat.rs
 ```
 
+## Prerequisites
+
+You need the SSL development library.  On Ubuntu, run:
+```
+sudo apt-get install pkg-config libssl-dev -y
+```
+
 ## Usage
 
 To download all available program pairs into the `programs/` directory:
