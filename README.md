@@ -18,14 +18,15 @@ Here is the directory structure for the downloaded `cat` program pair:
             └── cat.rs
 ```
 
-## Prerequisites
+## Usage
+
+### Running with `cargo`
 
 You need the SSL development library.  On Ubuntu, run:
-```
+
+```sh
 sudo apt-get install -y pkg-config libssl-dev
 ```
-
-## Usage
 
 To download all available program pairs into the `programs/` directory:
 
@@ -37,6 +38,28 @@ To download a small subset of available program pairs:
 
 ```sh
 cargo run demo
+```
+
+### Running with Docker
+
+You may wish to use Docker if you are facing system compatibility issues.
+
+First, build the container:
+
+```sh
+docker compose build
+```
+
+To download all available program pairs into the `programs/` directory:
+
+```sh
+docker compose run --rm c-rust-program-pairs
+```
+
+To download a small subset of available program pairs:
+
+```sh
+docker compose run --rm c-rust-program-pairs demo
 ```
 
 ## Terminology

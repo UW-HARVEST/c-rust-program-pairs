@@ -1,0 +1,7 @@
+services:
+  c-rust-program-pairs:
+    build: .
+    volumes:
+      - ./repository_clones:/app/repository_clones
+      - ./programs:/app/programs
+      - ./metadata:/app/metadata
