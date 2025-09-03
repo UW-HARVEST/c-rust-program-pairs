@@ -4,4 +4,3 @@ services:
     volumes:
       - ./repository_clones:/app/repository_clones
       - ./program_pairs:/app/program_pairs
-      - ./metadata:/app/metadata
