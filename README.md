@@ -34,7 +34,7 @@ To download all available program pairs into the `program_pairs/` directory:
 cargo run
 ```
 
-To download a small subset of available program pairs:
+To download a small subset of available program pairs for testing / demonstration:
 
 ```sh
 cargo run demo
@@ -42,7 +42,7 @@ cargo run demo
 
 ### Running with Docker
 
-You may wish to use Docker if you are facing system compatibility issues.
+You may wish to run the program with [Docker](https://docs.docker.com/get-started/get-docker/) if you are facing system compatibility issues.
 
 First, build the container:
 
@@ -56,7 +56,7 @@ To download all available program pairs into the `program_pairs/` directory:
 docker compose run --rm c-rust-program-pairs
 ```
 
-To download a small subset of available program pairs:
+To download a small subset of available program pairs for testing / demonstration:
 
 ```sh
 docker compose run --rm c-rust-program-pairs demo
