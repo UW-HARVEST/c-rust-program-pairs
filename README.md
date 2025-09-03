@@ -10,7 +10,7 @@ Here is the directory structure for the downloaded `cat` program pair:
 
 ```
 .
-└── programs/
+└── program_pairs/
     └── cat/
         ├── c-program/
         │   └── cat.c
