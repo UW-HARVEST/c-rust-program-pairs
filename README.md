@@ -21,13 +21,12 @@ Here is the directory structure for the downloaded `cat` program pair:
 ## Prerequisites
 
 You need the SSL development library.  On Ubuntu, run:
-```
+
+```sh
 sudo apt-get install -y pkg-config libssl-dev
 ```
 
-## Usage
-
-To download all available program pairs into the `programs/` directory:
+To download all available program pairs into the `program_pairs/` directory:
 
 ```sh
 cargo run
