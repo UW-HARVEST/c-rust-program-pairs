@@ -19,7 +19,7 @@ pub const INDIVIDUAL_METADATA_DIRECTORY: &str = "metadata/individual";
 pub const DEMO_METADATA_DIRECTORY: &str = "metadata/demo";
 
 /// Directory containing C-Rust program pairs.
-pub const PROGRAMS_DIRECTORY: &str = "programs";
+pub const PROGRAMS_DIRECTORY: &str = "program_pairs";
 
 /// Directory used as a local cache for repository clones to avoid repeatedly
 /// cloning repositories.
