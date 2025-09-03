@@ -28,7 +28,7 @@ You need the SSL development library.  On Ubuntu, run:
 sudo apt-get install -y pkg-config libssl-dev
 ```
 
-To download all available program pairs into the `programs/` directory:
+To download all available program pairs into the `program_pairs/` directory:
 
 ```sh
 cargo run
@@ -50,7 +50,7 @@ First, build the container:
 docker compose build
 ```
 
-To download all available program pairs into the `programs/` directory:
+To download all available program pairs into the `program_pairs/` directory:
 
 ```sh
 docker compose run --rm c-rust-program-pairs

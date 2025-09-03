@@ -148,13 +148,13 @@ fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
 /// Downloads a C-Rust program pair.
 ///
 /// Checks if the C and Rust repositories exist, and clone them if they don't.
-/// Copy the C source files to programs/<program_name>/c-program.
-/// Copy the Rust source files to programs/<program_name>/rust-program.
+/// Copy the C source files to program_pairs/<program_name>/c-program.
+/// Copy the Rust source files to program_pairs/<program_name>/rust-program.
 ///
 /// # Side Effects
 ///
 /// - Creates destination directories for program pairs at
-///   `programs/<program-name>/`.
+///   `program_pairs/<program-name>/`.
 ///
 /// # Arguments
 ///
