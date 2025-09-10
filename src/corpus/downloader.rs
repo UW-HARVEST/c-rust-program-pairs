@@ -229,12 +229,52 @@ fn download_files(
     repository_url: &str,
     source_files: &[String],
 ) -> Result<(), DownloaderError> {
+    let progress_bar = ProgressBar::new(80);
+
+    let repository_directory = download_with_git(&program_language, repository_url, &progress_bar)?;
+
+    progress_bar.set_style(ProgressStyle::default_spinner());
+    progress_bar.set_message("Copying files...");
+
+    // Copy given files from the repository to the given directory.
+    for file_path in source_files {
+        let file_name = Path::new(file_path).file_name().ok_or_else(|| {
+            DownloaderError::Io(format!("Failed to get file name for path '{file_path}'"))
+        })?;
+
+        let source = repository_directory.join(file_path);
+        let destination = program_directory.join(file_name);
+
+        // Copy files from destination to source.
+        if source.is_dir() {
+            utils::copy_files_from_directory(&source, &program_directory)?;
+        } else {
+            fs::copy(&source, &destination).map_err(|error| DownloaderError::IoCopy {
+                source: source.to_path_buf(),
+                destination: destination.to_path_buf(),
+                error,
+            })?;
+        }
+    }
+
+    progress_bar.finish_with_message(format!(
+        "Downloaded '{}' ({})",
+        program_name,
+        program_language.to_str()
+    ));
+    Ok(())
+}
+
+fn download_with_git(
+    program_language: &Language,
+    repository_url: &str,
+    progress_bar: &ProgressBar,
+) -> Result<PathBuf, DownloaderError> {
     let repository_clones_path =
         Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
     let repository_name = utils::get_repository_name(repository_url)?;
 
     // Create a progress bar.
-    let progress_bar = ProgressBar::new(80);
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{bar:40.white/white} {pos}/{len} {msg}")
@@ -276,42 +316,19 @@ fn download_files(
         }
     };
 
-    progress_bar.set_style(ProgressStyle::default_spinner());
-    progress_bar.set_message("Copying files...");
+    let repository_directory = repository
+        .workdir()
+        .ok_or_else(|| {
+            DownloaderError::Io(format!(
+                "Failed to find working directory for repository '{repository_name}'"
+            ))
+        })?
+        .to_path_buf();
+    Ok(repository_directory)
+}
 
-    let repository_directory = repository.workdir().ok_or_else(|| {
-        DownloaderError::Io(format!(
-            "Failed to find working directory for repository '{repository_name}'"
-        ))
-    })?;
-
-    // Copy given files from the repository to the given directory.
-    for file_path in source_files {
-        let file_name = Path::new(file_path).file_name().ok_or_else(|| {
-            DownloaderError::Io(format!("Failed to get file name for path '{file_path}'"))
-        })?;
-
-        let source = repository_directory.join(file_path);
-        let destination = program_directory.join(file_name);
-
-        // Copy files from destination to source.
-        if source.is_dir() {
-            utils::copy_files_from_directory(&source, &program_directory)?;
-        } else {
-            fs::copy(&source, &destination).map_err(|error| DownloaderError::IoCopy {
-                source: source.to_path_buf(),
-                destination: destination.to_path_buf(),
-                error,
-            })?;
-        }
-    }
-
-    progress_bar.finish_with_message(format!(
-        "Downloaded '{}' ({})",
-        program_name,
-        program_language.to_str()
-    ));
-    Ok(())
+fn download_files_with_tarball() {
+    todo!()
 }
 
 /// Callback used to update the progress bar as a repository is cloned.
