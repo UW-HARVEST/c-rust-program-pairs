@@ -265,6 +265,19 @@ fn download_files(
     Ok(())
 }
 
+/// Downloads a git repository using git clone.
+///
+/// # Arguments
+///
+/// - `program_language` - Either C or Rust.
+/// - `repository_url` - The URL to download with git.
+/// - `progress_bar` - A `ProgressBar` used to show the progress of the
+///                    download status of the current program-pair.
+///
+/// # Returns
+///
+/// A `PathBuf` to the downloaded repository on success, or a
+/// [`DownloaderError`] on failure.
 fn download_with_git(
     program_language: &Language,
     repository_url: &str,
@@ -274,7 +287,6 @@ fn download_with_git(
         Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
     let repository_name = utils::get_repository_name(repository_url)?;
 
-    // Create a progress bar.
     progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{bar:40.white/white} {pos}/{len} {msg}")
