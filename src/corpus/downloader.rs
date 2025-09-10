@@ -109,7 +109,7 @@ pub fn download_from_metadata_directory(
         // Parse the contents of `metadata_file`.
         match corpus::parse(&metadata_file.path()) {
             // Download the program pairs listed in the metadata file.
-            Ok(metadata) => download_metadata_file(&metadata, progress_bar),
+            Ok(metadata) => download_from_metadata_file(&metadata, progress_bar),
 
             // If there is an error parsing the current file,
             // display an error and move on to the next file.
@@ -136,7 +136,7 @@ pub fn download_from_metadata_directory(
 ///
 /// - `metadata` - The program pairs to download.
 /// - `progress_bar` - Is updated each time a metadata file is processed.
-fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
+fn download_from_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
     for pair in metadata.pairs.iter() {
         if let Err(error) = download_program_pair(pair) {
             eprintln!("Failed to download '{}': {}", pair.program_name, error)
