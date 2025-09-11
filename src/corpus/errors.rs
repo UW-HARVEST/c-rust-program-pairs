@@ -4,6 +4,7 @@
 
 use std::{io, path::PathBuf};
 
+use reqwest;
 use thiserror;
 
 /// Errors that occur when a metadata file is being parsed.
@@ -93,6 +94,36 @@ pub enum DownloaderError {
         /// The underlying git error.
         #[source]
         error: git2::Error,
+    },
+
+    /// Fail to download a tarball.
+    #[error("Failed to download tarball from '{tarball_url}': {error}")]
+    TarballDownload {
+        /// The URL used to download the tarball.
+        tarball_url: String,
+        /// The underlying HTTP request error.
+        #[source]
+        error: reqwest::Error,
+    },
+
+    /// Fail to read a tarball as bytes.
+    #[error("Failed to read tarball body from '{tarball_url}': {error}")]
+    TarballRead {
+        /// The URL used to download the tarball.
+        tarball_url: String,
+        /// The underlying HTTP request error.
+        #[source]
+        error: reqwest::Error,
+    },
+
+    /// Fail to unpack a tarball.
+    #[error("Failed to unpack tarball for '{repository_name}': {error}")]
+    TarballUnpack {
+        /// The name of the repository that is being unpacked.
+        repository_name: String,
+        /// The underlying HTTP request error.
+        #[source]
+        error: io::Error,
     },
 
     /// Failed to create a progress bar.
