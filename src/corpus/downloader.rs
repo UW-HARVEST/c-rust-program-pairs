@@ -347,6 +347,19 @@ fn download_with_git(
     Ok(repository_directory)
 }
 
+/// Downloads and extracts the source code of a repository as a tarball.
+///
+/// # Arguments
+///
+/// - `program_language` - Either C or Rust.
+/// - `repository_url` - The URL to download with git.
+/// - `progress_bar` - A `ProgressBar` used to show the progress of the
+///                    download status of the current program-pair.
+///
+/// # Returns
+///
+/// A `PathBuf` to the downloaded repository on success, or a
+/// [`DownloaderError`] on failure.
 fn download_tarball(
     program_language: &Language,
     repository_url: &str,
