@@ -22,7 +22,7 @@ use crate::{
         utils,
     },
     paths::{
-        DEMO_METADATA_DIRECTORY, INDIVIDUAL_METADATA_DIRECTORY, PROGRAMS_DIRECTORY,
+        DEMO_METADATA_DIRECTORY, INDIVIDUAL_METADATA_DIRECTORY, PROGRAM_PAIRS_DIRECTORY,
         PROJECT_METADATA_DIRECTORY, REPOSITORY_CLONES_DIRECTORY,
     },
 };
@@ -165,7 +165,7 @@ fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
 /// Returns `Ok(())` on success, or a [`DownloaderError`] on failure.
 fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloaderError> {
     let program_name = &pair.program_name;
-    let base_program_path = Path::new(PROGRAMS_DIRECTORY).join(program_name);
+    let base_program_path = Path::new(PROGRAM_PAIRS_DIRECTORY).join(program_name);
     let c_program_path = base_program_path.join("c-program");
     let rust_program_path = base_program_path.join("rust-program");
 
