@@ -5,13 +5,21 @@
 /// # Usage
 ///
 /// Download full metadata corpus:
-/// ```bash
+///
+/// ```sh
 /// cargo run
 /// ```
 ///
 /// Download demo/sample metadata only:
-/// ```bash
-/// cargo run -- demo
+///
+/// ```sh
+/// cargo run demo
+/// ```
+///
+/// Delete program-pairs and repository clones:
+///
+/// ```sh
+/// cargo run delete
 /// ```
 use c_rust_program_pairs;
 

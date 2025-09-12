@@ -8,7 +8,7 @@ without any dependencies, so they cannot be compiled.
 
 Here is the directory structure for the downloaded `cat` program pair:
 
-```
+```text
 .
 └── program_pairs/
     └── cat/
@@ -36,6 +36,12 @@ To download a small subset of available program pairs:
 
 ```sh
 cargo run demo
+```
+
+To delete `program_pairs/` and `repository_clones/`:
+
+```sh
+cargo run delete
 ```
 
 ## Terminology
