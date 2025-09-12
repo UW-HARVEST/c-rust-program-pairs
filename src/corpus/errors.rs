@@ -70,13 +70,25 @@ pub enum DownloaderError {
         error: io::Error,
     },
 
-    /// Failed to copy a file or directory from source to destination.
+    /// Failed to copy a file or directory from `source` to `destination`.
     #[error("Failed to copy '{source}' to '{destination}': {error}")]
     IoCopy {
         /// The source file path.
         source: PathBuf,
         /// The destination file path.
         destination: PathBuf,
+        /// The underlying I/O error.
+        #[source]
+        error: io::Error,
+    },
+
+    /// Failed to rename a file or directory from `old` to `new`.
+    #[error("Failed to rename '{old}' to '{new}': {error}")]
+    IoRename {
+        /// The old file path.
+        old: PathBuf,
+        /// The new file path.
+        new: PathBuf,
         /// The underlying I/O error.
         #[source]
         error: io::Error,

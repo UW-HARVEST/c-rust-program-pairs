@@ -414,11 +414,18 @@ fn download_tarball(
     archive
         .unpack(&repository_clones_path)
         .map_err(|error| DownloaderError::TarballUnpack {
-            repository_name,
+            repository_name: repository_name.clone(),
             error,
         })?;
 
-    // TODO: I need to rename from e.g. diffutils-main to diffutils.
+    // Rename from repository_clones/<repository_name>-main/ to
+    // repository_clones/<repository_name>.
+    let unpacked_directory = repository_clones_path.join(format!("{repository_name}-{branch}"));
+    fs::rename(&unpacked_directory, &repository).map_err(|error| DownloaderError::IoRename {
+        old: unpacked_directory.to_path_buf(),
+        new: repository.to_path_buf(),
+        error,
+    })?;
 
     Ok(repository)
 }
