@@ -4,12 +4,103 @@
 
 use std::{
     fs,
-    path::{Path, MAIN_SEPARATOR_STR},
+    path::{MAIN_SEPARATOR_STR, Path},
 };
 
+use reqwest::blocking::Client;
+use serde::Deserialize;
 use walkdir::WalkDir;
 
 use crate::corpus::errors::DownloaderError;
+
+#[derive(Debug, Deserialize)]
+/// Represents the data received from a request to GitHub's API.
+struct Repository {
+    default_branch: String,
+}
+
+/// Extract a repository's name from its URL.
+///
+/// # Example
+///
+/// The repository name of
+/// "https://github.com/eza-community/eza.git" is "eza".
+///
+/// # Arguments
+///
+/// - `url` - Git repository URL; must point to a valid, accessible repo.
+///
+/// # Returns
+///
+/// The name of the repository on success or [`DownloaderError`] on failure.
+pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
+    let last_segment = url
+        .trim_end_matches("/")
+        .split("/")
+        .last()
+        .expect("Unreachable because split always returns at least 1 element");
+    let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
+    Ok(name.to_string())
+}
+
+/// Extract a repository's owner from a GitHub URL.
+///
+/// # Example
+///
+/// The repository owner of
+/// "https://github.com/eza-community/eza.git" is "eza-community".
+///
+/// # Arguments
+///
+/// - `url` - Git repository URL; must point to a valid, accessible repo.
+///
+/// # Returns
+///
+/// The owner of the repository on success or [`DownloaderError`] on failure.
+pub fn get_repository_owner(url: &str) -> Result<String, DownloaderError> {
+    if !url.contains("github") {
+        return Err(DownloaderError::Io("Invalid URL".to_string()));
+    }
+
+    let url_parts: Vec<&str> = url.trim_end_matches("/").split("/").collect();
+    let owner = url_parts[url_parts.len() - 2].to_string();
+    Ok(owner)
+}
+
+/// Get the default branch for a GitHub repository.
+///
+/// # Arguments
+///
+/// - `url` - Git repository URL.
+///
+/// # Returns
+///
+/// The name of the default branch on success or [`DownloaderError`] on
+/// failure.
+pub fn get_repository_default_branch(url: &str) -> Result<String, DownloaderError> {
+    if !url.contains("github") {
+        return Err(DownloaderError::Io("Invalid URL".to_string()));
+    }
+
+    let owner = get_repository_owner(url)?;
+    let repository = get_repository_name(url)?;
+    let api_url = format!("https://api.github.com/repos/{owner}/{repository}");
+
+    let client = Client::new();
+    let response = client
+        .get(&api_url)
+        .header("User-Agent", "c-rust-program-pairs")
+        .send()
+        .map_err(|error| DownloaderError::ApiError {
+            url: api_url.clone(),
+            error,
+        })?;
+    let data: Repository = response.json().map_err(|error| DownloaderError::ApiError {
+        url: api_url.clone(),
+        error,
+    })?;
+    Ok(data.default_branch)
+}
 
 /// Count the number of immediate files in a directory, not including any
 /// files in sub-directories.
@@ -48,26 +139,6 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloaderError> {
     }
 
     Ok(total_files)
-}
-
-/// Extract a repository's name from its URL.  The repository name of
-/// "https://github.com/eza-community/eza.git" is "eza".
-///
-/// # Arguments
-///
-/// - `url` - Git repository URL; must point to a valid, accessible repo.
-///
-/// # Returns
-///
-/// The name of the repository on success or [`DownloaderError`] on failure.
-pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
-    let last_segment = url
-        .trim_end_matches('/')
-        .split('/')
-        .last()
-        .expect("Unreachable because split always returns at least 1 element");
-    let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
-    Ok(name.to_string())
 }
 
 /// Copies all .c, .h, and .rs files from a directory to the destination.
@@ -129,4 +200,44 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    /// Tests that a repository name can be extracted from a URL.
+    fn test_get_repository_name() {
+        assert_eq!(
+            "eza",
+            get_repository_name("https://github.com/eza-community/eza.git").unwrap()
+        );
+        assert_eq!(
+            "eza",
+            get_repository_name("https://github.com/eza-community/eza").unwrap()
+        );
+    }
+
+    #[test]
+    /// Tests that a repository owner can be extracted from a URL.
+    fn test_get_repository_owner() {
+        assert_eq!(
+            "eza-community",
+            get_repository_owner("https://github.com/eza-community/eza.git").unwrap()
+        );
+        assert_eq!(
+            "eza-community",
+            get_repository_owner("https://github.com/eza-community/eza").unwrap()
+        );
+    }
+
+    #[test]
+    /// Tests that a repository's default branch can be found from its URL.
+    fn test_get_repository_default_branch() {
+        assert_eq!(
+            "main",
+            get_repository_default_branch("https://github.com/eza-community/eza.git").unwrap()
+        );
+    }
 }

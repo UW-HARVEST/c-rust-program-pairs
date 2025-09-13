@@ -365,27 +365,19 @@ fn download_tarball(
     repository_url: &str,
     progress_bar: &ProgressBar,
 ) -> Result<PathBuf, DownloaderError> {
+    // Construct tarball URL.
     let repository_name = utils::get_repository_name(repository_url)?;
+    let repository_owner = utils::get_repository_owner(repository_url)?;
+    let branch = utils::get_repository_default_branch(repository_url)?;
+    let tarball_url = format!(
+        "https://github.com/{repository_owner}/{repository_name}/archive/refs/heads/{branch}.tar.gz"
+    );
 
     // Display progress bar.
     progress_bar.set_style(ProgressStyle::default_spinner());
     progress_bar.set_message(format!(
         "Downloading tarball for repository '{repository_name}'..."
     ));
-
-    // Construct tarball URL.
-    let url_parts: Vec<&str> = repository_url.trim_end_matches(".git").split("/").collect();
-    if url_parts.len() < 2 {
-        return Err(DownloaderError::Io(format!(
-            "Could not parse GitHub URL: {repository_url}"
-        )));
-    };
-
-    let repository_owner = url_parts[url_parts.len() - 2];
-    let branch = "main";
-    let tarball_url = format!(
-        "https://github.com/{repository_owner}/{repository_name}/archive/refs/heads/{branch}.tar.gz"
-    );
 
     // Specify destination directory for download.
     let repository_clones_path =

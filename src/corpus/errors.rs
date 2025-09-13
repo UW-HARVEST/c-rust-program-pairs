@@ -139,6 +139,16 @@ pub enum DownloaderError {
         error: io::Error,
     },
 
+    /// Fail to make an API request.
+    #[error("Failed to make API request to '{url}': {error}")]
+    ApiError {
+        /// The name of the API URL.
+        url: String,
+        /// The underlying HTTP request error.
+        #[source]
+        error: reqwest::Error,
+    },
+
     /// Failed to create a progress bar.
     #[error("Failed to create progress bar: {0}")]
     ProgressBar(String),
