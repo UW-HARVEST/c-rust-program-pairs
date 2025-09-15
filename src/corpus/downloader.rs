@@ -7,7 +7,6 @@
 //! repository URLs provided in the metadata.
 
 use std::{
-    collections::HashMap,
     fs,
     io::Cursor,
     path::{Path, PathBuf},
@@ -310,7 +309,7 @@ fn download_with_git(
         update_progress_bar_callback(progress, &repository_name, &progress_bar)
     });
 
-    // Check if repository exists in cache, if not clone it.
+    // Check if repository exists in `repository_clones/`, if not clone it.
     // We store repositories in repository_clones/<language>/<repository_name>.
     let repository = match Repository::open(repository_clones_path.join(&repository_name)) {
         Ok(repository) => repository,
@@ -369,10 +368,7 @@ fn download_tarball(
     // Construct tarball URL.
     let repository_name = utils::get_repository_name(repository_url)?;
     let repository_owner = utils::get_repository_owner(repository_url)?;
-
-    let mut cache = HashMap::new();
-    let branch = utils::get_repository_default_branch(repository_url, &mut cache)?;
-
+    let branch = utils::get_repository_default_branch(repository_url)?;
     let tarball_url = format!(
         "https://github.com/{repository_owner}/{repository_name}/archive/refs/heads/{branch}.tar.gz"
     );
@@ -390,7 +386,7 @@ fn download_tarball(
 
     // Return the repository if it is found in the cache.
     if repository.exists() {
-        return Ok(repository.to_path_buf());
+        return Ok(repository);
     };
 
     // Ensure parent directory exists.

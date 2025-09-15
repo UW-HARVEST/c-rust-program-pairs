@@ -132,6 +132,7 @@ dependencies = [
  "git2",
  "indicatif",
  "jsonschema",
+ "lazy_static",
  "prettyplease",
  "reqwest",
  "schemars",

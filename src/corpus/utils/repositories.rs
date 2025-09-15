@@ -1,15 +1,23 @@
 //! # Utility Functions for Git Repositories
 
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Mutex};
 
+use lazy_static::lazy_static;
 use reqwest::blocking::Client;
 use serde::Deserialize;
 
 use crate::corpus::errors::DownloaderError;
 
+lazy_static! {
+    /// This is a global cache that contains key-value pairs for
+    /// (repository_owner, repository_name) to branch name. It is important so
+    /// the GitHub API does not need to be called repeatedly.
+    static ref BRANCH_CACHE: Mutex<HashMap<(String, String), String>> = Mutex::new(HashMap::new());
+}
+
 #[derive(Debug, Deserialize)]
 /// Represents the data received from a request to GitHub's API.
-struct Repository {
+struct GithubApiResponse {
     default_branch: String,
 }
 
@@ -73,25 +81,24 @@ pub fn get_repository_owner(url: &str) -> Result<String, DownloaderError> {
 ///
 /// The name of the default branch on success or [`DownloaderError`] on
 /// failure.
-pub fn get_repository_default_branch(
-    url: &str,
-    cache: &mut HashMap<(String, String), String>,
-) -> Result<String, DownloaderError> {
+pub fn get_repository_default_branch(url: &str) -> Result<String, DownloaderError> {
     if !url.contains("github") {
         return Err(DownloaderError::Io("Invalid URL".to_string()));
     }
 
+    let mut cache = BRANCH_CACHE.lock().unwrap();
+
     let owner = get_repository_owner(url)?;
     let repository = get_repository_name(url)?;
+    let key = (owner.to_string(), repository.to_string());
 
     // Check if result has already been cached.
-    let key = (owner.to_string(), repository.to_string());
     if let Some(branch) = cache.get(&key) {
-        return Ok(branch.to_string());
+        return Ok(branch.clone());
     }
 
+    // Make API call.
     let api_url = format!("https://api.github.com/repos/{owner}/{repository}");
-
     let client = Client::new();
     let response = client
         .get(&api_url)
@@ -101,15 +108,15 @@ pub fn get_repository_default_branch(
             url: api_url.clone(),
             error,
         })?;
-    let data: Repository = response.json().map_err(|error| DownloaderError::ApiError {
+    let data: GithubApiResponse = response.json().map_err(|error| DownloaderError::ApiError {
         url: api_url.clone(),
         error,
     })?;
 
     // Add result to cache.
-    cache.insert(key, data.default_branch.clone());
-
-    Ok(data.default_branch)
+    let branch = data.default_branch;
+    cache.insert(key, branch.clone());
+    Ok(branch)
 }
 
 #[cfg(test)]
@@ -146,16 +153,14 @@ mod tests {
     /// Tests that a repository's default branch can be found from its URL.
     fn test_get_repository_default_branch() {
         let branch = "main";
-        let mut cache = HashMap::new();
-
         // Returns correct repository branch.
         assert_eq!(
             branch,
-            get_repository_default_branch("https://github.com/eza-community/eza.git", &mut cache)
-                .unwrap()
+            get_repository_default_branch("https://github.com/eza-community/eza.git").unwrap()
         );
 
         // Correctly caches branch.
+        let cache = BRANCH_CACHE.lock().unwrap();
         let key = (String::from("eza-community"), String::from("eza"));
         assert_eq!(cache.get(&key).unwrap(), branch);
     }
