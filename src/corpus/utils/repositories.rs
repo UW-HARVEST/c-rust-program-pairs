@@ -1,5 +1,7 @@
 //! # Utility Functions for Git Repositories
 
+use std::collections::HashMap;
+
 use reqwest::blocking::Client;
 use serde::Deserialize;
 
@@ -64,18 +66,30 @@ pub fn get_repository_owner(url: &str) -> Result<String, DownloaderError> {
 /// # Arguments
 ///
 /// - `url` - Git repository URL.
+/// - `cache` - Caches repository URLs and their default branches. This is
+///             important because there's a rate limit on GitHub's API.
 ///
 /// # Returns
 ///
 /// The name of the default branch on success or [`DownloaderError`] on
 /// failure.
-pub fn get_repository_default_branch(url: &str) -> Result<String, DownloaderError> {
+pub fn get_repository_default_branch(
+    url: &str,
+    cache: &mut HashMap<(String, String), String>,
+) -> Result<String, DownloaderError> {
     if !url.contains("github") {
         return Err(DownloaderError::Io("Invalid URL".to_string()));
     }
 
     let owner = get_repository_owner(url)?;
     let repository = get_repository_name(url)?;
+
+    // Check if result has already been cached.
+    let key = (owner.to_string(), repository.to_string());
+    if let Some(branch) = cache.get(&key) {
+        return Ok(branch.to_string());
+    }
+
     let api_url = format!("https://api.github.com/repos/{owner}/{repository}");
 
     let client = Client::new();
@@ -91,6 +105,10 @@ pub fn get_repository_default_branch(url: &str) -> Result<String, DownloaderErro
         url: api_url.clone(),
         error,
     })?;
+
+    // Add result to cache.
+    cache.insert(key, data.default_branch.clone());
+
     Ok(data.default_branch)
 }
 
@@ -127,9 +145,18 @@ mod tests {
     #[test]
     /// Tests that a repository's default branch can be found from its URL.
     fn test_get_repository_default_branch() {
+        let branch = "main";
+        let mut cache = HashMap::new();
+
+        // Returns correct repository branch.
         assert_eq!(
-            "main",
-            get_repository_default_branch("https://github.com/eza-community/eza.git").unwrap()
+            branch,
+            get_repository_default_branch("https://github.com/eza-community/eza.git", &mut cache)
+                .unwrap()
         );
+
+        // Correctly caches branch.
+        let key = (String::from("eza-community"), String::from("eza"));
+        assert_eq!(cache.get(&key).unwrap(), branch);
     }
 }
