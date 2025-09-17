@@ -8,15 +8,11 @@
 
 use std::{
     fs,
-    io::Cursor,
     path::{Path, PathBuf},
 };
 
-use flate2::read::GzDecoder;
-use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
+use git2::{ConfigLevel, FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder, opts};
 use indicatif::{ProgressBar, ProgressStyle};
-use reqwest::blocking;
-use tar::Archive;
 
 use crate::{
     corpus::{
@@ -44,6 +40,11 @@ use crate::{
 ///
 /// Returns `Ok(())` on success, or a [`DownloaderError`] if any step fails.
 pub fn download_metadata(demo: bool) -> Result<(), DownloaderError> {
+    unsafe {
+        opts::set_search_path(ConfigLevel::Global, "/dev/null").unwrap();
+        opts::set_search_path(ConfigLevel::System, "/dev/null").unwrap();
+    }
+
     let directories = if demo {
         vec![PathBuf::from(DEMO_METADATA_DIRECTORY)]
     } else {
@@ -235,11 +236,7 @@ fn download_files(
 ) -> Result<(), DownloaderError> {
     let progress_bar = ProgressBar::new(80);
 
-    let repository_directory = if repository_url.contains("github") {
-        download_tarball(&program_language, repository_url, &progress_bar)?
-    } else {
-        download_with_git(&program_language, repository_url, &progress_bar)?
-    };
+    let repository_directory = download_with_git(&program_language, repository_url, &progress_bar)?;
 
     progress_bar.set_style(ProgressStyle::default_spinner());
     progress_bar.set_message("Copying files...");
@@ -345,94 +342,6 @@ fn download_with_git(
         })?
         .to_path_buf();
     Ok(repository_directory)
-}
-
-/// Downloads and extracts the source code of a repository as a tarball.
-///
-/// # Arguments
-///
-/// - `program_language` - Either C or Rust.
-/// - `repository_url` - The URL to download with git.
-/// - `progress_bar` - A `ProgressBar` used to show the progress of the
-///                    download status of the current program-pair.
-///
-/// # Returns
-///
-/// A `PathBuf` to the downloaded repository on success, or a
-/// [`DownloaderError`] on failure.
-fn download_tarball(
-    program_language: &Language,
-    repository_url: &str,
-    progress_bar: &ProgressBar,
-) -> Result<PathBuf, DownloaderError> {
-    // Construct tarball URL.
-    let repository_name = utils::get_repository_name(repository_url)?;
-    let repository_owner = utils::get_repository_owner(repository_url)?;
-    let branch = utils::get_repository_default_branch(repository_url)?;
-    let tarball_url = format!(
-        "https://github.com/{repository_owner}/{repository_name}/archive/refs/heads/{branch}.tar.gz"
-    );
-
-    // Display progress bar.
-    progress_bar.set_style(ProgressStyle::default_spinner());
-    progress_bar.set_message(format!(
-        "Downloading tarball for repository '{repository_name}'..."
-    ));
-
-    // Specify destination directory for download.
-    let repository_clones_path =
-        Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
-    let repository = repository_clones_path.join(&repository_name);
-
-    // Return the repository if it is found in the cache.
-    if repository.exists() {
-        return Ok(repository);
-    };
-
-    // Ensure parent directory exists.
-    fs::create_dir_all(&repository_clones_path).map_err(|error| DownloaderError::IoCreate {
-        path: repository_clones_path.clone(),
-        error,
-    })?;
-
-    // Download tarball.
-    let response =
-        blocking::get(&tarball_url).map_err(|error| DownloaderError::TarballDownload {
-            tarball_url: tarball_url.clone(),
-            error,
-        })?;
-    if !response.status().is_success() {
-        return Err(DownloaderError::Io(format!(
-            "Tarball download failed with status {} from '{}'",
-            response.status(),
-            tarball_url.clone()
-        )));
-    };
-    let bytes = response
-        .bytes()
-        .map_err(|error| DownloaderError::TarballRead { tarball_url, error })?;
-
-    // Decompress and extract.
-    let cursor = Cursor::new(bytes);
-    let tar = GzDecoder::new(cursor);
-    let mut archive = Archive::new(tar);
-    archive
-        .unpack(&repository_clones_path)
-        .map_err(|error| DownloaderError::TarballUnpack {
-            repository_name: repository_name.clone(),
-            error,
-        })?;
-
-    // Rename from repository_clones/<repository_name>-main/ to
-    // repository_clones/<repository_name>.
-    let unpacked_directory = repository_clones_path.join(format!("{repository_name}-{branch}"));
-    fs::rename(&unpacked_directory, &repository).map_err(|error| DownloaderError::IoRename {
-        old: unpacked_directory.to_path_buf(),
-        new: repository.to_path_buf(),
-        error,
-    })?;
-
-    Ok(repository)
 }
 
 /// Callback used to update the progress bar as a repository is cloned.
