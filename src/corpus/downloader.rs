@@ -40,6 +40,9 @@ use crate::{
 ///
 /// Returns `Ok(())` on success, or a [`DownloaderError`] if any step fails.
 pub fn download_metadata(demo: bool) -> Result<(), DownloaderError> {
+    // Temporarily override the user's global and system Git configuration.
+    // This is to ensure reliability when using the clone operation to
+    // download repositories.
     unsafe {
         opts::set_search_path(ConfigLevel::Global, "/dev/null").unwrap();
         opts::set_search_path(ConfigLevel::System, "/dev/null").unwrap();
