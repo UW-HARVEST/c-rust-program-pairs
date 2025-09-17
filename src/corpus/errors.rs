@@ -83,18 +83,6 @@ pub enum DownloaderError {
         error: io::Error,
     },
 
-    /// Failed to rename a file or directory from `old` to `new`.
-    #[error("Failed to rename '{old}' to '{new}': {error}")]
-    IoRename {
-        /// The old file path.
-        old: PathBuf,
-        /// The new file path.
-        new: PathBuf,
-        /// The underlying I/O error.
-        #[source]
-        error: io::Error,
-    },
-
     /// Generic I/O error.
     #[error("IO error: {0}")]
     Io(String),
@@ -107,36 +95,6 @@ pub enum DownloaderError {
         /// The underlying git error.
         #[source]
         error: git2::Error,
-    },
-
-    /// Fail to download a tarball.
-    #[error("Failed to download tarball from '{tarball_url}': {error}")]
-    TarballDownload {
-        /// The URL used to download the tarball.
-        tarball_url: String,
-        /// The underlying HTTP request error.
-        #[source]
-        error: reqwest::Error,
-    },
-
-    /// Fail to read a tarball as bytes.
-    #[error("Failed to read tarball body from '{tarball_url}': {error}")]
-    TarballRead {
-        /// The URL used to download the tarball.
-        tarball_url: String,
-        /// The underlying HTTP request error.
-        #[source]
-        error: reqwest::Error,
-    },
-
-    /// Fail to unpack a tarball.
-    #[error("Failed to unpack tarball for '{repository_name}': {error}")]
-    TarballUnpack {
-        /// The name of the repository that is being unpacked.
-        repository_name: String,
-        /// The underlying HTTP request error.
-        #[source]
-        error: io::Error,
     },
 
     /// Fail to make an API request.
