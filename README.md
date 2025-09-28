@@ -39,6 +39,12 @@ To download a small subset of available program pairs:
 cargo run demo
 ```
 
+To delete `program_pairs/` and `repository_clones/`:
+
+```sh
+cargo run delete
+```
+
 ## Terminology
 
 - **Program**: Code that compiles to a single executable.
