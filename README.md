@@ -26,6 +26,8 @@ You need the SSL development library.  On Ubuntu, run:
 sudo apt-get install -y pkg-config libssl-dev
 ```
 
+## Usage
+
 To download all available program pairs into the `program_pairs/` directory:
 
 ```sh
