@@ -8,11 +8,7 @@ without any dependencies, so they cannot be compiled.
 
 Here is the directory structure for the downloaded `cat` program pair:
 
-<<<<<<< HEAD
 ```tree
-=======
-```text
->>>>>>> b388e7282bce221aa4a18a714d4f294e7f3f2658
 .
 └── program_pairs/
     └── cat/
