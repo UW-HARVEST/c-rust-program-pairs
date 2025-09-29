@@ -69,7 +69,7 @@ pub enum DownloaderError {
         error: io::Error,
     },
 
-    /// Failed to copy a file or directory from source to destination.
+    /// Failed to copy a file or directory from `source` to `destination`.
     #[error("Failed to copy '{source}' to '{destination}': {error}")]
     IoCopy {
         /// The source file path.
