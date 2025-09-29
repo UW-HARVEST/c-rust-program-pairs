@@ -9,8 +9,6 @@ pub use corpus::download_program_pairs;
 
 use crate::paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY};
 
-use crate::paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY};
-
 /// Downloads program pairs.
 ///
 /// Reads the command-line arguments supplied. If none are given, download
