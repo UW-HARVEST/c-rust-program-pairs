@@ -11,7 +11,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use git2::{ConfigLevel, FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder, opts};
+use git2::{build::RepoBuilder, opts, ConfigLevel, FetchOptions, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
@@ -39,7 +39,7 @@ use crate::{
 /// # Returns
 ///
 /// Returns `Ok(())` on success, or a [`DownloaderError`] if any step fails.
-pub fn download_metadata(demo: bool) -> Result<(), DownloaderError> {
+pub fn download_program_pairs(demo: bool) -> Result<(), DownloaderError> {
     // Temporarily override the user's global and system Git configuration.
     // This is to ensure reliability when using the clone operation to
     // download repositories.
