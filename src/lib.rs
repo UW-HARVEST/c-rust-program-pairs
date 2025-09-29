@@ -5,7 +5,7 @@ mod paths;
 
 use std::env;
 
-pub use corpus::download_metadata;
+pub use corpus::download_program_pairs;
 
 /// Downloads program pairs.
 ///
@@ -16,8 +16,8 @@ pub fn run() {
     let args: Vec<String> = env::args().collect();
 
     match args.get(1).map(|arg| arg.as_str()) {
-        None => download_metadata(false).expect("Failed to download program pairs"),
-        Some("demo") => download_metadata(true).expect("Failed to run demo"),
+        None => download_program_pairs(false).expect("Failed to download program pairs"),
+        Some("demo") => download_program_pairs(true).expect("Failed to run demo"),
         Some(arg) => eprintln!("Invalid argument: {arg}"),
     }
 }

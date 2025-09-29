@@ -18,5 +18,5 @@ pub mod parser;
 pub mod schema;
 mod utils;
 
-pub use downloader::download_metadata;
+pub use downloader::download_program_pairs;
 pub use parser::parse;
