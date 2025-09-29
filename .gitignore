@@ -1,7 +1,7 @@
 target
 
 # Where we store our program pairs.
-programs
+program_pairs
 
 # Where we store repositories we have downloaded.
 repository_clones

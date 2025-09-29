@@ -10,7 +10,7 @@ Here is the directory structure for the downloaded `cat` program pair:
 
 ```
 .
-└── programs/
+└── program_pairs/
     └── cat/
         ├── c-program/
         │   └── cat.c
@@ -27,7 +27,7 @@ sudo apt-get install -y pkg-config libssl-dev
 
 ## Usage
 
-To download all available program pairs into the `programs/` directory:
+To download all available program pairs into the `program_pairs/` directory:
 
 ```sh
 cargo run
