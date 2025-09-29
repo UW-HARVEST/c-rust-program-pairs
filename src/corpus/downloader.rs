@@ -39,7 +39,7 @@ use crate::{
 /// # Returns
 ///
 /// Returns `Ok(())` on success, or a [`DownloaderError`] if any step fails.
-pub fn download_metadata(demo: bool) -> Result<(), DownloaderError> {
+pub fn download_program_pairs(demo: bool) -> Result<(), DownloaderError> {
     let directories = if demo {
         vec![PathBuf::from(DEMO_METADATA_DIRECTORY)]
     } else {
@@ -109,7 +109,7 @@ pub fn download_from_metadata_directory(
         // Parse the contents of `metadata_file`.
         match corpus::parse(&metadata_file.path()) {
             // Download the program pairs listed in the metadata file.
-            Ok(metadata) => download_metadata_file(&metadata, progress_bar),
+            Ok(metadata) => download_from_metadata_file(&metadata, progress_bar),
 
             // If there is an error parsing the current file,
             // display an error and move on to the next file.
@@ -136,7 +136,7 @@ pub fn download_from_metadata_directory(
 ///
 /// - `metadata` - The program pairs to download.
 /// - `progress_bar` - Is updated each time a metadata file is processed.
-fn download_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
+fn download_from_metadata_file(metadata: &Metadata, progress_bar: &ProgressBar) {
     for pair in metadata.pairs.iter() {
         if let Err(error) = download_program_pair(pair) {
             eprintln!("Failed to download '{}': {}", pair.program_name, error)
@@ -249,7 +249,7 @@ fn download_files(
         update_progress_bar_callback(progress, &repository_name, &progress_bar)
     });
 
-    // Check if repository exists in cache, if not clone it.
+    // Check if repository exists in `repository_clones`, if not clone it.
     // We store repositories in repository_clones/<language>/<repository_name>.
     let repository = match Repository::open(repository_clones_path.join(&repository_name)) {
         Ok(repository) => repository,
