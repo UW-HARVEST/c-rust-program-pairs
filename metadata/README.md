@@ -4,13 +4,17 @@ Metadata files contain information about C-Rust program pairs.
 
 ## Schema
 
-There are two metadata schemas, *individual* and *project*. JSON files in the `metadata/individual/` and `metadata/project/` directories conform to the individual and project schemas respectively.
+There are two metadata schemas, *individual* and *project*. JSON files in the
+`metadata/individual/` and `metadata/project/` directories conform to the
+individual and project schemas respectively.
 
-An individual metadata file groups together unrelated C-Rust projects that each only contain one program.  Here is an example:
+An individual metadata file groups together unrelated C-Rust projects that each
+only contain one program.  Here is an example:
 
 ### Individual Metadata Schema
 
-- An individual metadata file consists of an array `pairs` containing C-Rust program pairs.
+- An individual metadata file consists of an array `pairs` containing C-Rust
+  program pairs.
 
 ```json
 {
@@ -35,7 +39,8 @@ An individual metadata file groups together unrelated C-Rust projects that each 
 }
 ```
 
-A project metadata file containing a C project and a Rust project.  Each project contains multiple programs, and each Rust program corresponds to a C program.
+A project metadata file containing a C project and a Rust project.  Each project
+contains multiple programs, and each Rust program corresponds to a C program.
 
 ```json
 {
@@ -69,10 +74,14 @@ A project metadata file containing a C project and a Rust project.  Each project
 
 ### Program Configuration
 
-Each metadata file in `project` has two program configurations. The *global program configuration* specifies fields that apply to every program pair in the project. This includes fields like `repository_url` and `documentation_url`. The *program configuration* applies to one program pair.
+Each metadata file in `project` has two program configurations. The *global
+program configuration* specifies fields that apply to every program pair in the
+project. This includes fields like `repository_url` and `documentation_url`. The
+*program configuration* applies to one program pair.
 
 ### Schema fields
 
+<!-- markdownlint-disable MD013 --><!-- long lines -->
 | Field | Type | Description | Valid Values/Examples |
 |-------|------|-------------|----------------------|
 | `program_name` | string | Name of the Rust executable program | `"ripgrep"`, `"ls"` |
@@ -82,8 +91,11 @@ Each metadata file in `project` has two program configurations. The *global prog
 | `translation_tools` | array of strings | Tools used for the translation process | `"c2rust"`, `"manual"` |
 | `feature_relationship` | string | How Rust features compare to C | `"overlapping"` |
 | `source_paths` | array of paths | Paths to source files/directories | `["src/main.rs", "src/"]` |
+<!-- markdownlint-enable MD013 --><!-- long lines -->
 
-- `source_paths`: Array of paths to files and directories containing source code. When specifying directories, only `.c`, `.h`, and `.rs` files will be included.
+- `source_paths`: Array of paths to files and directories containing source
+  code. When specifying directories, only `.c`, `.h`, and `.rs` files will be
+  included.
 - `feature_relationship` Enum:
   - `rust_superset_of_c` - Rust has all C features plus more
   - `rust_subset_of_c` - Rust implements only some C features
