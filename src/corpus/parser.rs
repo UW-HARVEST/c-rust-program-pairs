@@ -204,8 +204,8 @@ mod tests {
 
     use std::path::Path;
 
-    // Tests that a project-metadata file can be successfully parsed.
     #[test]
+    /// Tests that a project-metadata file can be successfully parsed.
     fn test_parse_project() {
         let metadata_file = Path::new(PROJECT_METADATA_DIRECTORY).join("diffutils.json");
         let result = parse(&metadata_file);
@@ -216,8 +216,8 @@ mod tests {
         );
     }
 
-    // Tests that an individual-metadata file can be successfully parsed.
     #[test]
+    /// Tests that an individual-metadata file can be successfully parsed.
     fn test_parse_individual() {
         let metadata_file = Path::new(INDIVIDUAL_METADATA_DIRECTORY).join("system-tools.json");
         let result = parse(&metadata_file);
