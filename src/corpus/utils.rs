@@ -4,7 +4,7 @@
 
 use std::{
     fs,
-    path::{Path, MAIN_SEPARATOR_STR},
+    path::{MAIN_SEPARATOR_STR, Path},
 };
 
 use walkdir::WalkDir;
@@ -129,4 +129,22 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    /// Tests that a repository name can be extracted from a URL.
+    fn test_get_repository_name() {
+        assert_eq!(
+            "eza",
+            get_repository_name("https://github.com/eza-community/eza.git").unwrap()
+        );
+        assert_eq!(
+            "eza",
+            get_repository_name("https://github.com/eza-community/eza").unwrap()
+        );
+    }
 }
