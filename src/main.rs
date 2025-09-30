@@ -5,12 +5,12 @@
 //! # Usage
 //!
 //! Download full metadata corpus:
-//! ```bash
+//! ```sh
 //! cargo run
 //! ```
 //!
 //! Download demo/sample metadata only:
-//! ```bash
+//! ```sh
 //! cargo run -- demo
 //! ```
 use c_rust_program_pairs;
