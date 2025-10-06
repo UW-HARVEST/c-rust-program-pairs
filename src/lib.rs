@@ -7,7 +7,7 @@ use std::{env, fs, io::Error, path::Path};
 
 pub use corpus::download_program_pairs;
 
-use crate::paths::{PROGRAMS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY};
+use crate::paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY};
 
 /// Downloads program pairs.
 ///
@@ -31,8 +31,8 @@ pub fn run() {
 /// [`PROGRAM_PAIRS_DIRECTORY`] and [`REPOSITORY_CLONES_DIRECTORY`],
 /// along with all their contents, if they exist.
 fn delete() -> Result<(), Error> {
-    if Path::new(PROGRAMS_DIRECTORY).exists() {
-        fs::remove_dir_all(PROGRAMS_DIRECTORY)?;
+    if Path::new(PROGRAM_PAIRS_DIRECTORY).exists() {
+        fs::remove_dir_all(PROGRAM_PAIRS_DIRECTORY)?;
     };
     if Path::new(REPOSITORY_CLONES_DIRECTORY).exists() {
         fs::remove_dir_all(REPOSITORY_CLONES_DIRECTORY)?;
