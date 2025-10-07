@@ -229,61 +229,12 @@ fn download_files(
     repository_url: &str,
     source_files: &[String],
 ) -> Result<(), DownloaderError> {
-    let repository_clones_path =
-        Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
-    let repository_name = utils::get_repository_name(repository_url)?;
-
-    // Create a progress bar.
     let progress_bar = ProgressBar::new(80);
-    progress_bar.set_style(
-        ProgressStyle::default_bar()
-            .template("{bar:40.white/white} {pos}/{len} {msg}")
-            .map_err(|error| DownloaderError::ProgressBar(error.to_string()))?
-            .progress_chars("##-"),
-    );
-    progress_bar.set_message(format!("Cloning repository {repository_name}..."));
 
-    // Set up remote callbacks for progress tracking.
-    let mut remote_callbacks = RemoteCallbacks::new();
-    remote_callbacks.transfer_progress(|progress: git2::Progress| {
-        update_progress_bar_callback(progress, &repository_name, &progress_bar)
-    });
-
-    // Check if repository exists in `repository_clones`, if not clone it.
-    // We store repositories in repository_clones/<language>/<repository_name>.
-    let repository = match Repository::open(repository_clones_path.join(&repository_name)) {
-        Ok(repository) => repository,
-        Err(_) => {
-            // Set up fetch options with progress-tracking callbacks.
-            let mut fetch_options = FetchOptions::new();
-            fetch_options.remote_callbacks(remote_callbacks);
-
-            // Clone only the latest commit to save time and space.
-            fetch_options.depth(1);
-
-            // Clone the repository.
-            let mut builder = RepoBuilder::new();
-            builder.fetch_options(fetch_options);
-            builder
-                .clone(
-                    repository_url,
-                    &repository_clones_path.join(&repository_name),
-                )
-                .map_err(|error| DownloaderError::CloneRepository {
-                    repository_url: repository_url.to_string(),
-                    error,
-                })?
-        }
-    };
+    let repository_directory = download_with_git(&program_language, repository_url, &progress_bar)?;
 
     progress_bar.set_style(ProgressStyle::default_spinner());
     progress_bar.set_message("Copying files...");
-
-    let repository_directory = repository.workdir().ok_or_else(|| {
-        DownloaderError::Io(format!(
-            "Failed to find working directory for repository '{repository_name}'"
-        ))
-    })?;
 
     // Copy given files from the repository to the given directory.
     for file_path in source_files {
@@ -312,6 +263,80 @@ fn download_files(
         program_language.to_str()
     ));
     Ok(())
+}
+
+/// Downloads a git repository using git clone.
+///
+/// # Arguments
+///
+/// - `program_language` - Either C or Rust.
+/// - `repository_url` - The URL to download with git.
+/// - `progress_bar` - A `ProgressBar` used to show the progress of the
+///                    download status of the current program-pair.
+///
+/// # Returns
+///
+/// A `PathBuf` to the downloaded repository on success, or a
+/// [`DownloaderError`] on failure.
+fn download_with_git(
+    program_language: &Language,
+    repository_url: &str,
+    progress_bar: &ProgressBar,
+) -> Result<PathBuf, DownloaderError> {
+    let repository_clones_path =
+        Path::new(REPOSITORY_CLONES_DIRECTORY).join(program_language.to_str());
+    let repository_name = utils::get_repository_name(repository_url)?;
+
+    progress_bar.set_style(
+        ProgressStyle::default_bar()
+            .template("{bar:40.white/white} {pos}/{len} {msg}")
+            .map_err(|error| DownloaderError::ProgressBar(error.to_string()))?
+            .progress_chars("##-"),
+    );
+    progress_bar.set_message(format!("Cloning repository {repository_name}..."));
+
+    // Set up remote callbacks for progress tracking.
+    let mut remote_callbacks = RemoteCallbacks::new();
+    remote_callbacks.transfer_progress(|progress: git2::Progress| {
+        update_progress_bar_callback(progress, &repository_name, &progress_bar)
+    });
+
+    // Check if repository exists in `repository_clones/`, if not clone it.
+    // We store repositories in repository_clones/<language>/<repository_name>.
+    let repository = match Repository::open(repository_clones_path.join(&repository_name)) {
+        Ok(repository) => repository,
+        Err(_) => {
+            // Set up fetch options with progress-tracking callbacks.
+            let mut fetch_options = FetchOptions::new();
+            fetch_options.remote_callbacks(remote_callbacks);
+
+            // Clone only the latest commit to save time and space.
+            fetch_options.depth(1);
+
+            // Clone the repository.
+            let mut builder = RepoBuilder::new();
+            builder.fetch_options(fetch_options);
+            builder
+                .clone(
+                    repository_url,
+                    &repository_clones_path.join(&repository_name),
+                )
+                .map_err(|error| DownloaderError::CloneRepository {
+                    repository_url: repository_url.to_string(),
+                    error,
+                })?
+        }
+    };
+
+    let repository_directory = repository
+        .workdir()
+        .ok_or_else(|| {
+            DownloaderError::Io(format!(
+                "Failed to find working directory for repository '{repository_name}'"
+            ))
+        })?
+        .to_path_buf();
+    Ok(repository_directory)
 }
 
 /// Callback used to update the progress bar as a repository is cloned.
