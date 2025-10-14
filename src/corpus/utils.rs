@@ -4,7 +4,7 @@
 
 use std::{
     fs,
-    path::{MAIN_SEPARATOR_STR, Path},
+    path::{Path, MAIN_SEPARATOR_STR},
 };
 
 use walkdir::WalkDir;
@@ -129,4 +129,22 @@ pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
         .expect("Unreachable because split always returns at least 1 element");
     let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
     Ok(name.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    /// Tests that a repository name can be extracted from a URL.
+    fn test_get_repository_name() {
+        assert_eq!(
+            "eza",
+            get_repository_name("https://github.com/eza-community/eza.git").unwrap()
+        );
+        assert_eq!(
+            "eza",
+            get_repository_name("https://github.com/eza-community/eza").unwrap()
+        );
+    }
 }
