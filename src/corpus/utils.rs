@@ -111,7 +111,11 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
     Ok(())
 }
 
-/// Extract a repository's name from its URL.  The repository name of
+/// Extract a repository's name from its URL.
+///
+/// # Example
+///
+/// The repository name of
 /// "https://github.com/eza-community/eza.git" is "eza".
 ///
 /// # Arguments
