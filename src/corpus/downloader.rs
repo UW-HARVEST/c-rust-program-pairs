@@ -249,7 +249,7 @@ fn download_files(
         update_progress_bar_callback(progress, &repository_name, &progress_bar)
     });
 
-    // Check if repository exists in `repository_clones`, if not clone it.
+    // Check if repository exists in `repository_clones/`, if not clone it.
     // We store repositories in repository_clones/<language>/<repository_name>.
     let repository = match Repository::open(repository_clones_path.join(&repository_name)) {
         Ok(repository) => repository,

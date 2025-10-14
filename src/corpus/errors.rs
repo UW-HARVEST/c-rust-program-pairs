@@ -44,9 +44,10 @@ pub enum ParserError {
     },
 }
 
-/// Errors that occur in the Downloader program.  Some of these relate
-/// to downloads from a git repository.  Others relate to local
-/// conditions such as file reading.
+/// Errors that occur in the Downloader program.
+///
+/// Some of these relate to downloads from a git repository.  Others relate
+/// to local conditions such as file reading.
 #[derive(thiserror::Error, Debug)]
 pub enum DownloaderError {
     /// Failed to read a file or directory.
