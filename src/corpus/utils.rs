@@ -50,26 +50,6 @@ pub fn count_files(directory: &Path) -> Result<usize, DownloaderError> {
     Ok(total_files)
 }
 
-/// Extract a repository's name from its URL.  The repository name of
-/// "https://github.com/eza-community/eza.git" is "eza".
-///
-/// # Arguments
-///
-/// - `url` - Git repository URL; must point to a valid, accessible repo.
-///
-/// # Returns
-///
-/// The name of the repository on success or [`DownloaderError`] on failure.
-pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
-    let last_segment = url
-        .trim_end_matches('/')
-        .split('/')
-        .last()
-        .expect("Unreachable because split always returns at least 1 element");
-    let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
-    Ok(name.to_string())
-}
-
 /// Copies all .c, .h, and .rs files from a directory to the destination.
 ///
 /// Copied files will all be directly under the destination directory;
@@ -129,4 +109,42 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
     }
 
     Ok(())
+}
+
+/// Extract a repository's name from its URL.  The repository name of
+/// "https://github.com/eza-community/eza.git" is "eza".
+///
+/// # Arguments
+///
+/// - `url` - Git repository URL; must point to a valid, accessible repo.
+///
+/// # Returns
+///
+/// The name of the repository on success or [`DownloaderError`] on failure.
+pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
+    let last_segment = url
+        .trim_end_matches('/')
+        .split('/')
+        .last()
+        .expect("Unreachable because split always returns at least 1 element");
+    let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
+    Ok(name.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    /// Tests that a repository name can be extracted from a URL.
+    fn test_get_repository_name() {
+        assert_eq!(
+            "eza",
+            get_repository_name("https://github.com/eza-community/eza.git").unwrap()
+        );
+        assert_eq!(
+            "eza",
+            get_repository_name("https://github.com/eza-community/eza").unwrap()
+        );
+    }
 }
