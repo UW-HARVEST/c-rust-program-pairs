@@ -4,7 +4,7 @@
 
 use std::{
     fs,
-    path::{MAIN_SEPARATOR_STR, Path},
+    path::{Path, MAIN_SEPARATOR_STR},
 };
 
 use walkdir::WalkDir;
@@ -127,8 +127,8 @@ pub fn copy_files_from_directory(source: &Path, destination: &Path) -> Result<()
 /// The name of the repository on success or [`DownloaderError`] on failure.
 pub fn get_repository_name(url: &str) -> Result<String, DownloaderError> {
     let last_segment = url
-        .trim_end_matches("/")
-        .split("/")
+        .trim_end_matches('/')
+        .split('/')
         .last()
         .expect("Unreachable because split always returns at least 1 element");
     let name = last_segment.strip_suffix(".git").unwrap_or(last_segment);
