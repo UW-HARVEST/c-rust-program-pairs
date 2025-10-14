@@ -9,6 +9,4 @@ repository_clones
 # Generated program
 metadata_structs.rs
 
-progress-reports
-
 .DS_Store

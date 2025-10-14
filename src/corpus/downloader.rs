@@ -11,7 +11,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use git2::{FetchOptions, RemoteCallbacks, Repository, build::RepoBuilder};
+use git2::{build::RepoBuilder, opts, ConfigLevel, FetchOptions, RemoteCallbacks, Repository};
 use indicatif::{ProgressBar, ProgressStyle};
 
 use crate::{
@@ -40,6 +40,14 @@ use crate::{
 ///
 /// Returns `Ok(())` on success, or a [`DownloaderError`] if any step fails.
 pub fn download_program_pairs(demo: bool) -> Result<(), DownloaderError> {
+    // Temporarily override the user's global and system Git configuration.
+    // This is to ensure reliability when using the clone operation to
+    // download repositories.
+    unsafe {
+        opts::set_search_path(ConfigLevel::Global, "/dev/null").unwrap();
+        opts::set_search_path(ConfigLevel::System, "/dev/null").unwrap();
+    }
+
     let directories = if demo {
         vec![PathBuf::from(DEMO_METADATA_DIRECTORY)]
     } else {
