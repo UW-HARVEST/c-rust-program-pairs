@@ -5,9 +5,30 @@ mod paths;
 
 use std::{env, fs, io::Error, path::Path};
 
+use clap::{Parser, Subcommand};
+
 pub use corpus::download_program_pairs;
 
 use crate::paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY};
+
+#[derive(Parser)]
+#[command(about = "Manages the corpus of C-Rust program pairs", long_about = None)]
+struct Cli {
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Downloads all C-Rust program pairs.
+    Download,
+
+    /// Downloads a subset of the corpus; used for demonstration.
+    Demo,
+
+    /// Delete the `program_pairs` and `repository_clones` directories.
+    Delete,
+}
 
 /// Downloads program pairs.
 ///
