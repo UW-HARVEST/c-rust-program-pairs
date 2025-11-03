@@ -1,36 +1,19 @@
 //! # C-Rust program pair downloader
 
+mod cli;
 mod corpus;
 mod paths;
 
 use std::{fs, io::Error, path::Path};
 
-use clap::{Parser, Subcommand};
+use clap::Parser;
 
 pub use corpus::download_program_pairs;
 
-use crate::paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY};
-
-/// This struct represents the top-level CLI entry point for the tool.
-#[derive(Parser)]
-#[command(about = "Manages the corpus of C-Rust program pairs", long_about = None)]
-struct Cli {
-    #[command(subcommand)]
-    command: Option<Commands>,
-}
-
-/// This struct represents the different commands available.
-#[derive(Subcommand)]
-enum Commands {
-    /// Downloads a subset of the corpus; used for demonstration.
-    Demo,
-
-    /// Downloads all C-Rust program pairs.
-    Download,
-
-    /// Delete the `program_pairs` and `repository_clones` directories.
-    Delete,
-}
+use crate::{
+    cli::{Cli, Commands},
+    paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY},
+};
 
 /// Downloads program pairs.
 ///
