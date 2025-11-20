@@ -36,8 +36,8 @@ use crate::{
 /// A [`Metadata`] instance containing program pair data on success and
 /// [`ParserError`] on failure.
 pub fn parse(path: &Path) -> Result<Metadata, ParserError> {
-    // Read metadata file and deserializes it into a
-    // [`CRustTranslationSchema`] enum.
+    // Read metadata file and deserialize it into a
+    // [`CRustProgramPairSchema`] enum.
     let raw_metadata = fs::read_to_string(path).map_err(|error| ParserError::IoRead {
         path: path.to_path_buf(),
         error,

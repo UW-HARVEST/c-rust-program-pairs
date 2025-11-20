@@ -213,7 +213,7 @@ fn download_program_pair(pair: &ProgramPair) -> Result<(), DownloaderError> {
 ///
 /// A progress bar is displayed on standard output to track cloning progress.
 ///
-/// Side effects:
+/// # Side Effects
 ///
 /// - Creates `repository_clones/`, which is a local cache for git clones.
 /// - May overwrite files at `program_directory`.
