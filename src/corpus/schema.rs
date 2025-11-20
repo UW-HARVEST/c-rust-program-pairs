@@ -1,4 +1,4 @@
-//! Parsed Metadata Schema
+//! # Parsed Metadata Schema
 //!
 //! This module defines data structures that represent the parsed output from
 //! JSON metadata files. These structures store the actual metadata information
