@@ -1,4 +1,4 @@
-//! Parsed Metadata Schema
+//! # Parsed Metadata Schema
 //!
 //! This module defines data structures that represent the parsed output from
 //! JSON metadata files. These structures store the actual metadata information
@@ -7,15 +7,15 @@
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
 /// The metadata from a single .json metadata file, containing
 /// an array of program pairs.
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Metadata {
     pub pairs: Vec<ProgramPair>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
 /// One C-Rust program pair.
+#[derive(Debug, Serialize, Deserialize)]
 pub struct ProgramPair {
     pub program_name: String,
     pub program_description: String,
@@ -25,8 +25,8 @@ pub struct ProgramPair {
     pub rust_program: Program,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
 /// One C or Rust program.
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Program {
     pub language: Language,
     pub documentation_url: String,
@@ -34,9 +34,9 @@ pub struct Program {
     pub source_paths: Vec<String>,
 }
 
+/// Specifies the feature set of the Rust project in relation to its C counterpart.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
-/// Specifies the feature set of the Rust project in relation to its C counterpart.
 pub enum Features {
     RustSubsetOfC,
     RustEquivalentToC,
@@ -44,9 +44,9 @@ pub enum Features {
     Overlapping,
 }
 
+/// The language in which the program is written.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-/// The language in which the program is written.
 pub enum Language {
     C,
     Rust,
