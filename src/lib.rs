@@ -4,9 +4,16 @@ mod cli;
 mod corpus;
 mod paths;
 
+use std::{fs, io::Error, path::Path};
+
 use clap::Parser;
 
-use crate::cli::{Cli, Commands};
+pub use corpus::download_program_pairs;
+
+use crate::{
+    cli::{Cli, Commands},
+    paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY},
+};
 
 /// Downloads program pairs.
 ///
