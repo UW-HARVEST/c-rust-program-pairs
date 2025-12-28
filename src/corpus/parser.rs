@@ -36,8 +36,8 @@ use crate::{
 /// A [`Metadata`] instance containing program pair data on success and
 /// [`ParserError`] on failure.
 pub fn parse(path: &Path) -> Result<Metadata, ParserError> {
-    // Read metadata file and deserializes it into a
-    // [`CRustTranslationSchema`] enum.
+    // Read metadata file and deserialize it into a
+    // [`CRustProgramPairSchema`] enum.
     let raw_metadata = fs::read_to_string(path).map_err(|error| ParserError::IoRead {
         path: path.to_path_buf(),
         error,
@@ -204,8 +204,8 @@ mod tests {
 
     use std::path::Path;
 
-    #[test]
     /// Tests that a project-metadata file can be successfully parsed.
+    #[test]
     fn test_parse_project() {
         let metadata_file = Path::new(PROJECT_METADATA_DIRECTORY).join("diffutils.json");
         let result = parse(&metadata_file);
@@ -216,8 +216,8 @@ mod tests {
         );
     }
 
-    #[test]
     /// Tests that an individual-metadata file can be successfully parsed.
+    #[test]
     fn test_parse_individual() {
         let metadata_file = Path::new(INDIVIDUAL_METADATA_DIRECTORY).join("system-tools.json");
         let result = parse(&metadata_file);

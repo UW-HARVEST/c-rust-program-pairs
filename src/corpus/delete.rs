@@ -1,4 +1,7 @@
-//! # Deletes program pairs
+//! # Delete Operations
+//!
+//! This module provides functionality for cleaning up downloaded program pairs
+//! and repository clones.
 
 use std::{fs, io::Error, path::Path};
 
