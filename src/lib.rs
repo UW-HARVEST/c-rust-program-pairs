@@ -1,13 +1,19 @@
 //! # C-Rust program pair downloader
 
+mod cli;
 mod corpus;
 mod paths;
 
-use std::{env, fs, io::Error, path::Path};
+use std::{fs, io::Error, path::Path};
+
+use clap::Parser;
 
 pub use corpus::download_program_pairs;
 
-use crate::paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY};
+use crate::{
+    cli::{Cli, Commands},
+    paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY},
+};
 
 /// Downloads program pairs.
 ///
@@ -15,13 +21,14 @@ use crate::paths::{PROGRAM_PAIRS_DIRECTORY, REPOSITORY_CLONES_DIRECTORY};
 /// all program pairs. If argument "demo" is given, download program pairs
 /// specified within the `demo/` directory.
 pub fn run() {
-    let args: Vec<String> = env::args().collect();
-
-    match args.get(1).map(|arg| arg.as_str()) {
+    let cli = Cli::parse();
+    match cli.command {
         None => download_program_pairs(false).expect("Failed to download program pairs"),
-        Some("demo") => download_program_pairs(true).expect("Failed to run demo"),
-        Some("delete") => delete().expect("Failed to delete directories"),
-        Some(arg) => eprintln!("Invalid argument: {arg}"),
+        Some(Commands::Demo) => download_program_pairs(true).expect("Failed to run demo"),
+        Some(Commands::Download) => {
+            download_program_pairs(false).expect("Failed to download program pairs")
+        }
+        Some(Commands::Delete) => delete().expect("Failed to delete directories"),
     }
 }
 
