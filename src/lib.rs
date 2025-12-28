@@ -23,26 +23,11 @@ use crate::{
 pub fn run() {
     let cli = Cli::parse();
     match cli.command {
-        None => download_program_pairs(false).expect("Failed to download program pairs"),
-        Some(Commands::Demo) => download_program_pairs(true).expect("Failed to run demo"),
+        None => corpus::download_program_pairs(false).expect("Failed to download program pairs"),
+        Some(Commands::Demo) => corpus::download_program_pairs(true).expect("Failed to run demo"),
         Some(Commands::Download) => {
-            download_program_pairs(false).expect("Failed to download program pairs")
+            corpus::download_program_pairs(false).expect("Failed to download program pairs")
         }
-        Some(Commands::Delete) => delete().expect("Failed to delete directories"),
+        Some(Commands::Delete) => corpus::delete().expect("Failed to delete directories"),
     }
-}
-
-/// Removes all downloaded program-pairs and repository clones.
-///
-/// This deletes the directories specified by
-/// [`PROGRAM_PAIRS_DIRECTORY`] and [`REPOSITORY_CLONES_DIRECTORY`],
-/// along with all their contents, if they exist.
-fn delete() -> Result<(), Error> {
-    if Path::new(PROGRAM_PAIRS_DIRECTORY).exists() {
-        fs::remove_dir_all(PROGRAM_PAIRS_DIRECTORY)?;
-    };
-    if Path::new(REPOSITORY_CLONES_DIRECTORY).exists() {
-        fs::remove_dir_all(REPOSITORY_CLONES_DIRECTORY)?;
-    };
-    Ok(())
 }
