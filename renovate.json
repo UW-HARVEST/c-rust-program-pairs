@@ -7,5 +7,15 @@
     "schedule:nonOfficeHours",
     ":disableDependencyDashboard"
   ],
-  "timezone": "America/Los_Angeles"
+  "timezone": "America/Los_Angeles",
+  "packageRules": [
+    {
+      "description": "prettyplease's `unparse` takes a `syn::File`, so the two crates must be upgraded together.",
+      "matchPackageNames": [
+        "syn",
+        "prettyplease"
+      ],
+      "groupName": "syn and prettyplease"
+    }
+  ]
 }
